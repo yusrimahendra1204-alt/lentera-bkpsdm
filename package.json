@@ -1,7 +1,7 @@
 {
   "name": "sistem-informasi-persuratan-bkpsdm-lutim",
   "version": "1.0.0",
-  "description": "Pengembangan Sistem Informasi Persuratan Berbasis Web pada BKPSDM Kabupaten Luwu Timur Menggunakan Metode Waterfall dan Perbup Luwu Timur No. 69 Tahun 2023",
+  "description": "SIPADU (Sistem Informasi Pengarsipan dan Administrasi Terpadu) pada BKPSDM Kabupaten Luwu Timur Menggunakan Metode Waterfall dan Perbup Luwu Timur No. 69 Tahun 2023",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

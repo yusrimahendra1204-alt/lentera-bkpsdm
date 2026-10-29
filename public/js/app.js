@@ -89,7 +89,7 @@ const App = {
       if (landingScreen) landingScreen.style.setProperty('display', 'block', 'important');
       if (loginScreen) loginScreen.style.setProperty('display', 'none', 'important');
       if (appScreen) appScreen.style.setProperty('display', 'none', 'important');
-      document.title = 'Portal Persuratan BKPSDM Luwu Timur - Lutim Juara';
+      document.title = 'SIPADU - Sistem Informasi Pengarsipan dan Administrasi Terpadu BKPSDM Luwu Timur';
       
       if (window.LandingModule) {
         LandingModule.init();
@@ -114,20 +114,24 @@ const App = {
       if (landingScreen) landingScreen.style.setProperty('display', 'none', 'important');
       if (loginScreen) loginScreen.style.setProperty('display', 'flex', 'important');
       if (appScreen) appScreen.style.setProperty('display', 'none', 'important');
-      document.title = 'Login - Sistem Informasi Persuratan BKPSDM Luwu Timur';
+      document.title = 'Login - SIPADU BKPSDM Kabupaten Luwu Timur';
       setTimeout(() => document.getElementById('login-nip')?.focus(), 150);
     } else if (screenName === 'app') {
       if (landingScreen) landingScreen.style.setProperty('display', 'none', 'important');
       if (loginScreen) loginScreen.style.setProperty('display', 'none', 'important');
       if (appScreen) appScreen.style.setProperty('display', 'flex', 'important');
-      document.title = 'Sistem Informasi Persuratan - BKPSDM Kab. Luwu Timur';
+      document.title = 'SIPADU - BKPSDM Kab. Luwu Timur';
       this.updateHeaderUser();
       this.updateSidebarBadges();
+      this.updateSidebarVisibility();
       // Pastikan seluruh menu sidebar tampil normal jika bukan mode read-only
       if (!this.isPublicMode) {
         document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
-          item.style.display = 'flex';
+          if (item.getAttribute('data-view') !== 'pengguna') {
+            item.style.display = 'flex';
+          }
         });
+        this.updateSidebarVisibility();
       }
     }
   },
@@ -259,6 +263,16 @@ const App = {
       return;
     }
 
+    // Strict RBAC: Menu Kelola Pegawai ('pengguna') & Database ('database') HANYA untuk Administrator
+    const currentUser = Store.state.currentUser;
+    const isAdmin = Boolean(currentUser && (currentUser.role === 'admin' || currentUser.nip === '199911202025211015'));
+
+    if (viewName === 'pengguna' && !isAdmin) {
+      this.showToast('Akses Ditolak: Menu Kelola Pegawai hanya dapat diakses oleh Administrator Sistem', 'warning');
+      this.navigate('dashboard');
+      return;
+    }
+
     this.currentView = viewName;
 
     // Update sidebar active link
@@ -367,6 +381,22 @@ const App = {
         const initials = user.nama.split(' ').slice(0, 2).map(n => n[0]).join('');
         avatarEl.innerText = initials;
       }
+    }
+    this.updateSidebarVisibility();
+  },
+
+  updateSidebarVisibility() {
+    const user = Store.state.currentUser;
+    const isAdmin = Boolean(user && (user.role === 'admin' || user.nip === '199911202025211015'));
+
+    const navPengguna = document.getElementById('nav-item-pengguna') || document.querySelector('.nav-item[data-view="pengguna"]');
+    const secMaster = document.getElementById('section-master-title');
+
+    if (navPengguna) {
+      navPengguna.style.display = isAdmin ? 'flex' : 'none';
+    }
+    if (secMaster) {
+      secMaster.style.display = isAdmin ? 'block' : 'none';
     }
   },
 

@@ -1,9 +1,33 @@
 // Modul Kelola Pegawai & Pengguna Sistem (User Management CRUD & RBAC)
-// Sistem Informasi Persuratan BKPSDM Kabupaten Luwu Timur
+// SIPADU - BKPSDM Kabupaten Luwu Timur
 const PenggunaModule = {
   render() {
     const container = document.getElementById('view-pengguna');
     if (!container) return;
+
+    const currentUser = Store.state.currentUser;
+    const isAdmin = Boolean(currentUser && (currentUser.role === 'admin' || currentUser.nip === '199911202025211015'));
+
+    // Strict RBAC Guard: Hanya Admin yang berhak melihat dan mengelola menu pengguna
+    if (!isAdmin) {
+      container.innerHTML = `
+        <div class="card" style="padding: 60px 24px; text-align: center;">
+          <div style="width: 68px; height: 68px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 32px;">
+            🔒
+          </div>
+          <h2 style="color: #991b1b; font-size: 22px; font-weight: 800; margin-bottom: 8px;">Akses Ditolak: Khusus Administrator Sistem</h2>
+          <p style="color: #64748b; font-size: 14.5px; max-width: 540px; margin: 0 auto 24px; line-height: 1.6;">
+            Menu Manajemen Data Pegawai & Hak Akses Pengguna hanya dapat dikelola oleh <strong>Administrator Sistem (Subbag Umum & Kepegawaian)</strong>. Role akun Anda saat ini tidak memiliki wewenang untuk menambah, mengubah, atau menghapus akun pengguna.
+          </p>
+          <div>
+            <button class="btn btn-primary" onclick="App.navigate('dashboard')">
+              Kembali ke Dashboard Utama
+            </button>
+          </div>
+        </div>
+      `;
+      return;
+    }
 
     const list = Store.state.pegawai || [];
     const totalAdmin = list.filter(p => p.role === 'admin').length;
@@ -21,7 +45,7 @@ const PenggunaModule = {
               </span>
             </div>
             <h2 style="margin-top:4px;">Manajemen Data Pegawai & Hak Akses Pengguna</h2>
-            <p>Pengelolaan akun pengguna, NIP aparatur, pangkat/golongan, jabatan, dan pembagian hak akses operasional persuratan BKPSDM Luwu Timur.</p>
+            <p>Pengelolaan akun pengguna, NIP aparatur, pangkat/golongan, jabatan, dan pembagian hak akses operasional SIPADU BKPSDM Luwu Timur (Khusus Administrator).</p>
           </div>
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             <div style="position:relative; width: 220px;">
@@ -182,6 +206,12 @@ const PenggunaModule = {
   },
 
   openCreateModal() {
+    const user = Store.state.currentUser;
+    if (!user || (user.role !== 'admin' && user.nip !== '199911202025211015')) {
+      App.showToast('Akses Ditolak: Hanya Administrator yang berhak menambah akun pegawai', 'warning');
+      return;
+    }
+
     const modal = document.getElementById('global-modal');
     const title = document.getElementById('modal-title');
     const body = document.getElementById('modal-body');
@@ -300,6 +330,12 @@ const PenggunaModule = {
   },
 
   openEditModal(id) {
+    const user = Store.state.currentUser;
+    if (!user || (user.role !== 'admin' && user.nip !== '199911202025211015')) {
+      App.showToast('Akses Ditolak: Hanya Administrator yang berhak mengubah data pegawai', 'warning');
+      return;
+    }
+
     const p = Store.state.pegawai.find(item => item.id === id);
     if (!p) return;
 
@@ -389,6 +425,12 @@ const PenggunaModule = {
   },
 
   async confirmDelete(id, nama) {
+    const user = Store.state.currentUser;
+    if (!user || (user.role !== 'admin' && user.nip !== '199911202025211015')) {
+      App.showToast('Akses Ditolak: Hanya Administrator yang berhak menghapus akun pegawai', 'warning');
+      return;
+    }
+
     if (confirm(`Konfirmasi Penghapusan:\nApakah Anda yakin ingin menghapus data pegawai:\n"${nama}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
       App.showToast('Menghapus pegawai...', 'info');
       const res = await Store.deletePegawai(id);
@@ -402,6 +444,12 @@ const PenggunaModule = {
   },
 
   async loadMasterData() {
+    const user = Store.state.currentUser;
+    if (!user || (user.role !== 'admin' && user.nip !== '199911202025211015')) {
+      App.showToast('Akses Ditolak: Hanya Administrator yang berhak memuat master data', 'warning');
+      return;
+    }
+
     if (!confirm('Muat 44 data master aparatur resmi BKPSDM Kabupaten Luwu Timur dari file master bawaan?\n\nData master akan ditambahkan/dimuat ke sistem.')) return;
     try {
       App.showToast('Memuat master pegawai...', 'info');
