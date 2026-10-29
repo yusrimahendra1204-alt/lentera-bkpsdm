@@ -124,34 +124,24 @@ async function generateNoAgenda(prefix) {
 async function buildAppState() {
   const pegawai     = await db.query('SELECT * FROM pegawai ORDER BY id');
   const suratMasuk  = await db.query('SELECT * FROM surat_masuk ORDER BY id DESC');
-  const disposisi   = await db.query(`
-    SELECT d.*, GROUP_CONCAT(i.instruksi ORDER BY i.id SEPARATOR '|||') AS instruksi_raw
-    FROM disposisi d
-    LEFT JOIN disposisi_instruksi i ON i.id_disposisi = d.id
-    GROUP BY d.id ORDER BY d.id DESC
-  `);
+  const disposisi   = await db.query('SELECT * FROM disposisi ORDER BY id DESC');
   const suratKeluar = await db.query('SELECT * FROM surat_keluar ORDER BY id DESC');
-  const suratTugas  = await db.query(`
-    SELECT st.*, GROUP_CONCAT(
-      JSON_OBJECT('nip', p.nip, 'nama', p.nama, 'pangkat', p.pangkat, 'jabatan', p.jabatan)
-      ORDER BY p.urutan SEPARATOR '|||') AS personil_raw
-    FROM surat_tugas st
-    LEFT JOIN surat_tugas_personil p ON p.id_surat_tugas = st.id
-    GROUP BY st.id ORDER BY st.id DESC
-  `);
+  const suratTugas  = await db.query('SELECT * FROM surat_tugas ORDER BY id DESC');
 
   // Parse instruksi & personil
   disposisi.forEach(d => {
-    try { d.instruksi = d.instruksi ? d.instruksi.split('|||') : []; } catch { d.instruksi = []; }
-    delete d.instruksi_raw;
+    if (typeof d.instruksi === 'string') {
+      try { d.instruksi = JSON.parse(d.instruksi); }
+      catch { d.instruksi = d.instruksi ? d.instruksi.split(',') : []; }
+    }
+    if (!Array.isArray(d.instruksi)) d.instruksi = [];
   });
   suratTugas.forEach(st => {
-    try {
-      st.personil = st.personil_raw
-        ? st.personil_raw.split('|||').map(p => JSON.parse(p))
-        : [];
-    } catch { st.personil = []; }
-    delete st.personil_raw;
+    if (typeof st.personil === 'string') {
+      try { st.personil = JSON.parse(st.personil); }
+      catch { st.personil = []; }
+    }
+    if (!Array.isArray(st.personil)) st.personil = [];
   });
 
   return { pegawai, surat_masuk: suratMasuk, disposisi, surat_keluar: suratKeluar, surat_tugas: suratTugas };
