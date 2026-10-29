@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistem Informasi Persuratan Berbasis Web pada BKPSDM Kabupaten Luwu Timur Menggunakan Metode Waterfall dan Peraturan Bupati Luwu Timur Nomor 69 Tahun 2023 tentang Kode Klasifikasi Arsip.">
+  <meta name="author" content="Yusri Mahendra (NIM: IK2311011)">
+  <meta name="keywords" content="persuratan, bkpsdm, luwu timur, disposisi kepala bkpsdm, surat tugas, perbup 69 2023, waterfall">
+  <title>Sistem Informasi Persuratan - BKPSDM Kab. Luwu Timur</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/modules.css">
+  <link rel="stylesheet" href="css/landing.css?v=2.5">
+
+  <!-- Early Authentication & Screen Routing Enforcement -->
+  <script>
+    (function() {
+      var isAuth = localStorage.getItem('bkpsdm_logged_in') === 'true' && window.location.pathname !== '/login';
+      var hash = window.location.hash;
+      var style = document.createElement('style');
+      style.id = 'early-auth-css';
+      if (isAuth && hash !== '#landing') {
+        style.textContent = '#screen-landing { display: none !important; } #screen-login { display: none !important; } #screen-app { display: flex !important; }';
+      } else if (hash === '#login') {
+        style.textContent = '#screen-landing { display: none !important; } #screen-login { display: flex !important; } #screen-app { display: none !important; }';
+      } else {
+        style.textContent = '#screen-landing { display: block !important; } #screen-login { display: none !important; } #screen-app { display: none !important; }';
+      }
+      document.head.appendChild(style);
+    })();
+  </script>
+</head>
+<body>
+  <!-- ==========================================================================
+       OFFICIAL LANDING PAGE - SISTEM INFORMASI PERSURATAN BKPSDM LUWU TIMUR
+       Tagline: Lutim Juara - Maju dan Sejahtera (Perbup No. 69 Tahun 2023)
+       ========================================================================== -->
+  <div id="screen-landing" class="landing-page-root" style="display: none;">
+    <!-- Ambient Dynamic Glows -->
+    <div class="landing-ambient-bg">
+      <div class="ambient-orb ambient-orb-1"></div>
+      <div class="ambient-orb ambient-orb-2"></div>
+      <div class="ambient-orb ambient-orb-3"></div>
+    </div>
+    <div class="landing-grid-pattern"></div>
+
+    <!-- Navigation Header -->
+    <header class="landing-header">
+      <div class="landing-nav-container">
+        <a class="landing-brand" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+          <img src="/img/logo_lutim_juara.png" alt="Logo Lutim Juara" class="landing-brand-logo">
+          <div class="landing-brand-text">
+            <h1>E-SURAT BKPSDM</h1>
+            <p>KABUPATEN LUWU TIMUR</p>
+          </div>
+        </a>
+
+        <ul class="landing-nav-links">
+          <li><a href="#hero">Beranda</a></li>
+          <li><a href="#cek-nomor">Cek Nomor</a></li>
+          <li><a href="#layanan">Layanan</a></li>
+          <li><a href="#regulasi">Alur Persuratan</a></li>
+        </ul>
+
+        <div class="landing-nav-actions">
+          <button class="btn-landing-primary" id="btn-nav-auth" onclick="App.goToAppOrLogin()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+            Masuk Pegawai
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="landing-hero" id="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-pill-badge">
+            <span class="hero-pill-dot"></span>
+            Portal Resmi E-Surat BKPSDM Luwu Timur
+          </div>
+
+          <h1 class="hero-title">
+            Tata Kelola Persuratan Digital <span class="gradient-text">BKPSDM Luwu Timur</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Sistem persuratan kedinasan terpadu berbasis <strong>Perbup No. 69 Tahun 2023</strong>. Mempermudah pencatatan agenda, kendali disposisi, penomoran resmi surat keluar, dan SPT secara akuntabel.
+          </p>
+
+          <div class="hero-cta-group">
+            <button class="btn-hero-primary" onclick="App.goToAppOrLogin()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              Buka Aplikasi
+            </button>
+            <button class="btn-hero-secondary" onclick="document.getElementById('cek-nomor').scrollIntoView({behavior: 'smooth'})">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              Cek Nomor Surat
+            </button>
+          </div>
+
+          <div class="hero-trust-bar">
+            <div class="trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Perbup Lutim 69/2023</span>
+            </div>
+            <div class="trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Penomoran Terpusat</span>
+            </div>
+            <div class="trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Kendali Disposisi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Official Lutim Juara Emblem Showcase -->
+        <div class="hero-visual-card">
+          <div class="hero-emblem-wrap">
+            <div class="hero-emblem-glow"></div>
+            <img src="/img/logo_lutim_juara.png" alt="Logo Resmi Lutim Juara" class="hero-emblem-img">
+          </div>
+          <h2 class="hero-visual-title">LUTIM JUARA</h2>
+          <div class="hero-visual-tagline">BKPSDM KABUPATEN LUWU TIMUR</div>
+          <div class="hero-chips-container">
+            <span class="hero-chip accent-cyan">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              Aparatur BKPSDM
+            </span>
+            <span class="hero-chip accent-green">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              2.961 Kode Perbup
+            </span>
+            <span class="hero-chip accent-amber">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              Agenda 2026
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="landing-stats-section">
+      <div class="stats-glass-grid">
+        <div class="stat-glass-card">
+          <div class="stat-glass-header">
+            <span class="stat-glass-title">Surat Masuk</span>
+            <div class="stat-glass-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-glass-value" id="landing-stat-sm">130</div>
+          <div class="stat-glass-desc">Total Agenda Masuk</div>
+        </div>
+
+        <div class="stat-glass-card">
+          <div class="stat-glass-header">
+            <span class="stat-glass-title">Surat Keluar</span>
+            <div class="stat-glass-icon" style="color: #34d399;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </div>
+          </div>
+          <div class="stat-glass-value" id="landing-stat-sk" style="color: #34d399;">822</div>
+          <div class="stat-glass-desc">Nomor Resmi Terbit</div>
+        </div>
+
+        <div class="stat-glass-card">
+          <div class="stat-glass-header">
+            <span class="stat-glass-title">Surat Tugas</span>
+            <div class="stat-glass-icon" style="color: #fbbf24;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            </div>
+          </div>
+          <div class="stat-glass-value" id="landing-stat-st" style="color: #fbbf24;">134</div>
+          <div class="stat-glass-desc">SPT Kedinasan</div>
+        </div>
+
+        <div class="stat-glass-card">
+          <div class="stat-glass-header">
+            <span class="stat-glass-title">Klasifikasi Arsip</span>
+            <div class="stat-glass-icon" style="color: #c084fc;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </div>
+          </div>
+          <div class="stat-glass-value" style="color: #c084fc;">2.961</div>
+          <div class="stat-glass-desc">Kode Perbup 69/2023</div>
+        </div>
+
+        <div class="stat-glass-card">
+          <div class="stat-glass-header">
+            <span class="stat-glass-title">Pegawai</span>
+            <div class="stat-glass-icon" style="color: #f472b6;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+          </div>
+          <div class="stat-glass-value" id="landing-stat-peg" style="color: #f472b6;">44</div>
+          <div class="stat-glass-desc">Aparatur BKPSDM</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Live Tools Section -->
+    <section class="landing-tools-section" id="cek-nomor">
+      <div class="section-badge-center">
+        <span class="section-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          Informasi Cepat
+        </span>
+      </div>
+      <div class="section-heading-center">
+        <h2>Cek Nomor Surat & Kode Klasifikasi</h2>
+        <p>Periksa nomor registrasi surat keluar terakhir atau cari kode klasifikasi kearsipan daerah secara cepat.</p>
+      </div>
+
+      <div class="tools-tab-bar">
+        <button class="tool-tab-btn active" data-tab="surat-keluar" onclick="LandingModule.switchTab('surat-keluar')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          Nomor Surat Keluar
+        </button>
+        <button class="tool-tab-btn" data-tab="klasifikasi" onclick="LandingModule.switchTab('klasifikasi')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Kamus Klasifikasi Arsip
+        </button>
+      </div>
+
+      <div class="interactive-tool-card" id="landing-tool-body">
+        <!-- Content injected dynamically by LandingModule -->
+      </div>
+    </section>
+
+    <!-- 4 Pillars of Persuratan Section -->
+    <section class="landing-pillars-section" id="layanan">
+      <div class="section-badge-center">
+        <span class="section-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          Layanan Persuratan
+        </span>
+      </div>
+      <div class="section-heading-center">
+        <h2>Modul Tata Kelola Persuratan</h2>
+        <p>Empat pilar utama dalam pengelolaan naskah dinas kedinasan BKPSDM Kabupaten Luwu Timur.</p>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </div>
+          <h3>Surat Masuk</h3>
+          <p>Registrasi cepat surat dinas masuk, penomoran agenda otomatis, dan pelacakan status disposisi.</p>
+          <div class="pillar-tags">
+            <span class="pillar-tag">Agenda Otomatis</span>
+            <span class="pillar-tag">Auto-Suggest Kode</span>
+          </div>
+          <a class="pillar-btn-link" onclick="App.goToAppOrLogin('surat-masuk')">
+            Buka Agenda Masuk →
+          </a>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          </div>
+          <h3>Kendali Disposisi</h3>
+          <p>Perekaman instruksi arahan pimpinan dari lembar fisik untuk monitoring tindak lanjut bidang.</p>
+          <div class="pillar-tags">
+            <span class="pillar-tag">Buku Kendali Digital</span>
+            <span class="pillar-tag">Tracking Status</span>
+          </div>
+          <a class="pillar-btn-link" onclick="App.goToAppOrLogin('disposisi')">
+            Buka Disposisi →
+          </a>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </div>
+          <h3>Surat Keluar</h3>
+          <p>Penomoran resmi terpusat berbasis Perbup Luwu Timur 69/2023 guna mencegah nomor dobel.</p>
+          <div class="pillar-tags">
+            <span class="pillar-tag">Nomor Terpusat</span>
+            <span class="pillar-tag">Sanding Nomor</span>
+          </div>
+          <a class="pillar-btn-link" onclick="App.goToAppOrLogin('surat-keluar')">
+            Buka Register Keluar →
+          </a>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          </div>
+          <h3>Surat Tugas (SPT)</h3>
+          <p>Penomoran resmi digital terpusat kode 800.1.11.1 dengan integrasi data aparatur penugasan.</p>
+          <div class="pillar-tags">
+            <span class="pillar-tag">Kode 800.1.11.1</span>
+            <span class="pillar-tag">Salin Nomor Cepat</span>
+          </div>
+          <a class="pillar-btn-link" onclick="App.goToAppOrLogin('surat-tugas')">
+            Buka Agenda SPT →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="landing-workflow-section" id="regulasi">
+      <div class="section-badge-center">
+        <span class="section-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Alur Pelayanan
+        </span>
+      </div>
+      <div class="section-heading-center">
+        <h2>Alur Pengelolaan Naskah Dinas</h2>
+        <p>Tahapan tata kelola persuratan terstruktur dari penerimaan hingga pengarsipan.</p>
+      </div>
+
+      <div class="workflow-steps-grid">
+        <div class="workflow-step-card">
+          <div class="step-num-badge">1</div>
+          <h4>Penerimaan & Agenda</h4>
+          <p>Surat masuk dicatat ke buku agenda digital dengan nomor registrasi urut.</p>
+        </div>
+
+        <div class="workflow-step-card">
+          <div class="step-num-badge">2</div>
+          <h4>Klasifikasi Perbup 69</h4>
+          <p>Penetapan kode klasifikasi kearsipan internal BKPSDM yang tepat.</p>
+        </div>
+
+        <div class="workflow-step-card">
+          <div class="step-num-badge">3</div>
+          <h4>Disposisi Pimpinan</h4>
+          <p>Perekaman instruksi dan catatan disposisi Kepala Badan ke buku kendali.</p>
+        </div>
+
+        <div class="workflow-step-card">
+          <div class="step-num-badge">4</div>
+          <h4>Tindak Lanjut & Balasan</h4>
+          <p>Penguncian nomor resmi surat keluar balasan atau agenda SPT terpusat.</p>
+        </div>
+
+        <div class="workflow-step-card">
+          <div class="step-num-badge">5</div>
+          <h4>Pengarsipan & Database</h4>
+          <p>Penyimpanan fisik dan sinkronisasi otomatis basis data persuratan.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call To Action Box -->
+    <section class="landing-cta-section">
+      <div class="cta-box-glass">
+        <h2>Mulai Kelola Persuratan Kedinasan</h2>
+        <p>Akses modul persuratan, pantau disposisi pimpinan, dan terbitkan nomor surat keluar resmi secara terpusat.</p>
+        <button class="btn-hero-primary" style="font-size: 15px; padding: 13px 32px;" onclick="App.goToAppOrLogin()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+          Masuk ke Aplikasi
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="/img/logo_lutim_juara.png" alt="Logo Lutim Juara" class="footer-logo">
+          <div class="footer-info">
+            <h3>BKPSDM KABUPATEN LUWU TIMUR</h3>
+            <p>
+              Pemerintah Kabupaten Luwu Timur - Provinsi Sulawesi Selatan<br>
+              Kompleks Perkantoran Pemkab Luwu Timur, Malili.
+            </p>
+            <div style="display: flex; gap: 8px;">
+              <span class="hero-chip accent-cyan" style="font-size: 11px;">Lutim Juara</span>
+              <span class="hero-chip accent-green" style="font-size: 11px;">Maju & Sejahtera</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Beranda</a></li>
+            <li><a href="#cek-nomor">Cek Nomor Surat</a></li>
+            <li><a href="#layanan">Layanan Persuratan</a></li>
+            <li><a href="#regulasi">Alur Pengelolaan</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Regulasi & Riset</h4>
+          <ul class="footer-links">
+            <li><a href="#">Perbup Luwu Timur No. 69/2023</a></li>
+            <li><a href="#">Metode Waterfall</a></li>
+            <li><a href="#">Universitas Mega Buana Palopo</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>&copy; 2026 BKPSDM Kabupaten Luwu Timur. Hak Cipta Dilindungi.</div>
+        <div>Sistem Informasi Persuratan Berbasis Web</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Official Authentication Login Screen (BKPSDM Luwu Timur) -->
+  <div id="screen-login" class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo-emblem" style="background: transparent; border: none; box-shadow: none;">
+          <img src="/img/logo_lutim_juara.png" alt="Logo Lutim Juara" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4); border: 2px solid #38bdf8;">
+        </div>
+        <h2>SISTEM INFORMASI PERSURATAN</h2>
+        <h3>BKPSDM KABUPATEN LUWU TIMUR</h3>
+        <p>Aplikasi Tata Naskah Dinas & Disposisi Berbasis Perbup No. 69 Tahun 2023</p>
+      </div>
+
+      <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:12px 14px; margin-bottom:18px; font-size:12.5px; color:#166534; line-height:1.5;">
+        <div style="font-weight:700; display:flex; align-items:center; gap:6px; margin-bottom:3px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Akses Masuk Administrator:
+        </div>
+        <div>Nama: <strong>Yusri Mahendra</strong> (Administrator Sistem)</div>
+        <div>Username: <code>admin</code> (atau NIP: <code>199911202025211015</code>)</div>
+        <div>Kata Sandi: <code>123456</code> (atau <code>123</code>)</div>
+      </div>
+
+      <form id="form-login-auth" onsubmit="App.handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Username / NIP Administrator <span class="required">*</span></label>
+          <input type="text" id="login-nip" class="form-control" style="font-size:14px; padding:11px 14px;" placeholder="Contoh: admin atau 199911202025211015" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Kata Sandi (Password) <span class="required">*</span></label>
+          <input type="password" id="login-password" class="form-control" style="font-size:14px; padding:11px 14px;" placeholder="Masukkan kata sandi" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; padding:11px; font-size:14.5px; margin-top:6px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+          Masuk ke Sistem Persuratan
+        </button>
+
+        <div style="margin-top: 18px; text-align: center;">
+          <a href="#landing" onclick="App.showScreen('landing')" style="font-size: 13px; color: #0284c7; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+            ← Kembali ke Beranda Portal (Landing Page)
+          </a>
+        </div>
+      </form>
+
+      <div class="login-footer">
+        BKPSDM Kabupaten Luwu Timur • Sistem Informasi Persuratan Berbasis Web
+      </div>
+    </div>
+  </div>
+
+  <div class="app-container" id="screen-app">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon" style="background: transparent; border: none; padding: 0;">
+          <img src="/img/logo_lutim_juara.png" alt="Lutim Juara" style="width: 36px; height: 36px; border-radius: 8px; object-fit: contain; background: #000; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+        </div>
+        <div class="sidebar-title-group">
+          <h1>E-PERSURATAN</h1>
+          <p>BKPSDM LUWU TIMUR</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu Utama</div>
+        <div class="nav-item nav-item-landing" onclick="App.showScreen('landing')" title="Buka Portal Beranda Publik" style="border-bottom: 1px dashed rgba(255,255,255,0.1); margin-bottom: 6px; padding-bottom: 8px;">
+          <div class="nav-icon" style="color: #38bdf8;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </div>
+          <span class="nav-text" style="color: #38bdf8; font-weight: 700;">Portal Beranda</span>
+        </div>
+        <div class="nav-item active" data-view="dashboard" onclick="App.navigate('dashboard')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </div>
+          <span class="nav-text">Dashboard</span>
+        </div>
+
+        <div class="nav-section-title">Tata Kelola Persuratan</div>
+        <div class="nav-item" data-view="surat-masuk" onclick="App.navigate('surat-masuk')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </div>
+          <span class="nav-text">Surat Masuk</span>
+          <span class="nav-badge" id="badge-sm">0</span>
+        </div>
+
+        <div class="nav-item" data-view="disposisi" onclick="App.navigate('disposisi')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          </div>
+          <span class="nav-text">Disposisi Surat</span>
+          <span class="nav-badge danger" id="badge-disposisi" style="display:none;">0</span>
+        </div>
+
+        <div class="nav-item" data-view="surat-keluar" onclick="App.navigate('surat-keluar')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </div>
+          <span class="nav-text">Surat Keluar</span>
+        </div>
+
+        <div class="nav-item" data-view="surat-tugas" onclick="App.navigate('surat-tugas')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7.5" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+          </div>
+          <span class="nav-text">Surat Tugas (SPT)</span>
+        </div>
+
+        <div class="nav-section-title">Regulasi & Laporan</div>
+        <div class="nav-item" data-view="klasifikasi" onclick="App.navigate('klasifikasi')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </div>
+          <span class="nav-text">Kamus Perbup 69/2023</span>
+        </div>
+
+        <div class="nav-item" data-view="laporan" onclick="App.navigate('laporan')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          <span class="nav-text">Buku Agenda & Rekap</span>
+        </div>
+
+        <div class="nav-section-title">Master & Kepegawaian</div>
+        <div class="nav-item" data-view="pengguna" onclick="App.navigate('pengguna')">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <span class="nav-text">Kelola Pegawai (RBAC)</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="research-info-card">
+          <div class="author">YUSRI MAHENDRA</div>
+          <div class="nim">NIM: IK2311011</div>
+          <div class="campus">Sarjana Informatika - Univ. Mega Buana Palopo (2026)</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper Area -->
+    <main class="main-wrapper">
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <div class="page-title-badge">
+            <h2 class="page-title" id="header-page-title">Dashboard & Monitoring Persuratan</h2>
+            <span class="regulation-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Perbup Luwu Timur No. 69/2023
+            </span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Reset Data Button -->
+          <button class="btn btn-outline btn-sm" onclick="App.confirmResetData()" title="Reset data ke kondisi awal sistem">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+            Reset Data
+          </button>
+
+          <!-- User Profile Display -->
+          <div class="user-avatar-btn" onclick="App.openProfileModal()" style="cursor:pointer;" title="Klik untuk melihat profil akun & ubah kata sandi">
+            <div class="avatar-circle" id="user-header-avatar">YM</div>
+            <div>
+              <div class="user-name-text" id="user-header-name">Yusri Mahendra, S.Kom.</div>
+              <div class="user-role-text" id="user-header-role">Admin Agendaris</div>
+            </div>
+          </div>
+
+          <!-- Logout Button -->
+          <button class="btn btn-danger-outline btn-sm" onclick="App.logout()" title="Keluar dari sesi akun saat ini" style="font-weight:700;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Keluar
+          </button>
+        </div>
+      </header>
+
+      <!-- View Containers Area -->
+      <div class="content-area">
+        <section id="view-dashboard" class="page-view active"></section>
+        <section id="view-surat-masuk" class="page-view"></section>
+        <section id="view-disposisi" class="page-view"></section>
+        <section id="view-surat-keluar" class="page-view"></section>
+        <section id="view-surat-tugas" class="page-view"></section>
+        <section id="view-klasifikasi" class="page-view"></section>
+        <section id="view-laporan" class="page-view"></section>
+        <section id="view-pengguna" class="page-view"></section>
+        <section id="view-database" class="page-view"></section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Global Modal Overlay -->
+  <div class="modal-overlay" id="global-modal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3 id="modal-title">Judul Modal</h3>
+        <button class="btn-close-modal" onclick="App.closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts with cache-busting -->
+  <script src="js/store.js?v=2.5"></script>
+  <script src="js/autosuggest.js?v=2.5"></script>
+  <script src="js/modules/landing.js?v=2.5"></script>
+  <script src="js/modules/dashboard.js?v=2.5"></script>
+  <script src="js/modules/suratMasuk.js?v=2.5"></script>
+  <script src="js/modules/disposisi.js?v=2.5"></script>
+  <script src="js/modules/suratKeluar.js?v=2.5"></script>
+  <script src="js/modules/suratTugas.js?v=2.5"></script>
+  <script src="js/modules/klasifikasiExplorer.js?v=2.5"></script>
+  <script src="js/modules/laporan.js?v=2.5"></script>
+  <script src="js/modules/pengguna.js?v=2.5"></script>
+  <script src="js/modules/database.js?v=2.5"></script>
+  <script src="js/app.js?v=2.5"></script>
+</body>
+</html>

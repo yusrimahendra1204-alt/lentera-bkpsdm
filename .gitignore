@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.npm
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+
+# Large thesis documents & scratch extraction files
+*.docx
+*.pdf
+*.xlsx
+*.zip
+*.ps1
+extracted_*.txt
+perbup_*.txt
+proposal_*.txt
+taufiq_*.txt
+bab4_*.txt
+*_SIAP_WORD.html
+*_SIAP_PRINT.html
+*.log
+
+# OS metadata
+Thumbs.db
+.DS_Store

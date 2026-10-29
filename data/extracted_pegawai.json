@@ -1,0 +1,542 @@
+[
+  {
+    "rowNum": 1,
+    "data": {
+      "A": "PEMERINTAH KABUPATEN LUWU TIMUR"
+    }
+  },
+  {
+    "rowNum": 2,
+    "data": {
+      "A": "BADAN KEPEGAWAIAN DAN PENGEMBANGAN "
+    }
+  },
+  {
+    "rowNum": 3,
+    "data": {
+      "A": "SUMBER DAYA MANUSIA (BKPSDM)"
+    }
+  },
+  {
+    "rowNum": 4,
+    "data": {
+      "A": "Jalan Soekarno-Hatta, Malili 92981 Telepon : (0474) 3220016 Fax (0474) 3220016"
+    }
+  },
+  {
+    "rowNum": 5,
+    "data": {
+      "A": "Website: www.bkpsdm.luwutimurkab.go.id Email: bkpsdm@luwutimurkab.go.id"
+    }
+  },
+  {
+    "rowNum": 6,
+    "data": {}
+  },
+  {
+    "rowNum": 7,
+    "data": {
+      "A": "DAFTAR  HADIR"
+    }
+  },
+  {
+    "rowNum": 8,
+    "data": {}
+  },
+  {
+    "rowNum": 9,
+    "data": {
+      "A": "Hari / Tanggal   ",
+      "C": ":"
+    }
+  },
+  {
+    "rowNum": 10,
+    "data": {
+      "A": "Tempat           ",
+      "C": ":"
+    }
+  },
+  {
+    "rowNum": 11,
+    "data": {
+      "A": "Waktu           ",
+      "C": ":"
+    }
+  },
+  {
+    "rowNum": 12,
+    "data": {}
+  },
+  {
+    "rowNum": 13,
+    "data": {
+      "A": "NO",
+      "B": "NAMA/NIP",
+      "C": "JK",
+      "D": "JABATAN, PANGKAT, GOL.",
+      "E": "TANDA TANGAN"
+    }
+  },
+  {
+    "rowNum": 14,
+    "data": {
+      "A": "1",
+      "B": "2",
+      "C": "3",
+      "D": "4",
+      "E": "5"
+    }
+  },
+  {
+    "rowNum": 15,
+    "data": {
+      "A": "1",
+      "B": "PARHA ARIEF, S.AP\r\n19840114 200312 2 001",
+      "C": "P",
+      "D": "Kepala Badan                                                           Pembina, IV/a"
+    }
+  },
+  {
+    "rowNum": 16,
+    "data": {
+      "A": "2",
+      "B": "AHYAR HAERUDDIN, SE, M. Tr.AP\r\n19811107 201101 1 008",
+      "C": "L",
+      "D": "Sekertaris Badan\r\nPembina, IV/a"
+    }
+  },
+  {
+    "rowNum": 17,
+    "data": {
+      "A": "3",
+      "B": "SILPA P, SH, MM\r\n19850307 200902 2 008",
+      "C": "P",
+      "D": "Kabid. Pengembangan Sumber Daya Aparatur                                                                          Pembina, IV/a"
+    }
+  },
+  {
+    "rowNum": 18,
+    "data": {
+      "A": "4",
+      "B": "BADARUDDIN ABDILLAH. , S.AN, M.M\r\n19750221 200312 1 002",
+      "C": "L",
+      "D": "Kabid. Mutasi, Kepengkatan dan Pengembangan Karir                                                         Penata Tk.I, III/d"
+    }
+  },
+  {
+    "rowNum": 19,
+    "data": {
+      "A": "5",
+      "B": "ABDI, S.STP\r\n19940510 201609 1 001",
+      "C": "L",
+      "D": "Kabid. Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian,                                               Penata, III/c",
+      "E": " "
+    }
+  },
+  {
+    "rowNum": 20,
+    "data": {
+      "A": "6",
+      "B": "ASMAWATI, S.AP, M.M \r\n19800502 200312 2 005",
+      "C": "P",
+      "D": "Fungsional Analis SDM Aparatur                                                      Penata Tk.I, III/d         ",
+      "E": " "
+    }
+  },
+  {
+    "rowNum": 21,
+    "data": {
+      "A": "7",
+      "B": "ASMAWATI T,S.AP\r\n19700817 200312 2 012",
+      "C": "P",
+      "D": "Fungsional Analis SDM Aparatur                                                      Penata Tk.I, III/d         "
+    }
+  },
+  {
+    "rowNum": 22,
+    "data": {
+      "A": "8",
+      "B": "RIDWAN ARSYAD, A.Md  (SP Towuti)                                              19731128 200604 1 007",
+      "C": "L",
+      "D": "Fungsional Analis SDM Aparatur                                                      Penata, III/c"
+    }
+  },
+  {
+    "rowNum": 23,
+    "data": {
+      "A": "9",
+      "B": "ELVI, S.M \r\n19800617 200801 2 008",
+      "C": "P",
+      "D": "Fungsional Analis SDM Aparatur                                                        Penata, III/c            "
+    }
+  },
+  {
+    "rowNum": 24,
+    "data": {
+      "A": "10",
+      "B": "ARIF GUNAWAN,S.AN, M.M \r\n19820130 200701  1 007",
+      "C": "L",
+      "D": "Kasubag. Perencanaan dan Keuangan, Penata, III/c"
+    }
+  },
+  {
+    "rowNum": 25,
+    "data": {
+      "A": "11",
+      "B": "NURAZISAH SYAHRIR, S.Tr.IP, M.M\r\n19990513 202108 2 001",
+      "C": "P",
+      "D": "Kasubag Umum dan Kepegawaian,                                                            Penata Muda Tk.I, III/b"
+    }
+  },
+  {
+    "rowNum": 26,
+    "data": {
+      "A": "12",
+      "B": "SITTI NURDIANA, S.AN\r\n19830427 200901 2 007",
+      "C": "P",
+      "D": "Penelaah Teknis Kebijakan,\r\nPenata Muda Tk.I, III/b"
+    }
+  },
+  {
+    "rowNum": 27,
+    "data": {
+      "A": "13",
+      "B": "AKBAR TANJUNG, S.M, MM\r\n19940701 202012 1 001",
+      "C": "L",
+      "D": "Penelaah Teknis Kebijakan                                           Penata Muda Tk.I, III/b"
+    }
+  },
+  {
+    "rowNum": 28,
+    "data": {
+      "A": "14",
+      "B": "HASRULLAH, S.M \r\n19870907 201903 1 002",
+      "C": "L",
+      "D": "Fungsional Analis SDM Aparatur                                              Penata, III/a"
+    }
+  },
+  {
+    "rowNum": 29,
+    "data": {
+      "A": "15",
+      "B": "SULHAM, S.T \r\n19930420 202012 1 002",
+      "C": "L",
+      "D": "Fungsional Pranata Komputer Ahli Pertama                                          Penata Muda, III/a ",
+      "E": " "
+    }
+  },
+  {
+    "rowNum": 30,
+    "data": {
+      "A": "16",
+      "B": "MEGA SURYA, S.M \r\n19880531 202203 2 001",
+      "C": "P",
+      "D": "Perencana Ahli Pertama/PPK                                                  Penata Muda, III/a"
+    }
+  },
+  {
+    "rowNum": 31,
+    "data": {
+      "A": "17",
+      "B": "SUBHAN\r\n19810712 200701 1 009",
+      "C": "L",
+      "D": "Pengadmistrasi Perkantoran                                               Penata Muda, III/a"
+    }
+  },
+  {
+    "rowNum": 32,
+    "data": {
+      "A": "18",
+      "B": "RAHMAT PANCA RAMADHAN, S.Tr.IP\r\n199912162023081001",
+      "C": "L",
+      "D": "Penelaah Teknis Kebijakan                                                   Penata Muda, III/a",
+      "E": " "
+    }
+  },
+  {
+    "rowNum": 33,
+    "data": {
+      "A": "19",
+      "B": "MAISARAH\r\n19851003 201001 2 003",
+      "C": "P",
+      "D": "Pengadmistrasi Perkantoran                                                  Pengatur Tk.I, II/d"
+    }
+  },
+  {
+    "rowNum": 34,
+    "data": {
+      "A": "20",
+      "B": "ERWIN\r\n19781110 201001 1 012",
+      "C": "L",
+      "D": "Pengadministrasi Perkantoran                                                              Pengatur Tk.I, II/d"
+    }
+  },
+  {
+    "rowNum": 35,
+    "data": {
+      "A": "21",
+      "B": "ANDI FATIMASARI\r\n19860424 201001 2 029",
+      "C": "P",
+      "D": "Pengadmistrasi Perkantoran                                                   Pengatur, II/c"
+    }
+  },
+  {
+    "rowNum": 36,
+    "data": {
+      "A": "22",
+      "B": "ANDI ARTIKA MELATI, S.Pd\r\n20010518 202506 2 002",
+      "C": "P",
+      "D": "Arsiparis Ahli Pertama, III/a"
+    }
+  },
+  {
+    "rowNum": 37,
+    "data": {
+      "A": "23",
+      "B": "FITRYA LIA RISMAWATI, S.Pd\r\n20000508 202506 2 002",
+      "C": "P",
+      "D": "Arsiparis Ahli Pertama, III/a"
+    }
+  },
+  {
+    "rowNum": 38,
+    "data": {
+      "A": "24",
+      "B": "NAJMI NILFAIDAH, S.Pd\r\n19990214 202506 2 003",
+      "C": "P",
+      "D": "Teknisi Sarana dan Prasarana, III/a"
+    }
+  },
+  {
+    "rowNum": 39,
+    "data": {
+      "A": "25",
+      "B": "PUTRA NURAN SAKTI HIDAYATULLAH, S.Kom\r\n19970419 202506 1 002",
+      "C": "L",
+      "D": "Penata Kelola Sistem dan Teknologi Informasi\r\nIII/a"
+    }
+  },
+  {
+    "rowNum": 40,
+    "data": {
+      "A": "26",
+      "B": "NADHIA SYAWALANI RENALDI, S.Psi\r\n19950318 202506 2 002",
+      "C": "P",
+      "D": "Analis Pengembangan Kompetensi       \r\nIII/a"
+    }
+  },
+  {
+    "rowNum": 41,
+    "data": {
+      "A": "27",
+      "B": "HESTI, S.Kom\r\n19981129 202506 2 001",
+      "C": "P",
+      "D": "Analis Sumber Daya Manusia         \r\nIII/a"
+    }
+  },
+  {
+    "rowNum": 42,
+    "data": {
+      "A": "28",
+      "B": "ISRO' DINIANTI, S.Kom\r\n19951215 202506 2 002",
+      "C": "P",
+      "D": "Analis Sumber Daya Manusia        \r\nIII/a"
+    }
+  },
+  {
+    "rowNum": 43,
+    "data": {
+      "A": "29",
+      "B": "ERA JESSICA PARAMMA, S.IP\r\n20010208 202506 2 002",
+      "C": "P",
+      "D": "Analis Sumber Daya Manusia         \r\nIII/a"
+    }
+  },
+  {
+    "rowNum": 44,
+    "data": {
+      "A": "30",
+      "B": "NI LUH KOMANG KURNIAWATI, A.Md.Kom\r\n20011124 202506 2 006",
+      "C": "P",
+      "D": "Pranata Sumber Daya Manusia  \r\nII/c"
+    }
+  },
+  {
+    "rowNum": 45,
+    "data": {
+      "A": "31",
+      "B": "JUMALA, SE\r\n19840704 202321 2 036",
+      "C": "P",
+      "D": "Arsiparis                                                                      IX"
+    }
+  },
+  {
+    "rowNum": 46,
+    "data": {
+      "A": "32",
+      "B": "SELVY TURSINA, SE\r\n19790904 202321 2 022",
+      "C": "P",
+      "D": "Perencana                                                                          IX"
+    }
+  },
+  {
+    "rowNum": 47,
+    "data": {
+      "A": "33",
+      "B": "SYAHRIR, S.AN\r\n19851028 202321 1 011",
+      "C": "L",
+      "D": "Analis SDM Aparatur                                                       IX"
+    }
+  },
+  {
+    "rowNum": 48,
+    "data": {
+      "A": "34",
+      "B": "PARJONO, S.Kom\r\n19860425 202321 1 024",
+      "C": "L",
+      "D": "Pranata Komputer                                                                 IX"
+    }
+  },
+  {
+    "rowNum": 49,
+    "data": {
+      "A": "35",
+      "B": "ULPA, S.Kom\r\n19890815 202521 2 039",
+      "C": "P",
+      "D": "Analis Sumber Daya Manusia         \r\nIX"
+    }
+  },
+  {
+    "rowNum": 50,
+    "data": {
+      "A": "36",
+      "B": "INRI MERDEKAWATI, S.AN\r\n19950810 202521 2 039",
+      "C": "P",
+      "D": "Penata Layanan Operasional\r\nIX"
+    }
+  },
+  {
+    "rowNum": 51,
+    "data": {
+      "A": "37",
+      "B": "SRY MULYA, S.M\r\n19951015 202521 2 034",
+      "C": "P",
+      "D": "Penata Layanan Operasional\r\nIX"
+    }
+  },
+  {
+    "rowNum": 52,
+    "data": {
+      "A": "38",
+      "B": "EVITA PUSPITA SARI EFENDI, S.I.Kom\r\n19970808 202521 2 063",
+      "C": "P",
+      "D": "Penata Layanan Operasional\r\nIX",
+      "E": " "
+    }
+  },
+  {
+    "rowNum": 53,
+    "data": {
+      "A": "39",
+      "B": "SURIYA, S.IP\r\n19880728 202521 2 042",
+      "C": "P",
+      "D": "Penata Layanan Operasional\r\nIX",
+      "E": " "
+    }
+  },
+  {
+    "rowNum": 54,
+    "data": {
+      "A": "40",
+      "B": "YUSRIL RANAH MAHENDRA, S.Pd\r\n19980522 202521 1 024",
+      "C": "L",
+      "D": "Penata Layanan Operasional\r\nIX"
+    }
+  },
+  {
+    "rowNum": 55,
+    "data": {
+      "A": "41",
+      "B": "ABD.AZIS\r\n19890421 202521 1 030",
+      "C": "L",
+      "D": "Operator Layanan Operasional\r\nV"
+    }
+  },
+  {
+    "rowNum": 56,
+    "data": {
+      "A": "42",
+      "B": "SARDIYANTI PAWALLUNGI\r\n20021010 202521 2 003",
+      "C": "P",
+      "D": "Pengadministrasi Perkantoran\r\nV"
+    }
+  },
+  {
+    "rowNum": 57,
+    "data": {
+      "A": "43",
+      "B": " YUSRI MAHENDRA\r\n19991120 202521 1 015",
+      "C": "L",
+      "D": "Pengadministrasi Perkantoran\r\nV"
+    }
+  },
+  {
+    "rowNum": 58,
+    "data": {
+      "A": "44",
+      "B": "ZAINUDDIN. M.S\r\n19911019 202521 1 043",
+      "C": "L",
+      "D": "Pengadministrasi Perkantoran\r\nV"
+    }
+  },
+  {
+    "rowNum": 59,
+    "data": {}
+  },
+  {
+    "rowNum": 60,
+    "data": {
+      "A": " ",
+      "D": "Kepala BKPSDM"
+    }
+  },
+  {
+    "rowNum": 61,
+    "data": {}
+  },
+  {
+    "rowNum": 62,
+    "data": {
+      "A": " "
+    }
+  },
+  {
+    "rowNum": 63,
+    "data": {
+      "A": " "
+    }
+  },
+  {
+    "rowNum": 64,
+    "data": {
+      "A": "PARHA ARIEF, S.AP"
+    }
+  },
+  {
+    "rowNum": 65,
+    "data": {
+      "A": "Pangkat : Pembina"
+    }
+  },
+  {
+    "rowNum": 66,
+    "data": {
+      "A": "NIP. 19840114 200312 2 001"
+    }
+  },
+  {
+    "rowNum": 67,
+    "data": {}
+  }
+]

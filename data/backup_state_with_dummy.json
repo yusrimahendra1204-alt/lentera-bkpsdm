@@ -1,0 +1,320 @@
+{
+  "pegawai": [
+    {
+      "id": 1,
+      "nip": "196805121994031008",
+      "nama": "Drs. H. Ramadhan Pirade, M.Si.",
+      "pangkat": "Pembina Utama Muda (IV/c)",
+      "jabatan": "Kepala BKPSDM Kabupaten Luwu Timur",
+      "role": "kepala_bkpsdm",
+      "unit": "Pimpinan"
+    },
+    {
+      "id": 2,
+      "nip": "198204152000121002",
+      "nama": "Andi Muhammad Baso, S.STP., M.AP.",
+      "pangkat": "Pembina (IV/a)",
+      "jabatan": "Sekretaris BKPSDM",
+      "role": "sekretaris",
+      "unit": "Sekretariat"
+    },
+    {
+      "id": 3,
+      "nip": "198007202006041011",
+      "nama": "Muhammad Yusuf, S.Sos., M.Si.",
+      "pangkat": "Penata Tingkat I (III/d)",
+      "jabatan": "Kepala Bidang Pengadaan, Mutasi dan Informasi Kepegawaian",
+      "role": "kabid",
+      "unit": "Bidang Pengadaan, Mutasi & Info"
+    },
+    {
+      "id": 4,
+      "nip": "197809142005022007",
+      "nama": "Hj. Nurhaedah, S.Pd., M.M.",
+      "pangkat": "Penata Tingkat I (III/d)",
+      "jabatan": "Kepala Bidang Pengembangan Kompetensi dan Penilaian Kinerja Aparatur",
+      "role": "kabid",
+      "unit": "Bidang Bangkom & Kinerja"
+    },
+    {
+      "id": 5,
+      "nip": "199611022020121005",
+      "nama": "Yusri Mahendra, S.Kom.",
+      "pangkat": "Penata Muda (III/a)",
+      "jabatan": "Kepala Sub Bagian Umum dan Kepegawaian (Admin Agendaris)",
+      "role": "admin",
+      "unit": "Subbag Umum & Kepegawaian"
+    },
+    {
+      "id": 6,
+      "nip": "198903252011012004",
+      "nama": "Fitriani, S.STP.",
+      "pangkat": "Penata (III/c)",
+      "jabatan": "Analis SDM Aparatur Ahli Muda",
+      "role": "pegawai",
+      "unit": "Bidang Bangkom & Kinerja"
+    },
+    {
+      "id": 7,
+      "nip": "199201142018031001",
+      "nama": "Rahmat Hidayat, S.E.",
+      "pangkat": "Penata Muda Tingkat I (III/b)",
+      "jabatan": "Pranata Komputer / Pengelola Pengadaan & Pensiun",
+      "role": "pegawai",
+      "unit": "Bidang Pengadaan, Mutasi & Info"
+    },
+    {
+      "id": 8,
+      "nip": "199508122019032008",
+      "nama": "Andi Tenri Sumpala, A.Md.",
+      "pangkat": "Pengatur (II/c)",
+      "jabatan": "Pengadministrasi Persuratan & Disposisi",
+      "role": "pegawai",
+      "unit": "Subbag Umum & Kepegawaian"
+    }
+  ],
+  "surat_masuk": [
+    {
+      "id": 1,
+      "no_agenda": "SM-2026-001",
+      "no_surat_pengirim": "005/182/SETDA",
+      "instansi_pengirim": "Sekretariat Daerah Kabupaten Luwu Timur",
+      "kode_internal": "800.1.2.1",
+      "nama_klasifikasi_internal": "Formasi ASN / Penataan Pegawai Non-ASN",
+      "perihal": "Undangan Rapat Koordinasi Percepatan Pendataan dan Usulan Formasi PPPK Tahun 2026",
+      "tgl_surat": "2026-10-20",
+      "tgl_diterima": "2026-10-21",
+      "sifat_surat": "Segera",
+      "status_disposisi": "Didisposisi"
+    },
+    {
+      "id": 2,
+      "no_agenda": "SM-2026-002",
+      "no_surat_pengirim": "1420/B-KS.04.01/SD/KR.IV/2026",
+      "instansi_pengirim": "Badan Kepegawaian Negara (BKN) Kanreg IV Makassar",
+      "kode_internal": "800.1.3.2",
+      "nama_klasifikasi_internal": "Kenaikan Pangkat/ Golongan/ Jabatan ASN",
+      "perihal": "Verifikasi Berkas Usulan Kenaikan Pangkat Pegawai Negeri Sipil Periode April 2026",
+      "tgl_surat": "2026-10-22",
+      "tgl_diterima": "2026-10-23",
+      "sifat_surat": "Penting",
+      "status_disposisi": "Menunggu Disposisi"
+    },
+    {
+      "id": 3,
+      "no_agenda": "SM-2026-003",
+      "no_surat_pengirim": "420/542/DIKBUD-LT/X/2026",
+      "instansi_pengirim": "Dinas Pendidikan dan Kebudayaan Kab. Luwu Timur",
+      "kode_internal": "800.1.4.1",
+      "nama_klasifikasi_internal": "Usulan Tugas Belajar/Ijin Belajar",
+      "perihal": "Permohonan Rekomendasi Izin Belajar Program Pascasarjana (S2) Guru PPPK",
+      "tgl_surat": "2026-10-23",
+      "tgl_diterima": "2026-10-24",
+      "sifat_surat": "Biasa",
+      "status_disposisi": "Menunggu Disposisi"
+    },
+    {
+      "id": 4,
+      "no_agenda": "SM-2026-004",
+      "no_surat_pengirim": "B/891/M.SM.01.00/2026",
+      "instansi_pengirim": "Kementerian PANRB Republik Indonesia",
+      "kode_internal": "800.1.5.1",
+      "nama_klasifikasi_internal": "Hasil Penilaian Kinerja dan Standar Kinerja ASN",
+      "perihal": "Sosialisasi Pedoman Pengelolaan Kinerja Pegawai ASN Melalui Aplikasi E-Kinerja BKN",
+      "tgl_surat": "2026-10-18",
+      "tgl_diterima": "2026-10-19",
+      "sifat_surat": "Penting",
+      "status_disposisi": "Selesai"
+    },
+    {
+      "id": 5,
+      "no_agenda": "SM-2026-005",
+      "no_surat_pengirim": "000.1.5/310/SETDA/X/2026",
+      "instansi_pengirim": "Bagian Tata Usaha dan Kerumahtanggaan Setda",
+      "kode_internal": "000.1.5",
+      "nama_klasifikasi_internal": "Rapat Koordinasi / Ketatausahaan",
+      "perihal": "Undangan Rapat Koordinasi Penataan Ketatausahaan dan Pelayanan Publik Perangkat Daerah",
+      "tgl_surat": "2026-10-23",
+      "tgl_diterima": "2026-10-24",
+      "sifat_surat": "Biasa",
+      "status_disposisi": "Menunggu Disposisi"
+    },
+    {
+      "id": 6,
+      "no_agenda": "SM-2026-006",
+      "no_surat_pengirim": "900.1.1/845/BKAD/X/2026",
+      "instansi_pengirim": "Badan Keuangan dan Aset Daerah (BKAD) Kab. Luwu Timur",
+      "kode_internal": "900.1.1",
+      "nama_klasifikasi_internal": "Anggaran dan Pelaksanaan Anggaran Belanja Daerah",
+      "perihal": "Pemberitahuan Batas Waktu Rekonsiliasi Realisasi Anggaran dan Pengajuan SPM Triwulan III TA 2026",
+      "tgl_surat": "2026-10-22",
+      "tgl_diterima": "2026-10-23",
+      "sifat_surat": "Penting",
+      "status_disposisi": "Menunggu Disposisi"
+    }
+  ],
+  "disposisi": [
+    {
+      "id": 1,
+      "id_surat_masuk": 1,
+      "dari_user": "Drs. H. Ramadhan Pirade, M.Si. (Kepala BKPSDM)",
+      "tujuan_user_id": 3,
+      "tujuan_nama": "Muhammad Yusuf, S.Sos., M.Si. (Kabid Mutasi & Info)",
+      "sifat": "Segera",
+      "instruksi": [
+        "Tindak lanjuti",
+        "Hadirkan / Wakili",
+        "Siapkan bahan rapat"
+      ],
+      "catatan": "Tolong dampingi saya dalam rakor di Ruang Rapat Pimpinan Setda. Siapkan data rekapitulasi data Non-ASN terbaru yang valid.",
+      "batas_waktu": "2026-10-24",
+      "status_tindak_lanjut": "Diproses",
+      "created_at": "2026-10-21 10:15:00",
+      "tindak_lanjut_note": "Data rekapitulasi non-ASN telah disusun dan dikoordinasikan dengan Subbag Umum."
+    },
+    {
+      "id": 2,
+      "id_surat_masuk": 4,
+      "dari_user": "Drs. H. Ramadhan Pirade, M.Si. (Kepala BKPSDM)",
+      "tujuan_user_id": 4,
+      "tujuan_nama": "Hj. Nurhaedah, S.Pd., M.M. (Kabid Bangkom & Kinerja)",
+      "sifat": "Penting",
+      "instruksi": [
+        "Pelajari & berikan pertimbangan",
+        "Sosialisasikan ke OPD"
+      ],
+      "catatan": "Buatkan surat edaran penginputan SKP triwulan IV kepada seluruh OPD lingkup Pemkab Luwu Timur.",
+      "batas_waktu": "2026-10-22",
+      "status_tindak_lanjut": "Selesai",
+      "created_at": "2026-10-19 14:30:00",
+      "tindak_lanjut_note": "Draft Surat Edaran Bupati telah rampung dan diteruskan ke Bagian Hukum Setda."
+    }
+  ],
+  "surat_keluar": [
+    {
+      "id": 4,
+      "no_agenda": "SK-2026-004",
+      "kode_klasifikasi": "800.1.2.1",
+      "nama_klasifikasi": "Formasi ASN / Penataan Pegawai Non-ASN",
+      "no_surat_keluar": "800.1.2.1/104/BKPSDM-LT/X/2026",
+      "tujuan_surat": "Sekretariat Daerah Kabupaten Luwu Timur",
+      "perihal": "Tanggapan / Tindak Lanjut Surat No. 005/182/SETDA perihal Undangan Rapat Koordinasi Percepatan Pendataan dan Usulan Formasi PPPK Tahun 2026",
+      "tgl_surat": "2026-10-24",
+      "sifat_surat": "Biasa",
+      "penandatangan": "Kepala BKPSDM Kabupaten Luwu Timur",
+      "metode_dokumen": "Fisik Manual (Tanda Tangan Basah)",
+      "lokasi_arsip_fisik": "Lemari Arsip Subbag Umum (Map Khusus)",
+      "is_surat_balasan": true,
+      "id_surat_masuk_asal": 1,
+      "no_surat_pengirim_asal": "005/182/SETDA",
+      "file_name": "surat_keluar.pdf"
+    },
+    {
+      "id": 3,
+      "no_agenda": "SK-2026-003",
+      "kode_klasifikasi": "800.1.8.1",
+      "nama_klasifikasi": "Status Kepegawaian (Izin Perceraian ASN)",
+      "no_surat_keluar": "800.1.8.1/115/BKPSDM-LT/X/2026",
+      "tujuan_surat": "PNS Pemohon Izin Perceraian & Pasangan",
+      "perihal": "Panggilan Pembinaan dan Mediasi Permohonan Izin Perceraian Pegawai Negeri Sipil",
+      "tgl_surat": "2026-10-24",
+      "sifat_surat": "Rahasia",
+      "penandatangan": "Kepala BKPSDM Kabupaten Luwu Timur",
+      "metode_dokumen": "Fisik Manual (Segel Amplop Tertutup)",
+      "lokasi_arsip_fisik": "Brankas Dokumen Rahasia Kepegawaian (Subbid Disiplin)",
+      "file_name": "Berkas_Fisik_Tertutup.pdf"
+    },
+    {
+      "id": 1,
+      "no_agenda": "SK-2026-001",
+      "kode_klasifikasi": "800.1.11.4",
+      "nama_klasifikasi": "Cuti Tahunan Pegawai",
+      "no_surat_keluar": "800.1.11.4/104/BKPSDM-LT/X/2026",
+      "tujuan_surat": "Seluruh Kepala Perangkat Daerah Lingkup Pemkab Luwu Timur",
+      "perihal": "Pemberitahuan Batas Akhir Rekonsiliasi Pengambilan Cuti Tahunan ASN Tahun 2026",
+      "tgl_surat": "2026-10-15",
+      "sifat_surat": "Biasa",
+      "penandatangan": "Kepala BKPSDM Kabupaten Luwu Timur",
+      "file_name": "SK_Pemberitahuan_Cuti_2026.pdf"
+    },
+    {
+      "id": 5,
+      "no_agenda": "SK-2026-005",
+      "kode_klasifikasi": "000.1.5",
+      "nama_klasifikasi": "Rapat Dinas / Ketatausahaan",
+      "no_surat_keluar": "000.1.5/116/BKPSDM-LT/X/2026",
+      "tujuan_surat": "Para Kepala Bidang dan Kasubbag Lingkup BKPSDM",
+      "perihal": "Undangan Rapat Koordinasi Internal Evaluasi Capaian Kinerja dan Ketatausahaan Bulan Oktober 2026",
+      "tgl_surat": "2026-10-24",
+      "sifat_surat": "Biasa",
+      "penandatangan": "Sekretaris BKPSDM Kab. Luwu Timur",
+      "metode_dokumen": "Fisik Manual (Tanda Tangan Basah)",
+      "lokasi_arsip_fisik": "Lemari Arsip Subbag Umum (Ordner Rapat)",
+      "file_name": "Undangan_Rapat_Internal.pdf"
+    },
+    {
+      "id": 6,
+      "no_agenda": "SK-2026-006",
+      "kode_klasifikasi": "900.1.3",
+      "nama_klasifikasi": "Perbendaharaan dan Pengesahan SPJ Belanja Daerah",
+      "no_surat_keluar": "900.1.3/117/BKPSDM-LT/X/2026",
+      "tujuan_surat": "Kepala Badan Keuangan dan Aset Daerah (BKAD) Kab. Luwu Timur",
+      "perihal": "Penyampaian Laporan Pertanggungjawaban (SPJ) Fungsional Belanja Gaji dan TPP ASN Bulan Oktober 2026",
+      "tgl_surat": "2026-10-24",
+      "sifat_surat": "Penting",
+      "penandatangan": "Kepala BKPSDM Kabupaten Luwu Timur",
+      "metode_dokumen": "Fisik Manual (Tanda Tangan Basah)",
+      "lokasi_arsip_fisik": "Subbag Keuangan (Ordner SPJ)",
+      "file_name": "Pengantar_SPJ_Oktober_2026.pdf"
+    },
+    {
+      "id": 2,
+      "no_agenda": "SK-2026-002",
+      "kode_klasifikasi": "800.1.3.2",
+      "nama_klasifikasi": "Kenaikan Pangkat/ Golongan/ Jabatan ASN",
+      "no_surat_keluar": "800.1.3.2/112/BKPSDM-LT/X/2026",
+      "tujuan_surat": "Kepala Kantor Regional IV BKN Makassar",
+      "perihal": "Pengiriman Berkas Kelengkapan Usulan Kenaikan Pangkat PNS Periode 1 April 2026",
+      "tgl_surat": "2026-10-23",
+      "sifat_surat": "Penting",
+      "penandatangan": "Bupati Luwu Timur cq. Kepala BKPSDM",
+      "file_name": "SK_Pengantar_Berkas_KP_April2026.pdf"
+    }
+  ],
+  "surat_tugas": [
+    {
+      "id": 1,
+      "no_surat_tugas": "800.1.11.1/045/BKPSDM-LT/X/2026",
+      "bidang_pengusul": "Bidang Pengadaan, Mutasi dan Informasi Kepegawaian",
+      "kode_klasifikasi": "800.1.11.1",
+      "nama_klasifikasi": "Surat Perintah Dinas/Surat Tugas",
+      "dasar": "1. DPA-SKPD BKPSDM Kab. Luwu Timur TA 2026 Program Pelayanan Administrasi Kepegawaian.\n2. Surat Kepala Kantor Regional IV BKN Nomor 1420/B-KS.04.01/SD/KR.IV/2026 perihal Verifikasi Berkas KP.",
+      "maksud_tugas": "Melaksanakan konsultasi dan koordinasi teknis percepatan verifikasi usulan Kenaikan Pangkat ASN Periode April 2026.",
+      "tempat_tujuan": "Kantor Regional IV BKN Makassar, Kota Makassar, Sulawesi Selatan",
+      "tgl_berangkat": "2026-10-26",
+      "tgl_kembali": "2026-10-29",
+      "lama_hari": 4,
+      "pembebanan_anggaran": "DPA-SKPD Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kab. Luwu Timur TA 2026",
+      "pejabat_penandatangan": "Drs. H. Ramadhan Pirade, M.Si.",
+      "jabatan_penandatangan": "Kepala BKPSDM Kabupaten Luwu Timur",
+      "personil": [
+        {
+          "pegawai_id": 3,
+          "nama": "Muhammad Yusuf, S.Sos., M.Si.",
+          "nip": "198007202006041011",
+          "pangkat": "Penata Tingkat I (III/d)",
+          "jabatan": "Kepala Bidang Pengadaan, Mutasi dan Informasi Kepegawaian",
+          "peran": "Ketua Tim"
+        },
+        {
+          "pegawai_id": 7,
+          "nama": "Rahmat Hidayat, S.E.",
+          "nip": "199201142018031001",
+          "pangkat": "Penata Muda Tingkat I (III/b)",
+          "jabatan": "Pengelola Pengadaan & Pensiun",
+          "peran": "Anggota"
+        }
+      ]
+    }
+  ]
+}
