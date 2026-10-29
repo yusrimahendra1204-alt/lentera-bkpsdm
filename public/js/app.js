@@ -3,7 +3,7 @@ const App = {
   currentView: 'dashboard',
 
   async init() {
-    console.log('[APP] Menginisialisasi Sistem Informasi Persuratan BKPSDM...');
+    console.log('[APP] Menginisialisasi LENTERA BKPSDM Luwu Timur...');
     
     // Load store state
     await Store.init();
