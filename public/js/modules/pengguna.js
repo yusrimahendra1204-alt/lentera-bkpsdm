@@ -1,5 +1,5 @@
 // Modul Kelola Pegawai & Pengguna Sistem (User Management CRUD & RBAC)
-// SIPADU - BKPSDM Kabupaten Luwu Timur
+// LENTERA - BKPSDM Kabupaten Luwu Timur
 const PenggunaModule = {
   render() {
     const container = document.getElementById('view-pengguna');
@@ -45,7 +45,7 @@ const PenggunaModule = {
               </span>
             </div>
             <h2 style="margin-top:4px;">Manajemen Data Pegawai & Hak Akses Pengguna</h2>
-            <p>Pengelolaan akun pengguna, NIP aparatur, pangkat/golongan, jabatan, dan pembagian hak akses operasional SIPADU BKPSDM Luwu Timur (Khusus Administrator).</p>
+            <p>Pengelolaan akun pengguna, NIP aparatur, pangkat/golongan, jabatan, dan pembagian hak akses operasional LENTERA BKPSDM Luwu Timur (Khusus Administrator).</p>
           </div>
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             <div style="position:relative; width: 220px;">

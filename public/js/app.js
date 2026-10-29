@@ -89,7 +89,7 @@ const App = {
       if (landingScreen) landingScreen.style.setProperty('display', 'block', 'important');
       if (loginScreen) loginScreen.style.setProperty('display', 'none', 'important');
       if (appScreen) appScreen.style.setProperty('display', 'none', 'important');
-      document.title = 'SIPADU - Sistem Informasi Pengarsipan dan Administrasi Terpadu BKPSDM Luwu Timur';
+      document.title = 'LENTERA BKPSDM - Layanan Elektronik Tata Naskah dan Administrasi Luwu Timur';
       
       if (window.LandingModule) {
         LandingModule.init();
@@ -114,13 +114,13 @@ const App = {
       if (landingScreen) landingScreen.style.setProperty('display', 'none', 'important');
       if (loginScreen) loginScreen.style.setProperty('display', 'flex', 'important');
       if (appScreen) appScreen.style.setProperty('display', 'none', 'important');
-      document.title = 'Login - SIPADU BKPSDM Kabupaten Luwu Timur';
+      document.title = 'Login - LENTERA BKPSDM Kabupaten Luwu Timur';
       setTimeout(() => document.getElementById('login-nip')?.focus(), 150);
     } else if (screenName === 'app') {
       if (landingScreen) landingScreen.style.setProperty('display', 'none', 'important');
       if (loginScreen) loginScreen.style.setProperty('display', 'none', 'important');
       if (appScreen) appScreen.style.setProperty('display', 'flex', 'important');
-      document.title = 'SIPADU - BKPSDM Kab. Luwu Timur';
+      document.title = 'LENTERA BKPSDM - Kab. Luwu Timur';
       this.updateHeaderUser();
       this.updateSidebarBadges();
       this.updateSidebarVisibility();

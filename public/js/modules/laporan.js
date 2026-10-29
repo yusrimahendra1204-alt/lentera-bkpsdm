@@ -50,7 +50,7 @@ const LaporanModule = {
             <div style="font-size:15px; font-weight:800; text-decoration:underline; margin-top:10px; letter-spacing:0.5px;">
               ${this.getReportTitle()}
             </div>
-            <div style="font-size:12px; margin-top:2px;">SIPADU • Tahun Anggaran 2026 • Peraturan Bupati Luwu Timur No. 69 Tahun 2023</div>
+            <div style="font-size:12px; margin-top:2px;">LENTERA BKPSDM • Tahun Anggaran 2026 • Peraturan Bupati Luwu Timur No. 69 Tahun 2023</div>
           </div>
 
           <div class="table-responsive">
@@ -61,7 +61,7 @@ const LaporanModule = {
           <div style="display:flex; justify-content:flex-end; margin-top:36px;">
             <div style="text-align:center; min-width:260px;">
               <div>Malili, ${new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-              <div style="font-weight:700; margin-top:4px;">Administrator SIPADU (Subbag Umum),</div>
+              <div style="font-weight:700; margin-top:4px;">Administrator LENTERA (Subbag Umum),</div>
               <div style="height:60px;"></div>
               <div style="font-weight:700; text-decoration:underline;">YUSRI MAHENDRA</div>
               <div style="font-size:12px;">NIP. 199911202025211015</div>
