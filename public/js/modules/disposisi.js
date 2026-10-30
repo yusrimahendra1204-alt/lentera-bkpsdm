@@ -323,6 +323,9 @@ const DisposisiModule = {
                 <button class="btn btn-outline btn-sm" onclick="DisposisiModule.showDetail(${disp.id})" title="Lihat Rincian Catatan Disposisi">
                   Detail
                 </button>
+                <button class="btn btn-outline btn-sm" style="background:#f0fdf4; color:#15803d; border-color:#86efac; font-weight:700;" onclick="DisposisiModule.printLembarDisposisi(${disp.id})" title="Cetak Lembar Disposisi Resmi A4">
+                  🖨️ Cetak
+                </button>
                 <button class="btn btn-outline btn-sm" style="color:#0284c7; border-color:#bae6fd;" onclick="DisposisiModule.openEditModal(${disp.id})" title="Ubah Catatan Disposisi">
                   Ubah
                 </button>
@@ -815,16 +818,163 @@ const DisposisiModule = {
     `;
 
     footer.innerHTML = `
-      <button class="btn btn-outline" onclick="App.closeModal()">Tutup</button>
+      <button class="btn btn-primary" onclick="DisposisiModule.printLembarDisposisi(${disp.id})" title="Cetak format fisik Lembar Disposisi resmi BKPSDM">
+        🖨️ Cetak Lembar Disposisi
+      </button>
       <button class="btn btn-outline" style="color:#0284c7; border-color:#bae6fd;" onclick="App.closeModal(); DisposisiModule.openEditModal(${disp.id})">
         ✏️ Ubah Disposisi
       </button>
       <button class="btn btn-outline" style="color:#dc2626; border-color:#fecaca;" onclick="DisposisiModule.confirmDelete(${disp.id})">
         🗑️ Hapus Disposisi
       </button>
+      <button class="btn btn-outline" onclick="App.closeModal()">Tutup</button>
     `;
 
     App.openModal();
+  },
+
+  // Cetak Lembar Disposisi Format Blanko Fisik Resmi BKPSDM Luwu Timur
+  printLembarDisposisi(dispId) {
+    const disp = Store.state.disposisi.find(d => d.id === dispId);
+    if (!disp) return;
+    const sm = Store.state.surat_masuk.find(s => s.id === disp.id_surat_masuk);
+    if (!sm) return;
+
+    const diteruskan = disp.diteruskan_kepada || (disp.tujuan_nama ? disp.tujuan_nama.split(',').map(s => s.trim()) : []);
+    const instruksi = Array.isArray(disp.instruksi) ? disp.instruksi : [];
+    const sifat = disp.sifat || 'B. Segera';
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      App.showToast('Gagal membuka jendela cetak. Mohon izinkan popup di browser Anda.', 'warning');
+      return;
+    }
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="id">
+      <head>
+        <meta charset="UTF-8">
+        <title>LEMBAR DISPOSISI - ${sm.no_agenda}</title>
+        <style>
+          @page { size: A4 portrait; margin: 15mm; }
+          body { font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #000; margin: 0; padding: 15px; line-height: 1.35; }
+          .kop { text-align: center; border-bottom: 3px double #000; padding-bottom: 8px; margin-bottom: 12px; }
+          .kop h3 { margin: 0; font-size: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+          .kop h2 { margin: 2px 0; font-size: 17px; font-weight: 800; text-transform: uppercase; }
+          .kop p { margin: 2px 0 0; font-size: 11px; font-style: italic; }
+          .title { text-align: center; font-size: 16px; font-weight: bold; text-decoration: underline; margin: 14px 0 16px; text-transform: uppercase; letter-spacing: 1px; }
+          table.main-box { width: 100%; border-collapse: collapse; border: 1.5px solid #000; }
+          table.main-box td { border: 1px solid #000; padding: 7px 10px; vertical-align: top; }
+          .check-box { display: inline-block; width: 15px; height: 15px; border: 1.5px solid #000; text-align: center; line-height: 14px; font-size: 12px; font-weight: bold; margin-right: 7px; vertical-align: middle; }
+          .item-row { display: flex; align-items: flex-start; margin-bottom: 6px; font-size: 12.5px; }
+          .ttd-box { margin-top: 18px; float: right; width: 290px; text-align: center; font-size: 13px; }
+          @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="no-print" style="margin-bottom: 18px; text-align: right; background: #f8fafc; padding: 10px 16px; border-radius: 6px; border: 1px solid #cbd5e1;">
+          <span style="font-size: 13px; color: #475569; margin-right: 12px;">Format resmi Blanko Lembar Disposisi BKPSDM Luwu Timur</span>
+          <button onclick="window.print()" style="padding: 7px 16px; background: #0284c7; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px;">
+            🖨️ Cetak Lembar Disposisi
+          </button>
+          <button onclick="window.close()" style="padding: 7px 16px; background: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 6px; font-size: 13px;">
+            Tutup
+          </button>
+        </div>
+
+        <div class="kop">
+          <h3>PEMERINTAH KABUPATEN LUWU TIMUR</h3>
+          <h2>BADAN KEPEGAWAIAN DAN PENGEMBANGAN SUMBER DAYA MANUSIA</h2>
+          <p>Jl. Soekarno-Hatta Km. 02 Kantor Bupati Luwu Timur - Malili, Kode Pos 92981</p>
+        </div>
+
+        <div class="title">LEMBAR DISPOSISI</div>
+
+        <table class="main-box">
+          <tr>
+            <td style="width: 50%;">
+              <div style="margin-bottom: 4px;"><strong>Surat Dari :</strong> ${sm.instansi_pengirim || '-'}</div>
+              <div style="margin-bottom: 4px;"><strong>No. Surat :</strong> ${sm.no_surat_pengirim || '-'}</div>
+              <div><strong>Tgl. Surat :</strong> ${App.formatIndoDate(sm.tgl_surat)}</div>
+            </td>
+            <td style="width: 50%;">
+              <div style="margin-bottom: 4px;"><strong>Diterima Tanggal :</strong> ${App.formatIndoDate(sm.tgl_diterima)}</div>
+              <div style="margin-bottom: 4px;"><strong>No. Agenda :</strong> <span style="font-family:monospace; font-weight:bold; font-size: 14px;">${sm.no_agenda}</span></div>
+              <div style="display:flex; align-items:center; gap: 12px; margin-top: 2px;">
+                <strong>Sifat :</strong>
+                <span><span class="check-box">${sifat.includes('Sangat') ? '✓' : '&nbsp;'}</span>Sangat Segera</span>
+                <span><span class="check-box">${sifat.includes('B. Segera') || sifat === 'Segera' ? '✓' : '&nbsp;'}</span>Segera</span>
+                <span><span class="check-box">${sifat.includes('Rahasia') ? '✓' : '&nbsp;'}</span>Rahasia</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <strong>Hal / Perihal :</strong><br>
+              <div style="margin-top: 4px; font-weight: 600; line-height: 1.45;">"${sm.perihal}"</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 50%;">
+              <div style="font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #000; padding-bottom: 3px;">
+                Diteruskan kepada saudara :
+              </div>
+              ${this.JABATAN_TUJUAN.map(j => {
+                const isChecked = diteruskan.some(sel => sel.includes(j) || j.includes(sel));
+                return `
+                  <div class="item-row">
+                    <span class="check-box">${isChecked ? '✓' : '&nbsp;'}</span>
+                    <span style="${isChecked ? 'font-weight: bold;' : ''}">${j}</span>
+                  </div>
+                `;
+              }).join('')}
+            </td>
+            <td style="width: 50%;">
+              <div style="font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #000; padding-bottom: 3px;">
+                Dengan hormat harap :
+              </div>
+              ${this.INSTRUKSI_RESMI.map(inst => {
+                const isChecked = instruksi.some(sel => sel.includes(inst) || inst.includes(sel));
+                return `
+                  <div class="item-row">
+                    <span class="check-box">${isChecked ? '✓' : '&nbsp;'}</span>
+                    <span style="${isChecked ? 'font-weight: bold;' : ''}">${inst}</span>
+                  </div>
+                `;
+              }).join('')}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="min-height: 90px; height: 100px;">
+              <div style="font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid #000; padding-bottom: 3px;">
+                Catatan Kepala Badan :
+              </div>
+              <div style="font-style: italic; min-height: 60px; line-height: 1.5; padding: 4px 0;">
+                ${disp.catatan ? `"${disp.catatan}"` : '...................................................................................................................................................................................................................'}
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <div class="ttd-box">
+          Malili, ${App.formatIndoDate(disp.created_at || sm.tgl_diterima)}<br>
+          <strong>${this.PIMPINAN_BKPSDM.jabatan}</strong><br>
+          <div style="height: 65px;"></div>
+          <strong><u>${this.PIMPINAN_BKPSDM.nama}</u></strong><br>
+          Pangkat: ${this.PIMPINAN_BKPSDM.pangkat}<br>
+          NIP. ${this.PIMPINAN_BKPSDM.nip}
+        </div>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
   },
 
   // Helper jika dibuka dari ID Surat Masuk

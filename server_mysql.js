@@ -386,9 +386,16 @@ const server = http.createServer(async (req, res) => {
         const disp = await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]);
         if (!disp) return sendJSON(res, { success: false, message: 'Disposisi tidak ditemukan' }, 404);
         const newStatus = body.status_tindak_lanjut || disp.status_tindak_lanjut;
+        const newTujuanNama = body.tujuan_nama !== undefined ? body.tujuan_nama : disp.tujuan_nama;
+        const newSifat = body.sifat !== undefined ? body.sifat : disp.sifat;
+        const newCatatan = body.catatan !== undefined ? body.catatan : disp.catatan;
+        const newInstruksi = body.instruksi !== undefined 
+          ? (Array.isArray(body.instruksi) ? JSON.stringify(body.instruksi) : String(body.instruksi))
+          : (typeof disp.instruksi === 'string' ? disp.instruksi : JSON.stringify(disp.instruksi || []));
+
         await db.getPool().execute(
-          'UPDATE disposisi SET status_tindak_lanjut=?, tindak_lanjut_note=? WHERE id=?',
-          [newStatus, body.tindak_lanjut_note || disp.tindak_lanjut_note || '', id]
+          'UPDATE disposisi SET status_tindak_lanjut=?, tindak_lanjut_note=?, tujuan_nama=?, sifat=?, instruksi=?, catatan=? WHERE id=?',
+          [newStatus, body.tindak_lanjut_note || disp.tindak_lanjut_note || '', newTujuanNama, newSifat, newInstruksi, newCatatan, id]
         );
         if (newStatus === 'Selesai') {
           await db.getPool().execute(
