@@ -120,6 +120,9 @@ const LandingModule = {
               <tr>
                 <td>
                   <span class="number-badge-live">${sk.no_surat_keluar}</span>
+                  <div style="font-size: 11px; color: #38bdf8; margin-top: 3px; font-weight: 500;">
+                    📅 ${App.formatIndoDate(sk.tgl_surat)}
+                  </div>
                 </td>
                 <td>
                   <div style="font-weight: 600; color: #f1f5f9; line-height: 1.4;">${sk.perihal}</div>

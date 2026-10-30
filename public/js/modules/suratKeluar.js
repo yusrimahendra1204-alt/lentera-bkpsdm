@@ -170,7 +170,15 @@ const SuratKeluarModule = {
 
     // Hitung nomor terakhir & estimasi nomor berikutnya secara real-time
     const lastItem = allList[0];
-    const nextUrut = allList.length ? Math.max(...allList.map(s => s.id)) + 1 + 100 : 101;
+    let maxNum = 0;
+    allList.forEach(s => {
+      const m = (s.no_surat_keluar || '').match(/\/0*(\d+)\//);
+      if (m) {
+        const val = parseInt(m[1], 10);
+        if (val > maxNum) maxNum = val;
+      }
+    });
+    const nextUrut = maxNum > 0 ? maxNum + 1 : ((allList.length || 0) + 1);
     const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
     const monthRomawi = romawi[new Date().getMonth()];
     const year = new Date().getFullYear();
@@ -230,16 +238,23 @@ const SuratKeluarModule = {
             </div>
 
             <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-              <div style="background:#ffffff; border:1px solid #86efac; border-radius:8px; padding:6px 14px; text-align:right;">
+              <div style="background:#ffffff; border:1px solid #86efac; border-radius:8px; padding:7px 14px; text-align:right;">
                 <div style="font-size:10px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor Terakhir Terbit:</div>
                 <div style="font-family:monospace; font-weight:800; font-size:13.5px; color:#15803d; margin-top:1px;">
                   ${lastItem ? lastItem.no_surat_keluar : 'Belum Ada Data'}
                 </div>
+                <div style="font-size:11px; color:#047857; margin-top:3px; display:flex; align-items:center; justify-content:flex-end; gap:4px; font-weight:600;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  Tanggal Surat: ${lastItem && lastItem.tgl_surat ? App.formatIndoDate(lastItem.tgl_surat) : '-'}
+                </div>
               </div>
-              <div style="background:#ffffff; border:1px solid #93c5fd; border-radius:8px; padding:6px 14px; text-align:right;">
+              <div style="background:#ffffff; border:1px solid #93c5fd; border-radius:8px; padding:7px 14px; text-align:right;">
                 <div style="font-size:10px; text-transform:uppercase; color:#0369a1; font-weight:700;">Estimasi Urut Berikutnya:</div>
                 <div style="font-family:monospace; font-weight:800; font-size:13.5px; color:#0284c7; margin-top:1px;">
                   ${nextFormatPreview}
+                </div>
+                <div style="font-size:11px; color:#0284c7; margin-top:3px; font-weight:600;">
+                  Siap Digunakan
                 </div>
               </div>
             </div>
@@ -352,7 +367,7 @@ const SuratKeluarModule = {
           </td>
           <td>
             <span style="font-weight:600; color:#1e293b; font-size:12.5px;">
-              ${s.tgl_surat || '-'}
+              ${App.formatIndoDate(s.tgl_surat)}
             </span>
           </td>
           <td>
@@ -364,8 +379,13 @@ const SuratKeluarModule = {
                 Salin
               </button>
             </div>
-            <div style="font-size:11.5px; color:#64748b; margin-top:3px;">
-              Unit: ${s.bidang_pembuat || 'Bidang Terkait'}
+            <div style="font-size:11.5px; color:#475569; margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span style="display:inline-flex; align-items:center; gap:3px; font-weight:700; color:#0369a1;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Tgl: ${App.formatIndoDate(s.tgl_surat)}
+              </span>
+              <span style="color:#cbd5e1;">•</span>
+              <span>Unit: ${s.bidang_pembuat || 'Bidang Terkait'}</span>
             </div>
           </td>
           <td>
@@ -444,13 +464,38 @@ const SuratKeluarModule = {
     const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
     const monthRomawi = romawi[new Date().getMonth()];
     const year = new Date().getFullYear();
-    const nextId = (Store.state.surat_keluar.length ? Math.max(...Store.state.surat_keluar.map(s => s.id)) : 0) + 1;
-    const defaultUrut = String(nextId + 100).padStart(3, '0');
+    const allSK = Store.state.surat_keluar || [];
+    const lastItem = allSK[0];
+    let maxNum = 0;
+    allSK.forEach(s => {
+      const m = (s.no_surat_keluar || '').match(/\/0*(\d+)\//);
+      if (m) {
+        const val = parseInt(m[1], 10);
+        if (val > maxNum) maxNum = val;
+      }
+    });
+    const nextUrutNum = maxNum > 0 ? maxNum + 1 : (allSK.length + 1);
+    const defaultUrut = String(nextUrutNum).padStart(3, '0');
     const defaultNoSurat = `[KODE_PERBUP]/${defaultUrut}/BKPSDM/${monthRomawi}/${year}`;
 
     title.innerText = 'Pengambilan Nomor Surat Keluar Resmi (Perbup Luwu Timur No. 69/2023)';
     body.innerHTML = `
       <form id="form-surat-keluar">
+        <!-- Informasi Nomor Terakhir & Tanggal Keluar -->
+        <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <div style="font-size:10.5px; text-transform:uppercase; color:#166534; font-weight:700;">Nomor Surat Terakhir di Buku Agenda:</div>
+            <div style="font-family:monospace; font-weight:800; font-size:13.5px; color:#15803d; margin-top:2px;">
+              ${lastItem ? lastItem.no_surat_keluar : '-'}
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10.5px; text-transform:uppercase; color:#64748b; font-weight:700;">Tanggal Terakhir Keluar:</div>
+            <div style="font-size:12.5px; font-weight:700; color:#0f172a; margin-top:2px;">
+              📅 ${lastItem && lastItem.tgl_surat ? App.formatIndoDate(lastItem.tgl_surat) : '-'}
+            </div>
+          </div>
+        </div>
         <div class="form-group">
           <label class="form-label">Perihal Surat Keluar <span class="required">*</span> (Ketik untuk auto-suggest cerdas Perbup)</label>
           <div class="autosuggest-wrapper">

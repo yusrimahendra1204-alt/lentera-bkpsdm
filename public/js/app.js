@@ -586,6 +586,28 @@ const App = {
     } else {
       this.showToast(res.message || 'Gagal memperbarui kata sandi', 'danger');
     }
+  },
+
+  formatIndoDate(dateStr) {
+    if (!dateStr) return '-';
+    if (typeof dateStr === 'string' && dateStr.includes(' ') && !dateStr.includes('T')) {
+      return dateStr;
+    }
+    const clean = String(dateStr).split('T')[0];
+    const parts = clean.split('-');
+    if (parts.length === 3) {
+      const y = parts[0];
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      const bulan = [
+        '', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      ];
+      if (bulan[m]) {
+        return `${d} ${bulan[m]} ${y}`;
+      }
+    }
+    return dateStr;
   }
 };
 

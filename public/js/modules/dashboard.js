@@ -9,6 +9,10 @@ const DashboardModule = {
     const disp = Store.state.disposisi || [];
     const spt = Store.state.surat_tugas || [];
 
+    const latestSk = sk[0];
+    const latestSkNum = latestSk ? latestSk.no_surat_keluar : '-';
+    const latestSkDate = latestSk && latestSk.tgl_surat ? App.formatIndoDate(latestSk.tgl_surat) : '-';
+
     const pendingDisp = sm.filter(s => s.status_disposisi === 'Menunggu Disposisi');
     const activeDisp = disp.filter(d => d.status_tindak_lanjut !== 'Selesai');
 
@@ -77,9 +81,15 @@ const DashboardModule = {
         <div class="stat-card emerald" onclick="App.navigate('surat-keluar')">
           <div class="stat-info">
             <div class="stat-label">Surat Keluar</div>
-            <div class="stat-value">${sk.length}</div>
-            <div class="stat-desc">
-              <span style="color:#059669; font-weight:600;">Terverifikasi Perbup 69/2023</span>
+            <div class="stat-value">${sk.length} <span style="font-size:13px; font-weight:600; color:#475569;">berkas</span></div>
+            <div class="stat-desc" style="display:flex; flex-direction:column; gap:2px; margin-top:4px;">
+              <span style="color:#059669; font-weight:700; font-size:12px;">
+                No. Terakhir: ${latestSkNum}
+              </span>
+              <span style="color:#475569; font-size:11.5px; font-weight:600; display:flex; align-items:center; gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Tgl Keluar: ${latestSkDate}
+              </span>
             </div>
           </div>
           <div class="stat-icon-wrapper">

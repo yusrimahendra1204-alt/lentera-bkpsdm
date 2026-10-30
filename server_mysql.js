@@ -427,9 +427,20 @@ const server = http.createServer(async (req, res) => {
         const romawi   = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
         const bulan    = romawi[new Date().getMonth()];
         const tahun    = new Date().getFullYear();
-        const [cntRows]= await db.getPool().execute(
-          'SELECT COUNT(*)+101 AS n FROM surat_keluar WHERE YEAR(created_at) = ?', [tahun]);
-        const noUrut   = String(cntRows[0].n).padStart(3, '0');
+        
+        let maxVal = 0;
+        const [recentSK] = await db.getPool().execute(
+          'SELECT no_surat_keluar FROM surat_keluar ORDER BY id DESC LIMIT 50'
+        );
+        for (const row of recentSK) {
+          const m = (row.no_surat_keluar || '').match(/\/0*(\d+)\//);
+          if (m) {
+            const v = parseInt(m[1], 10);
+            if (v > maxVal) maxVal = v;
+          }
+        }
+        const nextN    = maxVal > 0 ? maxVal + 1 : 1;
+        const noUrut   = String(nextN).padStart(3, '0');
         const noSurat  = body.no_surat_keluar || `${kode}/${noUrut}/BKPSDM/${bulan}/${tahun}`;
         const [result] = await db.getPool().execute(`
           INSERT INTO surat_keluar
