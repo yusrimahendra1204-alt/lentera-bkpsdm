@@ -95,7 +95,7 @@ const SuratTugasModule = {
         </td>
         <td>
           <span style="font-size:12px; font-weight:700; color:#334155; background:#f1f5f9; padding:4px 8px; border-radius:6px; display:inline-block; line-height:1.3;">
-            ${spt.bidang_pengusul || 'Bidang Pengadaan, Mutasi & Info'}
+            ${spt.bidang_pengusul || 'Subbagian Umum dan Kepegawaian'}
           </span>
           <div style="font-size:10.5px; color:#64748b; margin-top:4px;">
             Fisik: Tanda Tangan Basah
@@ -183,8 +183,9 @@ const SuratTugasModule = {
           <div class="form-group">
             <label class="form-label">Bidang / Unit Kerja Pembuat SPT <span class="required">*</span></label>
             <select id="spt-bidang" class="form-control" required>
-              <option value="Bidang Pengadaan, Mutasi dan Informasi Kepegawaian" selected>Bidang Pengadaan, Mutasi dan Informasi Kepegawaian</option>
-              <option value="Bidang Pengembangan Kompetensi dan Penilaian Kinerja Aparatur">Bidang Pengembangan Kompetensi dan Penilaian Kinerja Aparatur</option>
+              <option value="Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian" selected>Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian</option>
+              <option value="Bidang Mutasi, Kepangkatan dan Pengembangan Karir">Bidang Mutasi, Kepangkatan dan Pengembangan Karir</option>
+              <option value="Bidang Pengembangan Sumber Daya Aparatur">Bidang Pengembangan Sumber Daya Aparatur</option>
               <option value="Sekretariat / Subbagian Umum dan Kepegawaian">Sekretariat / Subbagian Umum dan Kepegawaian</option>
               <option value="Subbagian Perencanaan dan Keuangan">Subbagian Perencanaan dan Keuangan</option>
             </select>
@@ -318,7 +319,7 @@ const SuratTugasModule = {
 
   async submitCreate() {
     const nomor = document.getElementById('spt-nomor')?.value.trim();
-    const bidang = document.getElementById('spt-bidang')?.value;
+    const bidang = document.getElementById('spt-bidang')?.value || 'Subbagian Umum dan Kepegawaian';
     const dasar = document.getElementById('spt-dasar')?.value.trim();
     const maksud = document.getElementById('spt-maksud')?.value.trim();
     const tujuan = document.getElementById('spt-tujuan')?.value.trim();
@@ -419,7 +420,7 @@ const SuratTugasModule = {
             <div>
               <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Bidang / Unit Kerja Pembuat SPT:</div>
               <div style="font-weight:700; color:#0f172a; margin-top:3px;">
-                ${spt.bidang_pengusul || 'Bidang Pengadaan, Mutasi dan Informasi Kepegawaian'}
+                ${spt.bidang_pengusul || 'Subbagian Umum dan Kepegawaian'}
               </div>
             </div>
             <div>
@@ -544,6 +545,17 @@ const SuratTugasModule = {
         </div>
 
         <div class="form-group">
+          <label class="form-label">Bidang / Unit Kerja Pembuat SPT <span class="required">*</span></label>
+          <select id="edit-spt-bidang" class="form-control" required>
+            <option value="Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian" ${spt.bidang_pengusul && (spt.bidang_pengusul.includes('Pengadaan') || spt.bidang_pengusul.includes('PPK')) ? 'selected' : ''}>Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian</option>
+            <option value="Bidang Mutasi, Kepangkatan dan Pengembangan Karir" ${spt.bidang_pengusul && spt.bidang_pengusul.includes('Mutasi') ? 'selected' : ''}>Bidang Mutasi, Kepangkatan dan Pengembangan Karir</option>
+            <option value="Bidang Pengembangan Sumber Daya Aparatur" ${spt.bidang_pengusul && (spt.bidang_pengusul.includes('Pengembangan') || spt.bidang_pengusul.includes('Diklat')) ? 'selected' : ''}>Bidang Pengembangan Sumber Daya Aparatur</option>
+            <option value="Sekretariat / Subbagian Umum dan Kepegawaian" ${spt.bidang_pengusul && spt.bidang_pengusul.includes('Umum') ? 'selected' : ''}>Sekretariat / Subbagian Umum dan Kepegawaian</option>
+            <option value="Subbagian Perencanaan dan Keuangan" ${spt.bidang_pengusul && spt.bidang_pengusul.includes('Perencanaan') ? 'selected' : ''}>Subbagian Perencanaan dan Keuangan</option>
+          </select>
+        </div>
+
+        <div class="form-group">
           <label class="form-label">Maksud Tugas Kedinasan <span class="required">*</span></label>
           <textarea id="edit-spt-maksud" class="form-control" rows="2" required>${spt.maksud_tugas}</textarea>
         </div>
@@ -604,6 +616,7 @@ const SuratTugasModule = {
   },
 
   async submitEdit(id) {
+    const bidang = document.getElementById('edit-spt-bidang')?.value;
     const maksud = document.getElementById('edit-spt-maksud')?.value.trim();
     const tujuan = document.getElementById('edit-spt-tujuan')?.value.trim();
     const hari = document.getElementById('edit-spt-hari')?.value;
@@ -638,6 +651,7 @@ const SuratTugasModule = {
     }
 
     const updated = await Store.updateSuratTugas(id, {
+      bidang_pengusul: bidang,
       maksud_tugas: maksud,
       tempat_tujuan: tujuan,
       lama_hari: parseInt(hari, 10),

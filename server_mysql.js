@@ -458,7 +458,7 @@ const server = http.createServer(async (req, res) => {
              lokasi_arsip_fisik,is_surat_balasan,id_surat_masuk_asal,no_surat_pengirim_asal,file_name)
           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
           [noAgenda,
-           body.bidang_pembuat    || 'Bidang Pengadaan, Mutasi & Informasi Kepegawaian',
+           body.bidang_pembuat    || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
            kode,
            body.nama_klasifikasi  || 'Umum',
            noSurat,
@@ -527,7 +527,7 @@ const server = http.createServer(async (req, res) => {
              lama_hari,pembebanan_anggaran,pejabat_penandatangan,jabatan_penandatangan)
           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
           [noSpt,
-           body.bidang_pengusul       || 'Bidang Pengadaan, Mutasi dan Informasi Kepegawaian',
+           body.bidang_pengusul       || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
            '800.1.11.1',
            'Surat Perintah Dinas/Surat Tugas',
            body.dasar                 || '',
@@ -563,10 +563,11 @@ const server = http.createServer(async (req, res) => {
         if (!spt) return sendJSON(res, { success: false, message: 'Surat tugas tidak ditemukan' }, 404);
         await db.getPool().execute(`
           UPDATE surat_tugas SET
-            dasar=?, maksud_tugas=?, tempat_tujuan=?, tgl_berangkat=?,
+            bidang_pengusul=?, dasar=?, maksud_tugas=?, tempat_tujuan=?, tgl_berangkat=?,
             tgl_kembali=?, lama_hari=?, pembebanan_anggaran=?, pejabat_penandatangan=?
           WHERE id=?`,
-          [body.dasar               || spt.dasar,
+          [body.bidang_pengusul     || spt.bidang_pengusul,
+           body.dasar               || spt.dasar,
            body.maksud_tugas        || spt.maksud_tugas,
            body.tempat_tujuan       || spt.tempat_tujuan,
            body.tgl_berangkat       || spt.tgl_berangkat,

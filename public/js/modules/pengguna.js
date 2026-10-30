@@ -259,12 +259,12 @@ const PenggunaModule = {
           <div class="form-group">
             <label class="form-label">Unit Kerja / Bidang <span class="required">*</span></label>
             <select id="peg-unit" class="form-control" required>
-              <option value="Pimpinan">Pimpinan</option>
-              <option value="Sekretariat">Sekretariat</option>
-              <option value="Subbag Umum & Kepegawaian" selected>Subbag Umum & Kepegawaian</option>
-              <option value="Subbag Perencanaan & Keuangan">Subbag Perencanaan & Keuangan</option>
-              <option value="Bidang Pengadaan, Mutasi & Info">Bidang Pengadaan, Mutasi & Info</option>
-              <option value="Bidang Bangkom & Kinerja">Bidang Bangkom & Kinerja</option>
+              <option value="Pimpinan">Pimpinan (Kepala BKPSDM / Sekretaris)</option>
+              <option value="Subbagian Umum dan Kepegawaian" selected>Subbagian Umum dan Kepegawaian</option>
+              <option value="Subbagian Perencanaan dan Keuangan">Subbagian Perencanaan dan Keuangan</option>
+              <option value="Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian">Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian</option>
+              <option value="Bidang Mutasi, Kepangkatan dan Pengembangan Karir">Bidang Mutasi, Kepangkatan dan Pengembangan Karir</option>
+              <option value="Bidang Pengembangan Sumber Daya Aparatur">Bidang Pengembangan Sumber Daya Aparatur</option>
             </select>
           </div>
           <div class="form-group">

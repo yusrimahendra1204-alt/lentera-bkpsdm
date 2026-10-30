@@ -568,8 +568,9 @@ const SuratKeluarModule = {
           <div class="form-group">
             <label class="form-label">Bidang / Unit Kerja Pembuat Naskah Surat <span class="required">*</span></label>
             <select id="sk-bidang" class="form-control" required>
-              <option value="Bidang Pengadaan, Mutasi dan Informasi Kepegawaian" selected>Bidang Pengadaan, Mutasi dan Informasi Kepegawaian</option>
-              <option value="Bidang Pengembangan Kompetensi dan Penilaian Kinerja Aparatur">Bidang Pengembangan Kompetensi dan Penilaian Kinerja Aparatur</option>
+              <option value="Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian" selected>Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian</option>
+              <option value="Bidang Mutasi, Kepangkatan dan Pengembangan Karir">Bidang Mutasi, Kepangkatan dan Pengembangan Karir</option>
+              <option value="Bidang Pengembangan Sumber Daya Aparatur">Bidang Pengembangan Sumber Daya Aparatur</option>
               <option value="Sekretariat / Subbagian Umum dan Kepegawaian">Sekretariat / Subbagian Umum dan Kepegawaian</option>
               <option value="Subbagian Perencanaan dan Keuangan">Subbagian Perencanaan dan Keuangan</option>
             </select>
@@ -720,7 +721,7 @@ const SuratKeluarModule = {
     const kode = document.getElementById('sk-kode')?.value.trim();
     const namaKode = document.getElementById('sk-nama-kode')?.value.trim();
     const noSurat = document.getElementById('sk-no-surat')?.value.trim();
-    const bidang = document.getElementById('sk-bidang')?.value || 'Bidang Pengadaan, Mutasi dan Informasi Kepegawaian';
+    const bidang = document.getElementById('sk-bidang')?.value || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian';
     const tglSurat = document.getElementById('sk-tgl-surat')?.value;
     const sifat = document.getElementById('sk-sifat')?.value;
     const penandatangan = document.getElementById('sk-penandatangan')?.value;
@@ -925,10 +926,11 @@ const SuratKeluarModule = {
           <div class="form-group">
             <label class="form-label">Bidang Pembuat Naskah</label>
             <select id="edit-sk-bidang" class="form-control">
-              <option value="Bidang Pengadaan, Mutasi dan Informasi Kepegawaian" ${s.bidang_pembuat && s.bidang_pembuat.includes('Pengadaan') ? 'selected' : ''}>Bidang Pengadaan, Mutasi & Informasi</option>
-              <option value="Bidang Pengembangan Kompetensi dan Penilaian Kinerja Aparatur" ${s.bidang_pembuat && s.bidang_pembuat.includes('Pengembangan') ? 'selected' : ''}>Bidang Pengembangan Kompetensi & Kinerja</option>
-              <option value="Subbagian Umum dan Kepegawaian" ${s.bidang_pembuat && s.bidang_pembuat.includes('Umum') ? 'selected' : ''}>Subbagian Umum & Kepegawaian</option>
-              <option value="Subbagian Perencanaan dan Keuangan" ${s.bidang_pembuat && s.bidang_pembuat.includes('Perencanaan') ? 'selected' : ''}>Subbagian Perencanaan & Keuangan</option>
+              <option value="Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian" ${s.bidang_pembuat && (s.bidang_pembuat.includes('Pengadaan') || s.bidang_pembuat.includes('PPK')) ? 'selected' : ''}>Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian</option>
+              <option value="Bidang Mutasi, Kepangkatan dan Pengembangan Karir" ${s.bidang_pembuat && s.bidang_pembuat.includes('Mutasi') ? 'selected' : ''}>Bidang Mutasi, Kepangkatan dan Pengembangan Karir</option>
+              <option value="Bidang Pengembangan Sumber Daya Aparatur" ${s.bidang_pembuat && (s.bidang_pembuat.includes('Pengembangan') || s.bidang_pembuat.includes('Diklat')) ? 'selected' : ''}>Bidang Pengembangan Sumber Daya Aparatur</option>
+              <option value="Sekretariat / Subbagian Umum dan Kepegawaian" ${s.bidang_pembuat && s.bidang_pembuat.includes('Umum') ? 'selected' : ''}>Sekretariat / Subbagian Umum dan Kepegawaian</option>
+              <option value="Subbagian Perencanaan dan Keuangan" ${s.bidang_pembuat && s.bidang_pembuat.includes('Perencanaan') ? 'selected' : ''}>Subbagian Perencanaan dan Keuangan</option>
             </select>
           </div>
           <div class="form-group">
