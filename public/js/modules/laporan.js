@@ -106,10 +106,10 @@ const LaporanModule = {
             ${list.length === 0 ? `<tr><td colspan="6" style="text-align:center; padding:28px; color:#94a3b8;">Belum ada catatan surat masuk dalam buku agenda.</td></tr>` : list.map(s => `
               <tr>
                 <td style="font-family:monospace; font-weight:700;">${s.no_agenda}</td>
-                <td>${s.tgl_diterima}</td>
+                <td>${App.formatIndoDate(s.tgl_diterima)}</td>
                 <td>
                   <strong>${s.instansi_pengirim}</strong><br>
-                  <span style="font-size:11.5px; color:#475569;">No: ${s.no_surat_pengirim} (Tgl: ${s.tgl_surat})</span>
+                  <span style="font-size:11.5px; color:#475569;">No: ${s.no_surat_pengirim} (Tgl: ${App.formatIndoDate(s.tgl_surat)})</span>
                 </td>
                 <td style="max-width:280px; font-weight:500;">${s.perihal}</td>
                 <td><span class="code-tag code-tag-internal">${s.kode_internal}</span></td>
@@ -139,7 +139,7 @@ const LaporanModule = {
             ${list.length === 0 ? `<tr><td colspan="6" style="text-align:center; padding:28px; color:#94a3b8;">Belum ada catatan surat keluar dalam buku agenda.</td></tr>` : list.map(s => `
               <tr>
                 <td style="font-family:monospace; font-weight:700;">${s.no_agenda}</td>
-                <td>${s.tgl_surat}</td>
+                <td>${App.formatIndoDate(s.tgl_surat)}</td>
                 <td style="font-family:monospace; font-weight:700; color:var(--primary);">${s.no_surat_keluar}</td>
                 <td><span class="code-tag code-tag-internal">${s.kode_klasifikasi}</span></td>
                 <td style="max-width:320px; font-weight:500;">${s.perihal}</td>
@@ -170,7 +170,7 @@ const LaporanModule = {
                 <td style="max-width:300px; font-weight:500;">${spt.maksud_tugas}</td>
                 <td>
                   <strong>${spt.tempat_tujuan}</strong><br>
-                  <span style="font-size:11.5px; color:#64748b;">${spt.tgl_berangkat} s/d ${spt.tgl_kembali} (${spt.lama_hari} Hari)</span>
+                  <span style="font-size:11.5px; color:#64748b;">${App.formatIndoDate(spt.tgl_berangkat)} s/d ${App.formatIndoDate(spt.tgl_kembali)} (${spt.lama_hari} Hari)</span>
                 </td>
                 <td>
                   ${(spt.personil || []).map(p => `• ${p.nama}`).join('<br>')}

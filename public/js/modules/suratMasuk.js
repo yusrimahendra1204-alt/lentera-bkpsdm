@@ -127,8 +127,8 @@ const SuratMasukModule = {
           </div>
         </td>
         <td>
-          <div style="font-size:13px; font-weight:500;">${s.tgl_diterima}</div>
-          <div style="font-size:11px; color:var(--text-muted);">Surat: ${s.tgl_surat}</div>
+          <div style="font-size:13px; font-weight:500;">${App.formatIndoDate(s.tgl_diterima)}</div>
+          <div style="font-size:11px; color:var(--text-muted);">Surat: ${App.formatIndoDate(s.tgl_surat)}</div>
         </td>
         <td>
           <span class="badge badge-${s.sifat_surat.toLowerCase()}">${s.sifat_surat}</span>

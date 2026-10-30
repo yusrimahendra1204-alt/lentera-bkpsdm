@@ -109,7 +109,7 @@ const SuratTugasModule = {
         <td>
           <div style="font-weight:700; font-size:13px; color:#0f172a;">${spt.tempat_tujuan}</div>
           <div style="font-size:12px; color:#475569; margin-top:2px;">
-            ${spt.tgl_berangkat} s/d ${spt.tgl_kembali}
+            ${App.formatIndoDate(spt.tgl_berangkat)} s/d ${App.formatIndoDate(spt.tgl_kembali)}
           </div>
           <div style="font-size:11px; color:#d97706; font-weight:700; margin-top:2px;">
             (${spt.lama_hari} Hari Kerja)
