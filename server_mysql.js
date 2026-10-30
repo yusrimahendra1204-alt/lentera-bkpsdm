@@ -428,18 +428,20 @@ const server = http.createServer(async (req, res) => {
         const bulan    = romawi[new Date().getMonth()];
         const tahun    = new Date().getFullYear();
         
-        let maxVal = 0;
+        let nextN = 1;
         const [recentSK] = await db.getPool().execute(
-          'SELECT no_surat_keluar FROM surat_keluar ORDER BY id DESC LIMIT 50'
+          'SELECT no_surat_keluar FROM surat_keluar ORDER BY id DESC LIMIT 10'
         );
         for (const row of recentSK) {
           const m = (row.no_surat_keluar || '').match(/\/0*(\d+)\//);
           if (m) {
             const v = parseInt(m[1], 10);
-            if (v > maxVal) maxVal = v;
+            if (v < 2000) {
+              nextN = v + 1;
+              break;
+            }
           }
         }
-        const nextN    = maxVal > 0 ? maxVal + 1 : 1;
         const noUrut   = String(nextN).padStart(3, '0');
         const noSurat  = body.no_surat_keluar || `${kode}/${noUrut}/BKPSDM/${bulan}/${tahun}`;
         const [result] = await db.getPool().execute(`

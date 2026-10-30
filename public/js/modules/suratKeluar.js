@@ -160,6 +160,22 @@ const SuratKeluarModule = {
     }
   ],
 
+  // Hitung nomor urut surat keluar berikutnya berdasarkan nomor surat riil terakhir
+  getNextUrutNumber(list = null) {
+    const items = list || Store.state.surat_keluar || [];
+    for (const item of items) {
+      const m = (item.no_surat_keluar || '').match(/\/0*(\d+)\//);
+      if (m) {
+        const num = parseInt(m[1], 10);
+        // Abaikan anomali / typo tahun lampau jika ada
+        if (num < 2000) {
+          return num + 1;
+        }
+      }
+    }
+    return (items.length || 0) + 1;
+  },
+
   render() {
     const container = document.getElementById('view-surat-keluar');
     if (!container) return;
@@ -170,15 +186,7 @@ const SuratKeluarModule = {
 
     // Hitung nomor terakhir & estimasi nomor berikutnya secara real-time
     const lastItem = allList[0];
-    let maxNum = 0;
-    allList.forEach(s => {
-      const m = (s.no_surat_keluar || '').match(/\/0*(\d+)\//);
-      if (m) {
-        const val = parseInt(m[1], 10);
-        if (val > maxNum) maxNum = val;
-      }
-    });
-    const nextUrut = maxNum > 0 ? maxNum + 1 : ((allList.length || 0) + 1);
+    const nextUrut = this.getNextUrutNumber(allList);
     const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
     const monthRomawi = romawi[new Date().getMonth()];
     const year = new Date().getFullYear();
@@ -466,15 +474,7 @@ const SuratKeluarModule = {
     const year = new Date().getFullYear();
     const allSK = Store.state.surat_keluar || [];
     const lastItem = allSK[0];
-    let maxNum = 0;
-    allSK.forEach(s => {
-      const m = (s.no_surat_keluar || '').match(/\/0*(\d+)\//);
-      if (m) {
-        const val = parseInt(m[1], 10);
-        if (val > maxNum) maxNum = val;
-      }
-    });
-    const nextUrutNum = maxNum > 0 ? maxNum + 1 : (allSK.length + 1);
+    const nextUrutNum = this.getNextUrutNumber(allSK);
     const defaultUrut = String(nextUrutNum).padStart(3, '0');
     const defaultNoSurat = `[KODE_PERBUP]/${defaultUrut}/BKPSDM/${monthRomawi}/${year}`;
 
