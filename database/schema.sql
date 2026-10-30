@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `surat_masuk` (
 CREATE TABLE IF NOT EXISTS `disposisi` (
   `id`                   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `id_surat_masuk`       INT UNSIGNED NOT NULL,
-  `dari_user`            VARCHAR(200) DEFAULT 'Drs. H. Ramadhan Pirade, M.Si. (Kepala BKPSDM)',
+  `dari_user`            VARCHAR(200) DEFAULT 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
   `tujuan_user_id`       INT UNSIGNED DEFAULT NULL,
   `tujuan_nama`          VARCHAR(200) DEFAULT '',
   `sifat`                ENUM('Biasa','Segera','Sangat Segera') NOT NULL DEFAULT 'Biasa',
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `surat_tugas` (
   `tgl_kembali`           DATE NOT NULL,
   `lama_hari`             TINYINT UNSIGNED DEFAULT 1,
   `pembebanan_anggaran`   VARCHAR(200) DEFAULT 'DPA-SKPD BKPSDM Kabupaten Luwu Timur TA 2026',
-  `pejabat_penandatangan` VARCHAR(200) DEFAULT 'Drs. H. Ramadhan Pirade, M.Si.',
+  `pejabat_penandatangan` VARCHAR(200) DEFAULT 'PARHA ARIEF, S.AP',
   `jabatan_penandatangan` VARCHAR(200) DEFAULT 'Kepala BKPSDM Kabupaten Luwu Timur',
   `status_naskah_fisik`   VARCHAR(200) DEFAULT 'Naskah fisik disusun & dicetak manual oleh bidang',
   `created_at`            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -176,8 +176,8 @@ SELECT
 -- DATA AWAL: Pegawai BKPSDM Luwu Timur (Sesuai Simulasi Sistem)
 -- ============================================================
 INSERT IGNORE INTO `pegawai` (`nip`, `nama`, `pangkat`, `jabatan`, `role`, `unit`, `password`) VALUES
-('196805121994031008', 'Drs. H. Ramadhan Pirade, M.Si.',
-  'Pembina Utama Muda (IV/c)', 'Kepala BKPSDM',
+('198401142003122001', 'PARHA ARIEF, S.AP',
+  'Pembina (IV/a)', 'Kepala BKPSDM',
   'kepala_bkpsdm', 'Kepala BKPSDM Kabupaten Luwu Timur', '123456'),
 ('199611022020121005', 'Yusri Mahendra, S.Kom.',
   'Penata Muda (III/a)', 'Pengadministrasi Umum',

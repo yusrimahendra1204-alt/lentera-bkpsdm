@@ -364,7 +364,7 @@ const SuratTugasModule = {
       tgl_kembali: tglKembali,
       lama_hari: lama,
       pejabat_penandatangan: 'PARHA ARIEF, S.AP',
-      jabatan_penandatangan: 'Plt. Kepala BKPSDM Kabupaten Luwu Timur',
+      jabatan_penandatangan: 'Kepala BKPSDM Kabupaten Luwu Timur',
       status_naskah_fisik: 'Naskah fisik disusun & dicetak manual oleh bidang (Tanda tangan basah manual)',
       personil: personil
     });
@@ -426,7 +426,7 @@ const SuratTugasModule = {
             <div>
               <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Pejabat Penandatangan Basah:</div>
               <div style="font-weight:700; color:#0f172a; margin-top:3px;">
-                ${spt.pejabat_penandatangan || 'Drs. H. Ramadhan Pirade, M.Si.'} (Kepala BKPSDM)
+                ${spt.pejabat_penandatangan || 'PARHA ARIEF, S.AP'} (${spt.jabatan_penandatangan || 'Kepala BKPSDM Kab. Luwu Timur'})
               </div>
             </div>
           </div>

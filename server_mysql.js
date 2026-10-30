@@ -358,7 +358,7 @@ const server = http.createServer(async (req, res) => {
              sifat,instruksi,catatan,batas_waktu,status_tindak_lanjut)
           VALUES (?,?,?,?,?,?,?,?,?)`,
           [parseInt(body.id_surat_masuk, 10),
-           body.dari_user      || 'Drs. H. Ramadhan Pirade, M.Si. (Kepala BKPSDM)',
+           body.dari_user      || 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
            body.tujuan_user_id ? parseInt(body.tujuan_user_id, 10) : null,
            body.tujuan_nama    || '',
            body.sifat          || 'Biasa',
@@ -537,7 +537,7 @@ const server = http.createServer(async (req, res) => {
            body.tgl_kembali           || new Date().toISOString().split('T')[0],
            parseInt(body.lama_hari||'1', 10),
            body.pembebanan_anggaran   || `DPA-SKPD BKPSDM Kabupaten Luwu Timur TA ${tahun}`,
-           body.pejabat_penandatangan || 'Drs. H. Ramadhan Pirade, M.Si.',
+           body.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
            body.jabatan_penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur']
         );
         const sptId = result.insertId;

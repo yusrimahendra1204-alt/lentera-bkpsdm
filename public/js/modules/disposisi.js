@@ -1,6 +1,6 @@
 // Disposisi Module - Sistem Informasi Persuratan BKPSDM Kabupaten Luwu Timur
 // Format Tabel Pencatatan & Pengelolaan Terpadu Sesuai Format Surat Masuk / Keluar
-// Perekaman Data Lembar Disposisi Fisik Plt. Kepala BKPSDM Luwu Timur
+// Perekaman Data Lembar Disposisi Fisik Kepala BKPSDM Luwu Timur
 const DisposisiModule = {
   currentFilter: 'all', // 'all', 'pending', 'didisposisi'
   currentSifatFilter: 'all',
@@ -28,10 +28,10 @@ const DisposisiModule = {
     'File/Simpan/Edarkan'
   ],
 
-  // Pejabat Penandatangan Resmi (Plt. Kepala BKPSDM Luwu Timur)
+  // Pejabat Penandatangan Resmi (Kepala BKPSDM Kab. Luwu Timur)
   PIMPINAN_BKPSDM: {
     nama: 'PARHA ARIEF, S.AP',
-    jabatan: 'Plt. Kepala BKPSDM',
+    jabatan: 'Kepala BKPSDM Kabupaten Luwu Timur',
     pangkat: 'Pembina',
     nip: '19840114 200312 2 001'
   },
@@ -58,7 +58,7 @@ const DisposisiModule = {
                 Pencatatan Disposisi Fisik BKPSDM Luwu Timur
               </span>
               <span class="badge badge-info" style="font-size:11px; padding:3px 8px; font-weight:700;">
-                Plt. Kepala BKPSDM: ${this.PIMPINAN_BKPSDM.nama}
+                Kepala BKPSDM: ${this.PIMPINAN_BKPSDM.nama}
               </span>
             </div>
             <h2 style="margin-top:4px;">Pencatatan & Pengelolaan Disposisi Surat Masuk</h2>

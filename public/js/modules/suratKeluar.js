@@ -421,7 +421,7 @@ const SuratKeluarModule = {
               </span>
             </div>
             <div style="font-size:11px; color:#64748b; margin-top:4px;">
-              ${s.penandatangan ? s.penandatangan.replace('Kabupaten Luwu Timur', '') : 'Kepala BKPSDM'}
+              ${s.penandatangan ? s.penandatangan.replace('Kabupaten Luwu Timur', '') : 'PARHA ARIEF, S.AP'}
             </div>
           </td>
           <td style="text-align:right;">
@@ -596,7 +596,7 @@ const SuratKeluarModule = {
           <div class="form-group">
             <label class="form-label">Pejabat Penandatangan Surat</label>
             <select id="sk-penandatangan" class="form-control">
-              <option value="Kepala BKPSDM Kabupaten Luwu Timur">Kepala BKPSDM Kabupaten Luwu Timur (Drs. H. Ramadhan Pirade, M.Si.)</option>
+              <option value="PARHA ARIEF, S.AP" selected>Kepala BKPSDM Kab. Luwu Timur (PARHA ARIEF, S.AP)</option>
               <option value="Bupati Luwu Timur cq. Kepala BKPSDM">Bupati Luwu Timur cq. Kepala BKPSDM</option>
               <option value="Sekretaris BKPSDM an. Kepala Badan">Sekretaris BKPSDM an. Kepala Badan</option>
             </select>
@@ -874,7 +874,7 @@ const SuratKeluarModule = {
           </div>
           <div>
             <div style="font-size:11px; color:#64748b;">Pejabat Penandatangan:</div>
-            <div style="font-weight:600; font-size:13px;">${s.penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur'}</div>
+            <div style="font-weight:600; font-size:13px;">${s.penandatangan || 'PARHA ARIEF, S.AP (Kepala BKPSDM)'}</div>
           </div>
         </div>
 
@@ -959,7 +959,7 @@ const SuratKeluarModule = {
           <div class="form-group">
             <label class="form-label">Pejabat Penandatangan</label>
             <select id="edit-sk-penandatangan" class="form-control">
-              <option value="Kepala BKPSDM Kabupaten Luwu Timur" ${s.penandatangan && s.penandatangan.includes('Kepala BKPSDM') ? 'selected' : ''}>Kepala BKPSDM Kabupaten Luwu Timur</option>
+              <option value="PARHA ARIEF, S.AP" ${(!s.penandatangan || s.penandatangan.includes('PARHA') || s.penandatangan.includes('Kepala BKPSDM')) && !s.penandatangan.includes('Bupati') && !s.penandatangan.includes('Sekretaris') ? 'selected' : ''}>Kepala BKPSDM Kab. Luwu Timur (PARHA ARIEF, S.AP)</option>
               <option value="Bupati Luwu Timur cq. Kepala BKPSDM" ${s.penandatangan && s.penandatangan.includes('Bupati') ? 'selected' : ''}>Bupati Luwu Timur cq. Kepala BKPSDM</option>
               <option value="Sekretaris BKPSDM an. Kepala Badan" ${s.penandatangan && s.penandatangan.includes('Sekretaris') ? 'selected' : ''}>Sekretaris BKPSDM an. Kepala Badan</option>
             </select>

@@ -420,7 +420,7 @@ const server = http.createServer(async (req, res) => {
         const newDisposisi = {
           id: newId,
           id_surat_masuk: parseInt(body.id_surat_masuk, 10),
-          dari_user: body.dari_user || 'PARHA ARIEF, S.AP (Plt. Kepala BKPSDM)',
+          dari_user: body.dari_user || 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
           diteruskan_kepada: diteruskanList,
           tujuan_user_id: body.tujuan_user_id ? parseInt(body.tujuan_user_id, 10) : null,
           tujuan_nama: body.tujuan_nama || diteruskanList.join(', '),
@@ -588,7 +588,7 @@ const server = http.createServer(async (req, res) => {
           lama_hari: parseInt(body.lama_hari || '1', 10),
           pembebanan_anggaran: body.pembebanan_anggaran || 'DPA-SKPD BKPSDM Kabupaten Luwu Timur TA 2026',
           pejabat_penandatangan: body.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
-          jabatan_penandatangan: body.jabatan_penandatangan || 'Plt. Kepala BKPSDM Kabupaten Luwu Timur',
+          jabatan_penandatangan: body.jabatan_penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur',
           status_naskah_fisik: 'Naskah fisik disusun & dicetak manual oleh bidang (Tanda tangan basah manual)',
           personil: Array.isArray(body.personil) ? body.personil : []
         };
