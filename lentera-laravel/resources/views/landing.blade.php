@@ -3,330 +3,1208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LENTERA BKPSDM - Layanan Elektronik Tata Naskah dan Administrasi Kab. Luwu Timur</title>
+    <title>LENTERA BKPSDM - Layanan Elektronik Tata Naskah & Administrasi Kab. Luwu Timur</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- CSS Proyek Persuratan BKPSDM -->
-    <link rel="stylesheet" href="{{ asset('css/variables.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        body {
+        :root {
+            --gov-navy: #0f2b5c;
+            --gov-navy-dark: #0a1c3d;
+            --gov-navy-light: #1e3a8a;
+            --gov-blue: #0284c7;
+            --gov-blue-light: #f0f9ff;
+            --gov-emerald: #0d9488;
+            --gov-emerald-light: #f0fdfa;
+            --gov-gold: #d97706;
+            --gov-gold-light: #fef3c7;
+            --gov-slate: #334155;
+            --gov-slate-light: #f8fafc;
+            --gov-border: #e2e8f0;
+            --gov-card-shadow: 0 10px 25px -5px rgba(15, 43, 92, 0.06), 0 8px 10px -6px rgba(15, 43, 92, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #0f172a;
-            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: var(--gov-slate);
+            line-height: 1.6;
             overflow-x: hidden;
         }
-        .landing-page-root {
-            display: block !important;
+
+        /* 1. TOP ANNOUNCEMENT BAR */
+        .top-announce-bar {
+            background: linear-gradient(90deg, #0a1c3d 0%, #1e3a8a 100%);
+            color: #ffffff;
+            font-size: 0.78rem;
+            padding: 8px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .announce-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .badge-regulasi {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .announce-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #cbd5e1;
+            font-size: 0.75rem;
+        }
+
+        /* 2. MAIN NAVBAR */
+        header.portal-navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--gov-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .navbar-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .portal-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .brand-logos {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #0284c7;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
+        }
+
+        .logo-rect-card {
+            background: #ffffff;
+            border: 1px solid var(--gov-border);
+            border-radius: 8px;
+            padding: 4px 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-bkpsdm-img {
+            height: 24px;
+            width: auto;
+        }
+
+        .brand-meta h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--gov-navy);
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+
+        .brand-meta p {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        nav.nav-menu ul {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 28px;
+        }
+
+        nav.nav-menu a {
+            text-decoration: none;
+            color: #475569;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: color 0.15s ease;
+        }
+
+        nav.nav-menu a:hover {
+            color: var(--gov-blue);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-login-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .btn-login-header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.3);
+        }
+
+        /* 3. HERO SECTION (Asymmetric Split Layout) */
+        section.hero-portal {
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+            padding: 64px 24px 80px;
             position: relative;
-            min-height: 100vh;
+            overflow: hidden;
+            border-bottom: 1px solid var(--gov-border);
+        }
+
+        .hero-portal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(2, 132, 199, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .hero-tag-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-headline {
+            font-size: 2.35rem;
+            font-weight: 800;
+            color: var(--gov-navy-dark);
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+        }
+
+        .hero-headline .text-highlight {
+            color: #0284c7;
+            position: relative;
+        }
+
+        .hero-description {
+            font-size: 1.02rem;
+            color: #475569;
+            margin-bottom: 28px;
+            line-height: 1.65;
+            max-width: 580px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-main {
+            background: #1e3a8a;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-hero-main:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .btn-hero-alt {
+            background: #ffffff;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-hero-alt:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .hero-metrics-strip {
+            display: flex;
+            gap: 28px;
+            border-top: 1px solid var(--gov-border);
+            padding-top: 24px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--gov-navy);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* 4. HERO RIGHT: LIVE CONTROL CARD WIDGET */
+        .live-control-widget {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 18px;
+            padding: 26px;
+            box-shadow: 0 20px 40px -15px rgba(15, 43, 92, 0.12);
+            position: relative;
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--gov-border);
+        }
+
+        .widget-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .widget-pulse {
+            width: 10px;
+            height: 10px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .widget-title h3 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--gov-navy);
+        }
+
+        .widget-badge {
+            background: #ecfdf5;
+            color: #065f46;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid #a7f3d0;
+        }
+
+        .live-stat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+
+        .live-stat-card.accent-card {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .card-top-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.74rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-mid-val {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--gov-navy);
+            letter-spacing: -0.2px;
+        }
+
+        .card-next-est {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: #059669;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .widget-footer-note {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.74rem;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        /* 5. SECTION: EXECUTIVE SPOTLIGHT (Pimpinan BKPSDM) */
+        section.executive-spotlight {
+            padding: 70px 24px;
+            background: #ffffff;
+        }
+
+        .section-header-modern {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 48px;
+        }
+
+        .section-badge-modern {
+            background: #eff6ff;
+            color: #1e40af;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            display: inline-block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title-modern {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--gov-navy-dark);
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .section-sub-modern {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        .executive-card-wrapper {
+            max-width: 1080px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            border: 1px solid #dbeafe;
+            border-radius: 18px;
+            padding: 36px 42px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 36px;
+            align-items: center;
+            box-shadow: var(--gov-card-shadow);
+        }
+
+        .exec-quote-text {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #1e293b;
+            line-height: 1.7;
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 18px;
+            border-left: 4px solid #0284c7;
+        }
+
+        .exec-profile-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .exec-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #1e3a8a;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .exec-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--gov-navy);
+        }
+
+        .exec-rank {
+            font-size: 0.78rem;
+            color: #0d9488;
+            font-weight: 600;
+        }
+
+        .connected-units-list {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .connected-units-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .unit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: #334155;
+            padding: 7px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .unit-item:last-child { border-bottom: none; }
+        .unit-item i { color: #0284c7; }
+
+        /* 6. BENTO GRID MODULES SECTION */
+        section.bento-section {
+            background: #f8fafc;
+            padding: 80px 24px;
+            border-top: 1px solid var(--gov-border);
+            border-bottom: 1px solid var(--gov-border);
+        }
+
+        .bento-container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .bento-card {
+            background: #ffffff;
+            border: 1px solid var(--gov-border);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -6px rgba(15, 43, 92, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .bento-wide {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
+            border-color: #99f6e4;
+        }
+
+        .bento-icon-pill {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-bottom: 18px;
+        }
+
+        .bento-card.emerald .bento-icon-pill {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .bento-card.gold .bento-icon-pill {
+            background: #fffbeb;
+            color: #b45309;
+        }
+
+        .bento-card h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--gov-navy);
+            margin-bottom: 10px;
+        }
+
+        .bento-card p {
+            font-size: 0.88rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .bento-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .bento-tag {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .bento-link {
+            color: #0284c7;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bento-link:hover { text-decoration: underline; }
+
+        /* 7. LIVE KLASIFIKASI SEARCH SECTION */
+        section.klasifikasi-tool-section {
+            padding: 80px 24px;
+            background: #ffffff;
+        }
+
+        .search-box-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid #0284c7;
+            border-radius: 14px;
+            padding: 6px;
+            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box-wrap i {
+            font-size: 1.25rem;
+            color: #0284c7;
+            margin-left: 14px;
+        }
+
+        .search-input-live {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: #0f172a;
+            padding: 10px 0;
+        }
+
+        .search-btn-action {
+            background: #1e3a8a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        #liveSearchSuggestions {
+            max-width: 800px;
+            margin: 12px auto 0;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+            display: none;
+            overflow: hidden;
+        }
+
+        .suggestion-item {
+            padding: 10px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.84rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .suggestion-item:hover {
+            background: #eff6ff;
+        }
+
+        /* 8. FOOTER */
+        footer.portal-footer {
+            background: #0a1c3d;
+            color: #ffffff;
+            padding: 60px 24px 24px;
+        }
+
+        .footer-grid {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-brand-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #38bdf8;
+        }
+
+        .footer-brand-desc {
+            font-size: 0.84rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: #ffffff;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.84rem;
+            transition: color 0.15s ease;
+        }
+
+        .footer-col a:hover { color: #38bdf8; }
+
+        .footer-bottom {
+            max-width: 1240px;
+            margin: 20px auto 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 992px) {
+            .hero-container { grid-template-columns: 1fr; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-wide { grid-column: span 1; }
+            .executive-card-wrapper { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            nav.nav-menu { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="landing-page-root">
-        <!-- Ambient Dynamic Glows -->
-        <div class="landing-ambient-bg">
-            <div class="ambient-orb ambient-orb-1"></div>
-            <div class="ambient-orb ambient-orb-2"></div>
-            <div class="ambient-orb ambient-orb-3"></div>
+
+    <!-- 1. TOP ANNOUNCEMENT BAR -->
+    <div class="top-announce-bar">
+        <div class="announce-left">
+            <span class="badge-regulasi"><i class="bi bi-shield-check"></i> RESMI</span>
+            <span>Peraturan Bupati Luwu Timur Nomor 69 Tahun 2023 tentang Kode Klasifikasi Arsip</span>
         </div>
-        <div class="landing-grid-pattern"></div>
+        <div class="announce-right">
+            <span><i class="bi bi-geo-alt-fill"></i> Malili, Kab. Luwu Timur</span>
+            <span><i class="bi bi-clock-fill"></i> Layanan: 07.30 - 16.00 WITA</span>
+        </div>
+    </div>
 
-        <!-- Navigation Header -->
-        <header class="landing-header">
-            <div class="landing-nav-container">
-                <a href="#hero" class="landing-brand">
-                    <img src="{{ asset('img/logo_lutim_juara.png') }}" alt="Logo Lutim Juara" class="landing-brand-logo">
-                    <div style="background: #ffffff; padding: 4px 10px; border-radius: 8px; display: inline-flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
-                        <img src="{{ asset('img/logo_bkpsdm.png') }}" alt="Logo BKPSDM" style="height: 22px; width: auto; object-fit: contain;">
+    <!-- 2. MAIN NAVBAR -->
+    <header class="portal-navbar">
+        <div class="navbar-container">
+            <a href="{{ route('landing') }}" class="portal-brand">
+                <div class="brand-logos">
+                    <img src="{{ asset('img/logo_lutim_juara.png') }}" alt="Logo Lutim Juara" class="logo-circle">
+                    <div class="logo-rect-card">
+                        <img src="{{ asset('img/logo_bkpsdm.png') }}" alt="Logo BKPSDM" class="logo-bkpsdm-img">
                     </div>
-                    <div class="landing-brand-text">
-                        <h1>LENTERA BKPSDM</h1>
-                        <p>Layanan Elektronik Tata Naskah & Administrasi</p>
-                    </div>
-                </a>
+                </div>
+                <div class="brand-meta">
+                    <h1>LENTERA BKPSDM</h1>
+                    <p>Kabupaten Luwu Timur • Versi Laravel MVC</p>
+                </div>
+            </a>
 
-                <ul class="landing-nav-links">
+            <nav class="nav-menu">
+                <ul>
                     <li><a href="#hero">Beranda</a></li>
-                    <li><a href="#cek-nomor">Cek Nomor</a></li>
-                    <li><a href="#layanan">Layanan</a></li>
-                    <li><a href="#regulasi">Alur Persuratan</a></li>
+                    <li><a href="#pimpinan">Pimpinan</a></li>
+                    <li><a href="#modul">Modul Layanan</a></li>
+                    <li><a href="#kamus">Cari Klasifikasi</a></li>
                 </ul>
+            </nav>
 
-                <div class="landing-nav-actions">
-                    <a href="{{ route('login') }}" class="btn-landing-primary">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
-                        Masuk Pegawai
+            <div class="nav-actions">
+                <a href="{{ route('login') }}" class="btn-login-header">
+                    <i class="bi bi-box-arrow-in-right"></i> Masuk ke Sistem
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. HERO SECTION (Split Layout) -->
+    <section class="hero-portal" id="hero">
+        <div class="hero-container">
+            <!-- Left Info -->
+            <div>
+                <div class="hero-tag-badge">
+                    <i class="bi bi-cpu-fill"></i> Sistem Persuratan Elektronik & Tata Naskah Dinas Terpadu
+                </div>
+
+                <h1 class="hero-headline">
+                    Transformasi Digital Persuratan & <span class="text-highlight">Tertib Naskah Dinas</span> BKPSDM
+                </h1>
+
+                <p class="hero-description">
+                    Mewujudkan administrasi perkantoran modern tanpa nomor ganda. Integrasi penomoran surat keluar otomatis, pencatatan buku agenda masuk, dan kendali lembar disposisi pimpinan berbasis regulasi daerah.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="{{ route('login') }}" class="btn-hero-main">
+                        <i class="bi bi-shield-lock-fill"></i> Masuk Portal Persuratan
+                    </a>
+                    <a href="#kamus" class="btn-hero-alt">
+                        <i class="bi bi-search"></i> Cari Kode Perbup (2.961 Kode)
                     </a>
                 </div>
-            </div>
-        </header>
 
-        <!-- Hero Section -->
-        <section class="landing-hero" id="hero">
-            <div class="hero-grid">
-                <div>
-                    <div class="hero-pill-badge">
-                        <span class="hero-pill-dot"></span>
-                        Portal Resmi LENTERA - BKPSDM Luwu Timur
+                <div class="hero-metrics-strip">
+                    <div class="metric-item">
+                        <span class="metric-value">{{ number_format($stats['total_surat_keluar']) }}</span>
+                        <span class="metric-label">Surat Keluar Terbit</span>
                     </div>
-
-                    <h1 class="hero-title">
-                        LENTERA: Layanan Elektronik Tata Naskah <span class="gradient-text">& Administrasi BKPSDM</span>
-                    </h1>
-
-                    <p class="hero-subtitle">
-                        Layanan Elektronik Tata Naskah dan Administrasi terpadu berbasis <strong>Perbup No. 69 Tahun 2023</strong>. Mempermudah pencatatan agenda, kendali disposisi, penomoran resmi surat keluar, dan SPT secara akuntabel.
-                    </p>
-
-                    <div class="hero-cta-group">
-                        <a href="{{ route('login') }}" class="btn-hero-primary">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                            Buka Aplikasi
-                        </a>
-                        <button class="btn-hero-secondary" onclick="document.getElementById('cek-nomor').scrollIntoView({behavior: 'smooth'})">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                            Cek Nomor Surat
-                        </button>
+                    <div class="metric-item">
+                        <span class="metric-value">{{ number_format($stats['total_surat_masuk']) }}</span>
+                        <span class="metric-label">Agenda Masuk</span>
                     </div>
-
-                    <div class="hero-trust-bar">
-                        <div class="trust-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            <span>Perbup Lutim 69/2023</span>
-                        </div>
-                        <div class="trust-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            <span>Penomoran Terpusat</span>
-                        </div>
-                        <div class="trust-item">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            <span>Kendali Disposisi</span>
-                        </div>
+                    <div class="metric-item">
+                        <span class="metric-value">{{ number_format($stats['total_surat_tugas']) }}</span>
+                        <span class="metric-label">SPT Kedinasan</span>
                     </div>
-                </div>
-
-                <!-- Right Side: Official Lutim Juara & BKPSDM Showcase -->
-                <div class="hero-visual-card">
-                    <div class="hero-emblem-wrap">
-                        <div class="hero-emblem-glow"></div>
-                        <img src="{{ asset('img/logo_lutim_juara.png') }}" alt="Logo Resmi Lutim Juara" class="hero-emblem-img">
-                    </div>
-                    <!-- Official BKPSDM Logo -->
-                    <div style="background: #ffffff; padding: 10px 24px; border-radius: 12px; margin: 0 auto 16px; max-width: 220px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.8);">
-                        <img src="{{ asset('img/logo_bkpsdm.png') }}" alt="Logo Resmi BKPSDM" style="width: 100%; height: auto; max-height: 46px; object-fit: contain;">
-                    </div>
-                    <h2 class="hero-visual-title">LUTIM JUARA</h2>
-                    <div class="hero-visual-tagline">BKPSDM KABUPATEN LUWU TIMUR</div>
-                    <div class="hero-chips-container">
-                        <span class="hero-chip accent-cyan">
-                            Aparatur BKPSDM
-                        </span>
-                        <span class="hero-chip accent-green">
-                            2.961 Kode Perbup
-                        </span>
-                        <span class="hero-chip accent-amber">
-                            Agenda 2026
-                        </span>
+                    <div class="metric-item">
+                        <span class="metric-value">{{ number_format($stats['total_klasifikasi']) }}</span>
+                        <span class="metric-label">Kode Perbup 69/2023</span>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Statistics Section -->
-        <section class="landing-stats-section">
-            <div class="stats-glass-grid">
-                <div class="stat-glass-card">
-                    <div class="stat-glass-header">
-                        <span class="stat-glass-title">Surat Masuk</span>
-                        <div class="stat-glass-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        </div>
+            <!-- Right Live Control Panel Widget -->
+            <div class="live-control-widget">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <span class="widget-pulse"></span>
+                        <h3>Pusat Penomoran Digital (Anti-Ganda)</h3>
                     </div>
-                    <div class="stat-glass-value">{{ number_format($stats['total_surat_masuk']) }}</div>
-                    <div class="stat-glass-desc">Total Agenda Masuk</div>
+                    <span class="widget-badge">Real-Time Terkunci</span>
                 </div>
 
-                <div class="stat-glass-card">
-                    <div class="stat-glass-header">
-                        <span class="stat-glass-title">Surat Keluar</span>
-                        <div class="stat-glass-icon" style="color: #34d399;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        </div>
+                <!-- Surat Keluar Live Card -->
+                <div class="live-stat-card accent-card">
+                    <div class="card-top-row">
+                        <span><i class="bi bi-send-fill text-success"></i> SURAT KELUAR DINAS</span>
+                        <span>Kode Perbup 69/2023</span>
                     </div>
-                    <div class="stat-glass-value" style="color: #34d399;">{{ number_format($stats['total_surat_keluar']) }}</div>
-                    <div class="stat-glass-desc">Nomor Resmi Terbit</div>
-                </div>
-
-                <div class="stat-glass-card">
-                    <div class="stat-glass-header">
-                        <span class="stat-glass-title">Surat Tugas</span>
-                        <div class="stat-glass-icon" style="color: #fbbf24;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-                        </div>
-                    </div>
-                    <div class="stat-glass-value" style="color: #fbbf24;">{{ number_format($stats['total_surat_tugas']) }}</div>
-                    <div class="stat-glass-desc">SPT Kedinasan</div>
-                </div>
-
-                <div class="stat-glass-card">
-                    <div class="stat-glass-header">
-                        <span class="stat-glass-title">Klasifikasi Arsip</span>
-                        <div class="stat-glass-icon" style="color: #c084fc;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                        </div>
-                    </div>
-                    <div class="stat-glass-value" style="color: #c084fc;">{{ number_format($stats['total_klasifikasi']) }}</div>
-                    <div class="stat-glass-desc">Kode Perbup 69/2023</div>
-                </div>
-
-                <div class="stat-glass-card">
-                    <div class="stat-glass-header">
-                        <span class="stat-glass-title">Pegawai</span>
-                        <div class="stat-glass-icon" style="color: #f472b6;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        </div>
-                    </div>
-                    <div class="stat-glass-value" style="color: #f472b6;">{{ $stats['total_pegawai'] }}</div>
-                    <div class="stat-glass-desc">Aparatur BKPSDM</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Interactive Live Tools Section: Anti-Nomor Ganda -->
-        <section class="landing-tools-section" id="cek-nomor">
-            <div class="section-badge-center">
-                <span class="section-badge">Informasi Cepat</span>
-            </div>
-            <div class="section-heading-center">
-                <h2>Cek Nomor Surat Resmi (Anti Nomor Ganda)</h2>
-                <p>Pantau nomor surat keluar dan nomor SPT dinas terakhir yang resmi tercatat di sistem.</p>
-            </div>
-
-            <div style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 24px; backdrop-filter: blur(12px);">
-                    <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: #38bdf8; letter-spacing: 0.5px;">Surat Keluar Dinas</div>
-                    <div style="font-size: 13px; color: #94a3b8; margin-top: 6px;">Nomor Terakhir Terbit:</div>
-                    <div style="font-size: 18px; font-weight: 800; color: #34d399; margin: 4px 0;">
+                    <div class="card-mid-val">
                         {{ $keluarSeq['last_surat']->no_surat_keluar ?? '800.1.3.3/841/BKPSDM/X/2026' }}
                     </div>
-                    <div style="font-size: 12px; color: #cbd5e1; margin-top: 8px;">
-                        Estimasi Urutan Berikutnya: <strong style="color: #38bdf8; font-size: 15px;">{{ $keluarSeq['next_number'] }}</strong>
+                    <div class="card-next-est">
+                        <i class="bi bi-check-circle-fill"></i> Estimasi Urutan Berikutnya: <strong>{{ $keluarSeq['next_number'] }}</strong>
                     </div>
                 </div>
 
-                <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 16px; padding: 24px; backdrop-filter: blur(12px);">
-                    <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: #fbbf24; letter-spacing: 0.5px;">Surat Tugas (SPT Dinas)</div>
-                    <div style="font-size: 13px; color: #94a3b8; margin-top: 6px;">Nomor Terakhir Terbit:</div>
-                    <div style="font-size: 18px; font-weight: 800; color: #fbbf24; margin: 4px 0;">
+                <!-- Surat Tugas Live Card -->
+                <div class="live-stat-card">
+                    <div class="card-top-row">
+                        <span><i class="bi bi-briefcase-fill text-primary"></i> SURAT PERINTAH TUGAS (SPT)</span>
+                        <span>Klasifikasi: 800.1.11.1</span>
+                    </div>
+                    <div class="card-mid-val">
                         {{ $tugasSeq['last_spt']->no_surat_tugas ?? '800.1.11.1/135/BKPSDM' }}
                     </div>
-                    <div style="font-size: 12px; color: #cbd5e1; margin-top: 8px;">
-                        Estimasi Urutan Berikutnya: <strong style="color: #34d399; font-size: 15px;">{{ $tugasSeq['next_number'] }}</strong> ({{ $tugasSeq['full_next_no'] }})
+                    <div class="card-next-est" style="color: #2563eb;">
+                        <i class="bi bi-check-circle-fill"></i> Nomor Urut Berikutnya: <strong>{{ $tugasSeq['full_next_no'] }}</strong>
+                    </div>
+                </div>
+
+                <div class="widget-footer-note">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <span>Rekan kantor yang sedang menyusun draf di Microsoft Word dapat mengacu ke nomor estimasi di atas.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SECTION: EXECUTIVE SPOTLIGHT (Pimpinan BKPSDM) -->
+    <section class="executive-spotlight" id="pimpinan">
+        <div class="section-header-modern">
+            <span class="section-badge-modern">Kepemimpinan & Komitmen</span>
+            <h2 class="section-title-modern">Aparatur Berintegritas, Tata Naskah Akuntabel</h2>
+            <p class="section-sub-modern">Penyelenggaraan tata naskah dinas kedinasan BKPSDM Kabupaten Luwu Timur di bawah koordinasi Kepala Badan.</p>
+        </div>
+
+        <div class="executive-card-wrapper">
+            <div>
+                <p class="exec-quote-text">
+                    "Penerapan tertib administrasi persuratan dan penomoran digital terpusat merupakan komitmen BKPSDM Kabupaten Luwu Timur dalam mewujudkan birokrasi aparatur yang berkeadaban, transparan, dan bebas dari duplikasi administrasi sesuai Peraturan Bupati Nomor 69 Tahun 2023."
+                </p>
+
+                <div class="exec-profile-meta">
+                    <div class="exec-avatar">PA</div>
+                    <div>
+                        <div class="exec-name">PARHA ARIEF, S.AP</div>
+                        <div class="exec-rank">Pembina (IV/a) • Kepala BKPSDM Kabupaten Luwu Timur</div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 4 Pillars of Persuratan Section -->
-        <section class="landing-pillars-section" id="layanan">
-            <div class="section-badge-center">
-                <span class="section-badge">Layanan Persuratan</span>
-            </div>
-            <div class="section-heading-center">
-                <h2>Modul Tata Kelola Persuratan</h2>
-                <p>Empat pilar utama dalam pengelolaan naskah dinas kedinasan BKPSDM Kabupaten Luwu Timur.</p>
-            </div>
-
-            <div class="pillars-grid">
-                <div class="pillar-card">
-                    <div class="pillar-icon-box">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                    </div>
-                    <h3>Surat Masuk</h3>
-                    <p>Registrasi cepat surat dinas masuk, penomoran agenda otomatis, dan pelacakan status disposisi.</p>
-                    <div class="pillar-tags">
-                        <span class="pillar-tag">Agenda Otomatis</span>
-                        <span class="pillar-tag">Auto-Suggest Kode</span>
-                    </div>
-                    <a href="{{ route('login') }}" class="pillar-btn-link">Buka Agenda Masuk →</a>
+            <!-- Connected Organizational Units -->
+            <div class="connected-units-list">
+                <div class="connected-units-title">Unit Kerja Terintegrasi Sistem:</div>
+                <div class="unit-item">
+                    <i class="bi bi-check2-circle"></i>
+                    <span>Bidang Pengadaan, Mutasi & Informasi Kepegawaian</span>
                 </div>
-
-                <div class="pillar-card">
-                    <div class="pillar-icon-box">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                    </div>
-                    <h3>Kendali Disposisi</h3>
-                    <p>Perekaman instruksi arahan pimpinan dari lembar fisik untuk monitoring tindak lanjut bidang.</p>
-                    <div class="pillar-tags">
-                        <span class="pillar-tag">Buku Kendali Digital</span>
-                        <span class="pillar-tag">Tracking Status</span>
-                    </div>
-                    <a href="{{ route('login') }}" class="pillar-btn-link">Buka Disposisi →</a>
+                <div class="unit-item">
+                    <i class="bi bi-check2-circle"></i>
+                    <span>Bidang Pengembangan Kompetensi & Kinerja Aparatur</span>
                 </div>
-
-                <div class="pillar-card">
-                    <div class="pillar-icon-box">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </div>
-                    <h3>Surat Keluar</h3>
-                    <p>Penomoran resmi terpusat berbasis Perbup Luwu Timur 69/2023 guna mencegah nomor dobel.</p>
-                    <div class="pillar-tags">
-                        <span class="pillar-tag">Nomor Terpusat</span>
-                        <span class="pillar-tag">Sanding Nomor</span>
-                    </div>
-                    <a href="{{ route('login') }}" class="pillar-btn-link">Buka Register Keluar →</a>
+                <div class="unit-item">
+                    <i class="bi bi-check2-circle"></i>
+                    <span>Sekretariat / Subbagian Umum & Kepegawaian</span>
                 </div>
-
-                <div class="pillar-card">
-                    <div class="pillar-icon-box">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-                    </div>
-                    <h3>Surat Tugas (SPT)</h3>
-                    <p>Penomoran resmi digital terpusat kode 800.1.11.1 dengan integrasi data aparatur penugasan.</p>
-                    <div class="pillar-tags">
-                        <span class="pillar-tag">Kode 800.1.11.1</span>
-                        <span class="pillar-tag">Multi-Personil</span>
-                    </div>
-                    <a href="{{ route('login') }}" class="pillar-btn-link">Buka Agenda SPT →</a>
+                <div class="unit-item">
+                    <i class="bi bi-check2-circle"></i>
+                    <span>Subbagian Perencanaan & Keuangan</span>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Footer -->
-        <footer class="landing-footer">
-            <div class="footer-inner">
-                <div class="footer-brand">
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <img src="{{ asset('img/logo_lutim_juara.png') }}" alt="Logo Lutim Juara" class="footer-logo">
-                        <div style="background: #ffffff; padding: 6px 14px; border-radius: 8px; display: inline-flex; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-                            <img src="{{ asset('img/logo_bkpsdm.png') }}" alt="Logo BKPSDM" style="height: 26px; width: auto; object-fit: contain;">
+    <!-- 5. BENTO GRID MODULES SECTION -->
+    <section class="bento-section" id="modul">
+        <div class="bento-container">
+            <div class="section-header-modern">
+                <span class="section-badge-modern">Arsitektur Modul Persuratan</span>
+                <h2 class="section-title-modern">Empat Pilar Tata Naskah Dinas Terpadu</h2>
+                <p class="section-sub-modern">Alur operasional persuratan dirancang terstruktur dan terotomatisasi secara end-to-end.</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- Bento 1: Large Wide Box (Surat Keluar) -->
+                <div class="bento-card bento-wide">
+                    <div>
+                        <div class="bento-icon-pill" style="background: #f0fdf4; color: #15803d;">
+                            <i class="bi bi-send-check-fill"></i>
+                        </div>
+                        <h3>Penerbitan Nomor Surat Keluar Resmi (Anti Nomor Ganda)</h3>
+                        <p>
+                            Menghilangkan insiden bentrok penomoran antar-bidang yang sedang menyusun draf di Microsoft Word. Rumus baku <code>[Kode Perbup]/[Urut]/BKPSDM/[Romawi]/[Tahun]</code> terhitung murni secara real-time dari database pusat.
+                        </p>
+                        <div class="bento-tags">
+                            <span class="bento-tag">Algoritma N+1 Murni</span>
+                            <span class="bento-tag">Buku Agenda Otomatis</span>
+                            <span class="bento-tag">Klasifikasi Baku 2026</span>
                         </div>
                     </div>
-                    <div class="footer-info">
-                        <h3>BKPSDM KABUPATEN LUWU TIMUR</h3>
+                    <a href="{{ route('login') }}" class="bento-link">Buka Registrasi Surat Keluar →</a>
+                </div>
+
+                <!-- Bento 2: Kendali Disposisi -->
+                <div class="bento-card">
+                    <div>
+                        <div class="bento-icon-pill">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <h3>Lembar Kendali Disposisi</h3>
                         <p>
-                            Jalan Soekarno Hatta - Puncak Indah Malili, Kode Pos 92981, Sulawesi Selatan<br>
-                            Sistem Informasi Persuratan & Tata Naskah Dinas Terpadu (LENTERA)
+                            Distribusi petunjuk pimpinan secara presisi ke 6 unit/pejabat struktural resmi. Dilengkapi format cetak blanko fisik A4 standar pemerintah.
                         </p>
+                        <div class="bento-tags">
+                            <span class="bento-tag">6 Unit Tujuan Resmi</span>
+                            <span class="bento-tag">Cetak A4 Siap Pakai</span>
+                        </div>
                     </div>
+                    <a href="{{ route('login') }}" class="bento-link">Buka Lembar Disposisi →</a>
+                </div>
+
+                <!-- Bento 3: Surat Tugas (SPT) -->
+                <div class="bento-card">
+                    <div>
+                        <div class="bento-icon-pill" style="background: #fffbeb; color: #b45309;">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </div>
+                        <h3>Surat Perintah Tugas (SPT)</h3>
+                        <p>
+                            Penugasan aparatur terpusat pada kode <code>800.1.11.1</code> dengan dukungan multi-pegawai dari 44 personil resmi BKPSDM.
+                        </p>
+                        <div class="bento-tags">
+                            <span class="bento-tag">Kode 800.1.11.1</span>
+                            <span class="bento-tag">Multi-Personil</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('login') }}" class="bento-link">Buka Register SPT →</a>
+                </div>
+
+                <!-- Bento 4: Surat Masuk -->
+                <div class="bento-card">
+                    <div>
+                        <div class="bento-icon-pill">
+                            <i class="bi bi-inbox-fill"></i>
+                        </div>
+                        <h3>Buku Agenda Surat Masuk</h3>
+                        <p>
+                            Registrasi naskah masuk instansi eksternal secara tertib dengan nomor agenda unik <code>SM-2026-XXX</code> dan pelacakan status disposisi.
+                        </p>
+                        <div class="bento-tags">
+                            <span class="bento-tag">No. Agenda Unik</span>
+                            <span class="bento-tag">Pelacakan Status</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('login') }}" class="bento-link">Buka Agenda Masuk →</a>
+                </div>
+
+                <!-- Bento 5: Laporan & Ekspor -->
+                <div class="bento-card">
+                    <div>
+                        <div class="bento-icon-pill" style="background: #fdf2f8; color: #be185d;">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <h3>Rekapitulasi & Ekspor CSV</h3>
+                        <p>
+                            Laporan buku agenda berkala dapat difilter berdasarkan rentang tanggal dan diekspor ke format spreadsheet CSV / Excel sekali klik.
+                        </p>
+                        <div class="bento-tags">
+                            <span class="bento-tag">Ekspor CSV Excel</span>
+                            <span class="bento-tag">Cetak Buku Agenda</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('login') }}" class="bento-link">Lihat Fitur Laporan →</a>
                 </div>
             </div>
-            <div class="footer-bottom-bar">
-                <div>&copy; 2026 BKPSDM Kabupaten Luwu Timur. Hak Cipta Dilindungi.</div>
-                <div>LENTERA — Layanan Elektronik Tata Naskah dan Administrasi</div>
+        </div>
+    </section>
+
+    <!-- 6. LIVE KLASIFIKASI SEARCH SECTION -->
+    <section class="klasifikasi-tool-section" id="kamus">
+        <div class="section-header-modern">
+            <span class="section-badge-modern">Kamus Digital Kearsipan</span>
+            <h2 class="section-title-modern">Pencarian Kode Klasifikasi Perbup 69/2023</h2>
+            <p class="section-sub-modern">Ketik kata kunci perihal surat untuk menemukan kode klasifikasi resmi dari 2.961 entri baku daerah.</p>
+        </div>
+
+        <div class="search-box-wrap">
+            <i class="bi bi-search"></i>
+            <input type="text" id="landingLiveSearch" class="search-input-live" placeholder="Ketik kata kunci naskah dinas (contoh: mutasi, cuti, pensiun, tugas belajar, 800)..." oninput="doSearch(this.value)">
+            <button type="button" class="search-btn-action">Cari Kode</button>
+        </div>
+
+        <div id="liveSearchSuggestions"></div>
+    </section>
+
+    <!-- 7. FOOTER -->
+    <footer class="portal-footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand-title">LENTERA BKPSDM KAB. LUWU TIMUR</div>
+                <p class="footer-brand-desc">
+                    Layanan Elektronik Tata Naskah dan Administrasi Persuratan Terpadu berbasis Peraturan Bupati Luwu Timur Nomor 69 Tahun 2023. Implementasi arsitektur Model-View-Controller (Laravel 11/12).
+                </p>
+                <div style="font-size: 0.8rem; color: #cbd5e1;">
+                    <i class="bi bi-geo-alt"></i> Kompleks Perkantoran Pemerintah Daerah Kabupaten Luwu Timur, Puncak Indah Malili, 92981
+                </div>
             </div>
-        </footer>
-    </div>
+
+            <div class="footer-col">
+                <h4>Navigasi Portal</h4>
+                <ul>
+                    <li><a href="#hero">Beranda Utama</a></li>
+                    <li><a href="#pimpinan">Profil Kepemimpinan</a></li>
+                    <li><a href="#modul">Empat Pilar Layanan</a></li>
+                    <li><a href="#kamus">Pencarian Kode Klasifikasi</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Akses Pegawai</h4>
+                <ul>
+                    <li><a href="{{ route('login') }}">Masuk Portal LENTERA</a></li>
+                    <li><a href="{{ route('login') }}">Buku Agenda Surat Keluar</a></li>
+                    <li><a href="{{ route('login') }}">Registrasi Surat Tugas</a></li>
+                    <li><a href="{{ route('login') }}">Papan Kendali Disposisi</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>&copy; 2026 Pemerintah Kabupaten Luwu Timur — BKPSDM. Hak Cipta Dilindungi.</div>
+            <div>Implementasi Skripsi Mahasiswa Universitas Mega Buana Palopo (Yusri Mahendra - IK2311011)</div>
+        </div>
+    </footer>
+
+    <script>
+        let debounceTimer;
+        function doSearch(q) {
+            clearTimeout(debounceTimer);
+            const box = document.getElementById('liveSearchSuggestions');
+            const query = q.trim();
+
+            if (query.length < 2) {
+                box.style.display = 'none';
+                return;
+            }
+
+            debounceTimer = setTimeout(() => {
+                fetch(`/api/klasifikasi/search?q=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data || data.length === 0) {
+                            box.innerHTML = '<div style="padding: 14px; text-align: center; color: #94a3b8; font-size: 0.85rem;">Tidak ditemukan kode klasifikasi yang cocok.</div>';
+                            box.style.display = 'block';
+                            return;
+                        }
+
+                        let html = '';
+                        data.slice(0, 6).forEach(item => {
+                            html += `
+                                <div class="suggestion-item">
+                                    <div>
+                                        <strong style="color: #1e3a8a; font-size: 0.95rem;">${item.kode}</strong>
+                                        <div style="color: #334155; font-weight: 500;">${item.nama}</div>
+                                    </div>
+                                    <span style="background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; color: #64748b;">${item.kategori}</span>
+                                </div>
+                            `;
+                        });
+                        box.innerHTML = html;
+                        box.style.display = 'block';
+                    })
+                    .catch(() => {
+                        box.style.display = 'none';
+                    });
+            }, 250);
+        }
+    </script>
 </body>
 </html>
