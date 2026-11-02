@@ -48,7 +48,7 @@ class SuratKeluarController extends Controller
         return view('surat_keluar.index', compact('suratKeluarList', 'seqInfo', 'bidangList'));
     }
 
-    public function create(Request $request)
+    public function create(?Request $request = null)
     {
         $seqInfo = NomorSuratService::getSuratKeluarSequenceInfo();
         $nextAgenda = NomorSuratService::getNextAgendaSuratKeluar();
@@ -154,3 +154,4 @@ class SuratKeluarController extends Controller
             ->with('success', "Surat Keluar {$no} berhasil dihapus.");
     }
 }
+

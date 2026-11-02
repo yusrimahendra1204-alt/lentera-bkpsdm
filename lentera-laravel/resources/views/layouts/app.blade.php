@@ -479,10 +479,14 @@
                 <span>Buku Agenda & Cetak</span>
             </a>
 
-            <div class="menu-category">Pengaturan</div>
+            <div class="menu-category">Pengaturan & Sistem</div>
             <a href="{{ route('pegawai.index') }}" class="nav-item {{ request()->routeIs('pegawai.*') ? 'active' : '' }}">
                 <i class="bi bi-people-fill"></i>
                 <span>Data Pegawai (44)</span>
+            </a>
+            <a href="{{ route('database.index') }}" class="nav-item {{ request()->routeIs('database.*') ? 'active' : '' }}">
+                <i class="bi bi-database-fill-gear"></i>
+                <span>Basis Data & Cadangan</span>
             </a>
         </div>
 
@@ -531,7 +535,7 @@
                 </div>
             @endif
 
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 <div class="alert alert-danger">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     <div>
@@ -552,3 +556,4 @@
     @yield('scripts')
 </body>
 </html>
+

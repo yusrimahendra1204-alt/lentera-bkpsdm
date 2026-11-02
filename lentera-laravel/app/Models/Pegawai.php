@@ -60,3 +60,4 @@ class Pegawai extends Authenticatable
         return $this->role === 'sekretaris';
     }
 }
+

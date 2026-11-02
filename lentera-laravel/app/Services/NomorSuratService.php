@@ -21,6 +21,34 @@ class NomorSuratService
     }
 
     /**
+     * Format tanggal Indonesia baku (contoh: 15 Oktober 2026)
+     */
+    public static function formatIndoDate($date): string
+    {
+        if (!$date) return '-';
+        if (is_string($date)) {
+            $time = strtotime($date);
+            if (!$time) return $date;
+        } elseif ($date instanceof \DateTimeInterface) {
+            $time = $date->getTimestamp();
+        } else {
+            return '-';
+        }
+
+        $bulanIndo = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+
+        $d = date('j', $time);
+        $m = $bulanIndo[(int)date('n', $time)] ?? date('m', $time);
+        $y = date('Y', $time);
+
+        return "{$d} {$m} {$y}";
+    }
+
+    /**
      * Estimasi nomor agenda Surat Masuk berikutnya (format: SM-2026-131)
      */
     public static function getNextAgendaSuratMasuk(int $tahun = 2026): string
@@ -147,3 +175,4 @@ class NomorSuratService
         ];
     }
 }
+

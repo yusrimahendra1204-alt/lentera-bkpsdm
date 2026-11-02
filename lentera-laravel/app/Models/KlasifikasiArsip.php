@@ -15,3 +15,4 @@ class KlasifikasiArsip extends Model
         'keywords',
     ];
 }
+

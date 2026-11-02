@@ -62,8 +62,8 @@
                 <textarea name="maksud_tugas" class="form-control" rows="3" placeholder="Contoh: Mengikuti Rapat Koordinasi Teknis Kepegawaian Se-Sulawesi Selatan..." required>{{ old('maksud_tugas') }}</textarea>
             </div>
 
-            <!-- Tempat Tujuan, Tanggal Berangkat & Kembali -->
-            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px;">
+            <!-- Tempat Tujuan, Tanggal Berangkat & Kembali, Lama Hari -->
+            <div style="display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1fr; gap: 14px;">
                 <div class="form-group">
                     <label class="form-label">Tempat / Lokasi Tujuan *</label>
                     <input type="text" name="tempat_tujuan" class="form-control" value="{{ old('tempat_tujuan', 'Kabupaten Luwu Timur') }}" placeholder="Contoh: Makassar / Malili / Bone-Bone" required>
@@ -71,12 +71,18 @@
 
                 <div class="form-group">
                     <label class="form-label">Tanggal Berangkat *</label>
-                    <input type="date" name="tgl_berangkat" class="form-control" value="{{ old('tgl_berangkat', date('Y-m-d')) }}" required>
+                    <input type="date" id="tglBerangkatInput" name="tgl_berangkat" class="form-control" value="{{ old('tgl_berangkat', date('Y-m-d')) }}" required onchange="calcLamaHari()">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Tanggal Kembali *</label>
-                    <input type="date" name="tgl_kembali" class="form-control" value="{{ old('tgl_kembali', date('Y-m-d')) }}" required>
+                    <input type="date" id="tglKembaliInput" name="tgl_kembali" class="form-control" value="{{ old('tgl_kembali', date('Y-m-d')) }}" required onchange="calcLamaHari()">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Lama Tugas</label>
+                    <input type="text" id="lamaHariDisplay" class="form-control" value="1 Hari Kerja" readonly style="font-weight: 800; color: #0d9488; background: #f0fdfa;">
+                    <input type="hidden" id="lamaHariInput" name="lama_hari" value="1">
                 </div>
             </div>
 
@@ -222,6 +228,24 @@
         document.getElementById('livePreviewSpt').innerText = `800.1.11.1/${padded}/BKPSDM`;
     }
 
+    function calcLamaHari() {
+        const t1Val = document.getElementById('tglBerangkatInput').value;
+        const t2Val = document.getElementById('tglKembaliInput').value;
+        if (t1Val && t2Val) {
+            const d1 = new Date(t1Val);
+            const d2 = new Date(t2Val);
+            if (!isNaN(d1) && !isNaN(d2) && d2 >= d1) {
+                const diffTime = Math.abs(d2 - d1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById('lamaHariDisplay').value = `${diffDays} Hari Kerja`;
+                document.getElementById('lamaHariInput').value = diffDays;
+                return;
+            }
+        }
+        document.getElementById('lamaHariDisplay').value = '1 Hari Kerja';
+        document.getElementById('lamaHariInput').value = 1;
+    }
+
     let personilCount = 1;
 
     function tambahPersonil() {
@@ -282,5 +306,10 @@
             row.querySelector('.input-jabatan').value = '';
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        calcLamaHari();
+    });
 </script>
 @endsection
+

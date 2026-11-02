@@ -103,8 +103,8 @@
                 <ol style="margin-left: 20px; padding-left: 0;">
                     <li>{{ $suratTugas->maksud_tugas }} di <strong>{{ $suratTugas->tempat_tujuan }}</strong>.</li>
                     <li>Waktu pelaksanaan tugas selama <strong>{{ $suratTugas->lama_hari }} hari</strong>, terhitung tanggal 
-                        {{ $suratTugas->tgl_berangkat ? $suratTugas->tgl_berangkat->format('d F Y') : '-' }} s.d. 
-                        {{ $suratTugas->tgl_kembali ? $suratTugas->tgl_kembali->format('d F Y') : '-' }}.</li>
+                        {{ $suratTugas->tgl_berangkat ? \App\Services\NomorSuratService::formatIndoDate($suratTugas->tgl_berangkat) : '-' }} s.d. 
+                        {{ $suratTugas->tgl_kembali ? \App\Services\NomorSuratService::formatIndoDate($suratTugas->tgl_kembali) : '-' }}.</li>
                     <li>Melaporkan hasil pelaksanaan tugas kepada Pejabat yang menugaskan.</li>
                 </ol>
             </div>
@@ -120,7 +120,7 @@
     <!-- Tanda Tangan PARHA ARIEF, S.AP -->
     <div class="ttd-box">
         <div>Dikeluarkan di : Malili</div>
-        <div>Pada tanggal : {{ $suratTugas->tgl_berangkat ? $suratTugas->tgl_berangkat->format('d F Y') : date('d F Y') }}</div>
+        <div>Pada tanggal : {{ $suratTugas->tgl_berangkat ? \App\Services\NomorSuratService::formatIndoDate($suratTugas->tgl_berangkat) : \App\Services\NomorSuratService::formatIndoDate(date('Y-m-d')) }}</div>
         <div style="margin-top: 6px; font-weight: bold;">
             {{ strtoupper($suratTugas->jabatan_penandatangan) }}
         </div>
@@ -134,3 +134,4 @@
     <div class="clear"></div>
 </body>
 </html>
+

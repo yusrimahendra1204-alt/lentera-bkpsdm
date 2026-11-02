@@ -108,3 +108,4 @@ class SuratMasukController extends Controller
             ->with('success', "Surat Masuk {$agenda} berhasil dihapus dari sistem.");
     }
 }
+

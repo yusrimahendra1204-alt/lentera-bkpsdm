@@ -36,3 +36,4 @@ class Disposisi extends Model
         return $this->belongsTo(Pegawai::class, 'tujuan_user_id');
     }
 }
+

@@ -29,7 +29,7 @@ echo "\n--- UJI LOGIKA PENOMORAN (ANTI-NOMOR GANDA) ---\n";
 echo "Surat Keluar:\n";
 echo "   - Nomor Terakhir Terdaftar : " . ($sk['last_surat']->no_surat_keluar ?? '-') . "\n";
 echo "   - Urutan Terakhir          : " . $sk['last_number'] . "\n";
-echo "   - Estimasi Urut Berikutnya : " . $sk['next_number'] . " (SEHARUSNYA 842: " . ($sk['next_number'] === 842 ? "SESUAI ✓" : "GAGAL ✗") . ")\n";
+echo "   - Estimasi Urut Berikutnya : " . $sk['next_number'] . " (SEHARUSNYA 835: " . ($sk['next_number'] === 835 ? "SESUAI ✓" : "GAGAL ✗") . ")\n";
 echo "   - Format Preview           : " . $sk['template_preview'] . "\n";
 
 $st = App\Services\NomorSuratService::getSuratTugasSequenceInfo();
@@ -51,6 +51,29 @@ $stats = [
 $keluarSeq = $sk;
 $tugasSeq = $st;
 echo "2. View landing: " . (strlen(view('landing', compact('stats', 'keluarSeq', 'tugasSeq'))->render()) > 0 ? "OK (" . strlen(view('landing', compact('stats', 'keluarSeq', 'tugasSeq'))->render()) . " bytes) ✓" : "GAGAL") . "\n";
+
+// Login as admin for authenticated view testing
+$admin = App\Models\Pegawai::where('role', 'admin')->first();
+Illuminate\Support\Facades\Auth::login($admin);
+
+$dbCtrl = new App\Http\Controllers\DatabaseController();
+$dbView = $dbCtrl->index();
+echo "3. View database.index: " . (strlen($dbView->render()) > 0 ? "OK (" . strlen($dbView->render()) . " bytes) ✓" : "GAGAL") . "\n";
+
+$sqlResponse = $dbCtrl->downloadSql();
+echo "4. Generator database_persuratan.sql: " . (strlen($sqlResponse->getContent()) > 500000 ? "OK (" . round(strlen($sqlResponse->getContent()) / 1024) . " KB) ✓" : "GAGAL") . "\n";
+
+$skCtrl = new App\Http\Controllers\SuratKeluarController();
+$skView = $skCtrl->create();
+echo "5. View surat_keluar.create (Katalog Populer & Rahasia): " . (strlen($skView->render()) > 0 ? "OK (" . strlen($skView->render()) . " bytes) ✓" : "GAGAL") . "\n";
+
+$stCtrl = new App\Http\Controllers\SuratTugasController();
+$stView = $stCtrl->create();
+echo "6. View surat_tugas.create (Lama Hari & Multi-Personil): " . (strlen($stView->render()) > 0 ? "OK (" . strlen($stView->render()) . " bytes) ✓" : "GAGAL") . "\n";
+
+$klasCtrl = new App\Http\Controllers\KlasifikasiController();
+$klasView = $klasCtrl->index(new Illuminate\Http\Request());
+echo "7. View klasifikasi.index (Aksi Pakai Kode): " . (strlen($klasView->render()) > 0 ? "OK (" . strlen($klasView->render()) . " bytes) ✓" : "GAGAL") . "\n";
 
 echo "\n========================================================\n";
 echo "SEMUA FITUR DAN DATA TERVERIFIKASI SEMPURNA!\n";

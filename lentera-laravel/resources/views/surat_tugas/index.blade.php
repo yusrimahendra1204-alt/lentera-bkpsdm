@@ -74,8 +74,13 @@
                 @forelse($suratTugasList as $st)
                     <tr>
                         <td>
-                            <strong style="color: #0d9488; font-size: 0.9rem;">{{ $st->no_surat_tugas }}</strong>
-                            <div style="font-size: 0.72rem; color: #64748b;">Kode: {{ $st->kode_klasifikasi }}</div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <strong style="color: #0d9488; font-size: 0.9rem; font-family: monospace;">{{ $st->no_surat_tugas }}</strong>
+                                <button type="button" class="btn btn-sm btn-secondary" style="padding: 2px 6px; font-size: 0.7rem;" onclick="copyNoSpt('{{ $st->no_surat_tugas }}', this)" title="Salin nomor SPT">
+                                    <i class="bi bi-clipboard"></i> Salin
+                                </button>
+                            </div>
+                            <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Kode: {{ $st->kode_klasifikasi }}</div>
                         </td>
                         <td>
                             <span style="font-size: 0.78rem; color: #334155;">{{ $st->bidang_pengusul }}</span>
@@ -133,4 +138,21 @@
         {{ $suratTugasList->links() }}
     </div>
 </div>
+
+<script>
+    function copyNoSpt(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check-lg text-success"></i> Disalin!';
+            btn.classList.add('btn-success');
+            btn.classList.remove('btn-secondary');
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-secondary');
+            }, 2000);
+        });
+    }
+</script>
 @endsection
+

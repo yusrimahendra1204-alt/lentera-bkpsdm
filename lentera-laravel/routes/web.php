@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\KlasifikasiController;
 use App\Http\Controllers\LandingController;
@@ -62,4 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
     Route::put('/pegawai/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
     Route::post('/pegawai/{pegawai}/toggle', [PegawaiController::class, 'toggleAktif'])->name('pegawai.toggle');
+
+    // Manajemen Basis Data & Portabilitas
+    Route::get('/database', [DatabaseController::class, 'index'])->name('database.index');
+    Route::get('/database/download-sql', [DatabaseController::class, 'downloadSql'])->name('database.downloadSql');
+    Route::get('/database/backup-json', [DatabaseController::class, 'backupJson'])->name('database.backupJson');
+    Route::post('/database/restore-json', [DatabaseController::class, 'restoreJson'])->name('database.restoreJson');
+    Route::post('/database/clear-dummy', [DatabaseController::class, 'clearDummy'])->name('database.clearDummy');
 });

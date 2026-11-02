@@ -36,3 +36,4 @@ class SuratTugas extends Model
         return $this->hasMany(SuratTugasPersonil::class, 'id_surat_tugas')->orderBy('urutan');
     }
 }
+

@@ -33,3 +33,4 @@ class SuratMasuk extends Model
         return $this->hasMany(Disposisi::class, 'id_surat_masuk');
     }
 }
+

@@ -139,3 +139,4 @@ class SuratTugasController extends Controller
             ->with('success', "Surat Tugas {$no} berhasil dihapus.");
     }
 }
+

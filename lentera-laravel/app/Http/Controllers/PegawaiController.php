@@ -89,3 +89,4 @@ class PegawaiController extends Controller
         return back()->with('success', "Status pegawai {$pegawai->nama} berhasil {$status}.");
     }
 }
+

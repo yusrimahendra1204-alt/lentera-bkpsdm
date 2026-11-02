@@ -33,3 +33,4 @@ class LandingController extends Controller
         return view('landing', compact('stats', 'keluarSeq', 'tugasSeq'));
     }
 }
+

@@ -30,14 +30,14 @@
                 {{ $seqInfo['last_surat']->no_surat_keluar ?? '800.1.3.3/841/BKPSDM/X/2026' }}
             </div>
             <div style="font-size: 0.75rem; color: #64748b;">
-                <i class="bi bi-calendar-event"></i> Tanggal Surat: {{ $seqInfo['last_surat'] && $seqInfo['last_surat']->tgl_surat ? $seqInfo['last_surat']->tgl_surat->format('d F Y') : '14 Oktober 2026' }}
+                <i class="bi bi-calendar-event"></i> Tanggal Surat: {{ $seqInfo['last_surat'] && $seqInfo['last_surat']->tgl_surat ? \App\Services\NomorSuratService::formatIndoDate($seqInfo['last_surat']->tgl_surat) : '15 Oktober 2026' }}
             </div>
         </div>
 
         <div class="board-card secondary-board">
             <div style="font-size: 0.75rem; color: #64748b; font-weight: 600;">ESTIMASI URUT BERIKUTNYA:</div>
             <div style="font-size: 1.15rem; font-weight: 800; color: #2563eb; margin: 4px 0;">
-                [Kode Klasifikasi]/<strong>{{ $seqInfo['next_number'] }}</strong>/BKPSDM/{{ NomorSuratService::getBulanRomawi((int)date('n')) }}/{{ date('Y') }}
+                [Kode Klasifikasi]/<strong>{{ $seqInfo['next_number'] }}</strong>/BKPSDM/{{ \App\Services\NomorSuratService::getBulanRomawi((int)date('n')) }}/{{ date('Y') }}
             </div>
             <div style="font-size: 0.75rem; color: #059669; font-weight: 600;">
                 <i class="bi bi-check-circle"></i> Siap Digunakan untuk Registrasi Naskah
@@ -113,8 +113,18 @@
                             <span class="badge badge-neutral">{{ $sk->no_agenda }}</span>
                         </td>
                         <td>
-                            <strong style="color: #1e3a8a; font-size: 0.9rem;">{{ $sk->no_surat_keluar }}</strong>
-                            <div style="font-size: 0.72rem; color: #64748b;">Kode: {{ $sk->kode_klasifikasi }} ({{ Str::limit($sk->nama_klasifikasi, 25) }})</div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <strong style="color: #1e3a8a; font-size: 0.9rem; font-family: monospace;">{{ $sk->no_surat_keluar }}</strong>
+                                <button type="button" class="btn btn-sm btn-secondary" style="padding: 2px 6px; font-size: 0.7rem;" onclick="copyNoSurat('{{ $sk->no_surat_keluar }}', this)" title="Salin nomor surat">
+                                    <i class="bi bi-clipboard"></i> Salin
+                                </button>
+                            </div>
+                            <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">
+                                Kode: <span style="font-weight: 600; color: #15803d;">{{ $sk->kode_klasifikasi }}</span> ({{ Str::limit($sk->nama_klasifikasi, 28) }})
+                                @if($sk->sifat_surat === 'Rahasia')
+                                    <span class="badge badge-danger" style="font-size: 0.65rem; padding: 1px 5px;">🔒 Rahasia</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <span style="font-size: 0.78rem; color: #334155;">{{ $sk->bidang_pembuat }}</span>
@@ -160,4 +170,21 @@
         {{ $suratKeluarList->links() }}
     </div>
 </div>
+
+<script>
+    function copyNoSurat(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check-lg text-success"></i> Disalin!';
+            btn.classList.add('btn-success');
+            btn.classList.remove('btn-secondary');
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-secondary');
+            }, 2000);
+        });
+    }
+</script>
 @endsection
+

@@ -22,3 +22,4 @@ class SuratTugasPersonil extends Model
         return $this->belongsTo(SuratTugas::class, 'id_surat_tugas');
     }
 }
+

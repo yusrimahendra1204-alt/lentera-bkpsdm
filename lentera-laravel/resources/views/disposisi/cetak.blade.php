@@ -115,7 +115,7 @@
 
     <!-- TANDA TANGAN KEPALA BKPSDM -->
     <div class="ttd-container">
-        <div>Malili, {{ $disposisi->created_at ? $disposisi->created_at->format('d F Y') : date('d F Y') }}</div>
+        <div>Malili, {{ $disposisi->created_at ? \App\Services\NomorSuratService::formatIndoDate($disposisi->created_at) : \App\Services\NomorSuratService::formatIndoDate(date('Y-m-d')) }}</div>
         <div style="font-weight: bold; margin-top: 4px;">
             KEPALA BKPSDM KAB. LUWU TIMUR
         </div>
@@ -129,3 +129,4 @@
     <div class="clear"></div>
 </body>
 </html>
+

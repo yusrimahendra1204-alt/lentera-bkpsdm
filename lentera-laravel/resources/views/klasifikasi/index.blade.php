@@ -52,13 +52,14 @@
                     <th>Nama & Uraian Naskah / Arsip</th>
                     <th style="width: 120px;">Kategori</th>
                     <th>Kata Kunci Terkait</th>
+                    <th style="width: 130px; text-align: center;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($klasifikasiList as $k)
                     <tr>
                         <td>
-                            <strong style="color: #1e3a8a; font-size: 0.92rem;">{{ $k->kode }}</strong>
+                            <strong style="color: #1e3a8a; font-size: 0.92rem; font-family: monospace;">{{ $k->kode }}</strong>
                         </td>
                         <td>
                             <div style="font-weight: 600; color: #0f172a;">{{ $k->nama }}</div>
@@ -69,10 +70,15 @@
                         <td>
                             <span style="font-size: 0.76rem; color: #64748b;">{{ $k->keywords ?: '-' }}</span>
                         </td>
+                        <td style="text-align: center;">
+                            <a href="{{ route('surat-keluar.create', ['kode' => $k->kode, 'nama' => $k->nama]) }}" class="btn btn-sm btn-outline-primary" style="font-size: 0.76rem; padding: 4px 10px;" title="Gunakan kode ini untuk menerbitkan surat keluar baru">
+                                <i class="bi bi-pencil-square"></i> Pakai Kode
+                            </a>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" style="text-align: center; padding: 30px; color: #94a3b8;">
+                        <td colspan="5" style="text-align: center; padding: 30px; color: #94a3b8;">
                             Kode klasifikasi tidak ditemukan.
                         </td>
                     </tr>
@@ -86,3 +92,4 @@
     </div>
 </div>
 @endsection
+

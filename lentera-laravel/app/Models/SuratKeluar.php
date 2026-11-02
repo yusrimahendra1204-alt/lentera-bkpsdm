@@ -37,3 +37,4 @@ class SuratKeluar extends Model
         return $this->belongsTo(SuratMasuk::class, 'id_surat_masuk_asal');
     }
 }
+

@@ -35,3 +35,4 @@ class DashboardController extends Controller
         return view('dashboard', compact('stats', 'keluarSeq', 'tugasSeq', 'latestSuratMasuk', 'latestSuratKeluar', 'latestSuratTugas'));
     }
 }
+
