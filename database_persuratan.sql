@@ -6,7 +6,7 @@
 -- Rujukan Regulasi: Peraturan Bupati Luwu Timur Nomor 69 Tahun 2023
 -- Peneliti: Yusri Mahendra (NIM: IK2311011)
 -- Program Studi: Sarjana Informatika, Universitas Mega Buana Palopo
--- Waktu Pembuatan/Export: 2026-10-29 03:43:42
+-- Waktu Pembuatan/Export: 2026-11-02 00:48:55
 -- =====================================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -179,7 +179,50 @@ CREATE TABLE `surat_tugas_personil` (
 -- Data Pegawai
 --
 INSERT INTO `pegawai` (`id`, `nip`, `nama`, `pangkat`, `jabatan`, `role`, `unit`, `password`, `created_at`) VALUES
-(1, '199911202025211015', 'YUSRI MAHENDRA', 'Pengatur Muda (II/a)', 'Administrator Sistem Persuratan (Subbag Umum)', 'admin', 'Subbag Umum & Kepegawaian', '123456', NOW());
+(1, '199911202025211015', 'YUSRI MAHENDRA', 'Pengatur Muda (II/a)', 'Administrator Sistem Persuratan (Subbag Umum)', 'admin', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(2, '198111072011011008', 'AHYAR HAERUDDIN, SE, M. Tr.AP', 'Pembina, IV/a', 'Sekretaris BKPSDM', 'sekretaris', 'Sekretariat', '123456', NOW()),
+(3, '198503072009022008', 'SILPA P, SH, MM', 'Pembina, IV/a', 'Kabid. Pengembangan Sumber Daya Aparatur', 'kabid', 'Bidang Pengembangan SDA', '123456', NOW()),
+(4, '197502212003121002', 'BADARUDDIN ABDILLAH. , S.AN, M.M', 'Penata Tingkat I, III/d', 'Kabid. Mutasi, Kepangkatan dan Pengembangan Karir', 'kabid', 'Bidang Mutasi & Karir', '123456', NOW()),
+(5, '199405102016091001', 'ABDI, S.STP', 'Penata, III/c', 'Kabid. Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', 'kabid', 'Bidang Pengadaan, Pemberhentian & Info', '123456', NOW()),
+(6, '198005022003122005', 'ASMAWATI, S.AP, M.M', 'Penata Tingkat I, III/d', 'Analis SDM Aparatur Ahli Muda', 'pegawai', 'Bidang Pengembangan SDA', '123456', NOW()),
+(7, '197008172003122012', 'ASMAWATI T,S.AP', 'Penata Tingkat I, III/d', 'Analis SDM Aparatur Ahli Muda', 'pegawai', 'Bidang Mutasi & Karir', '123456', NOW()),
+(8, '197311282006041007', 'RIDWAN ARSYAD, A.Md (SP Towuti)', 'Penata, III/c', 'Analis SDM Aparatur Ahli Muda (SP Towuti)', 'pegawai', 'Sentra Pelayanan Towuti', '123456', NOW()),
+(9, '198006172008012008', 'ELVI, S.M', 'Penata, III/c', 'Analis SDM Aparatur Ahli Muda', 'pegawai', 'Bidang Pengadaan & Kinerja', '123456', NOW()),
+(10, '198201302007011007', 'ARIF GUNAWAN,S.AN, M.M', 'Penata, III/c', 'Kasubag. Perencanaan dan Keuangan', 'pegawai', 'Subbag Perencanaan & Keuangan', '123456', NOW()),
+(11, '199905132021082001', 'NURAZISAH SYAHRIR, S.Tr.IP, M.M', 'Penata Muda Tingkat I, III/b', 'Kasubag. Umum dan Kepegawaian', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(12, '198304272009012007', 'SITTI NURDIANA, S.AN', 'Penata Muda Tingkat I, III/b', 'Penelaah Teknis Kebijakan', 'pegawai', 'Bidang Mutasi & Karir', '123456', NOW()),
+(13, '199407012020121001', 'AKBAR TANJUNG, S.M, MM', 'Penata Muda Tingkat I, III/b', 'Penelaah Teknis Kebijakan', 'pegawai', 'Bidang Pengadaan & Kinerja', '123456', NOW()),
+(14, '198709072019031002', 'HASRULLAH, S.M', 'Penata, III/a', 'Analis SDM Aparatur Ahli Pertama', 'pegawai', 'Bidang Pengembangan SDA', '123456', NOW()),
+(15, '199304202020121002', 'SULHAM, S.T', 'Penata Muda, III/a', 'Pranata Komputer Ahli Pertama', 'pegawai', 'Bidang Pengadaan, Kinerja & Info', '123456', NOW()),
+(16, '198805312022032001', 'MEGA SURYA, S.M', 'Penata Muda, III/a', 'Perencana Ahli Pertama / PPK', 'pegawai', 'Subbag Perencanaan & Keuangan', '123456', NOW()),
+(17, '198107122007011009', 'SUBHAN', 'Penata Muda, III/a', 'Pengadministrasi Perkantoran', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(18, '199912162023081001', 'RAHMAT PANCA RAMADHAN, S.Tr.IP', 'Penata Muda, III/a', 'Penelaah Teknis Kebijakan', 'pegawai', 'Bidang Mutasi & Karir', '123456', NOW()),
+(19, '198510032010012003', 'MAISARAH', 'Pengatur Tingkat I, II/d', 'Pengadministrasi Perkantoran', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(20, '197811102010011012', 'ERWIN', 'Pengatur Tingkat I, II/d', 'Pengadministrasi Perkantoran', 'pegawai', 'Bidang Pengadaan & Kinerja', '123456', NOW()),
+(21, '198604242010012029', 'ANDI FATIMASARI', 'Pengatur, II/c', 'Pengadministrasi Perkantoran', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(22, '200105182025062002', 'ANDI ARTIKA MELATI, S.Pd', 'Penata Muda, III/a', 'Arsiparis Ahli Pertama', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(23, '200005082025062002', 'FITRYA LIA RISMAWATI, S.Pd', 'Penata Muda, III/a', 'Arsiparis Ahli Pertama', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(24, '199902142025062003', 'NAJMI NILFAIDAH, S.Pd', 'Penata Muda, III/a', 'Teknisi Sarana dan Prasarana', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(25, '199704192025061002', 'PUTRA NURAN SAKTI HIDAYATULLAH, S.Kom', 'Penata Muda, III/a', 'Penata Kelola Sistem dan Teknologi Informasi', 'pegawai', 'Bidang Pengadaan, Kinerja & Info', '123456', NOW()),
+(26, '199503182025062002', 'NADHIA SYAWALANI RENALDI, S.Psi', 'Penata Muda, III/a', 'Analis Pengembangan Kompetensi', 'pegawai', 'Bidang Pengembangan SDA', '123456', NOW()),
+(27, '199811292025062001', 'HESTI, S.Kom', 'Penata Muda, III/a', 'Analis Sumber Daya Manusia Aparatur', 'pegawai', 'Bidang Mutasi & Karir', '123456', NOW()),
+(28, '199512152025062002', 'ISRO\' DINIANTI, S.Kom', 'Penata Muda, III/a', 'Analis Sumber Daya Manusia Aparatur', 'pegawai', 'Bidang Pengadaan & Kinerja', '123456', NOW()),
+(29, '200102082025062002', 'ERA JESSICA PARAMMA, S.IP', 'Penata Muda, III/a', 'Analis Sumber Daya Manusia Aparatur', 'pegawai', 'Bidang Pengembangan SDA', '123456', NOW()),
+(30, '200111242025062006', 'NI LUH KOMANG KURNIAWATI, A.Md.Kom', 'Pengatur, II/c', 'Pranata Sumber Daya Manusia Aparatur', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(31, '198407042023212036', 'JUMALA, SE', 'Golongan IX', 'Arsiparis Ahli Pertama (PPPK)', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(32, '197909042023212022', 'SELVY TURSINA, SE', 'Golongan IX', 'Perencana Ahli Pertama (PPPK)', 'pegawai', 'Subbag Perencanaan & Keuangan', '123456', NOW()),
+(33, '198510282023211011', 'SYAHRIR, S.AN', 'Golongan IX', 'Analis SDM Aparatur Ahli Pertama (PPPK)', 'pegawai', 'Bidang Mutasi & Karir', '123456', NOW()),
+(34, '198604252023211024', 'PARJONO, S.Kom', 'Golongan IX', 'Pranata Komputer Ahli Pertama (PPPK)', 'pegawai', 'Bidang Pengadaan, Kinerja & Info', '123456', NOW()),
+(35, '198908152025212039', 'ULPA, S.Kom', 'Golongan IX', 'Analis SDM Aparatur Ahli Pertama (PPPK)', 'pegawai', 'Bidang Pengembangan SDA', '123456', NOW()),
+(36, '199508102025212039', 'INRI MERDEKAWATI, S.AN', 'Golongan IX', 'Penata Layanan Operasional (PPPK)', 'pegawai', 'Bidang Mutasi & Karir', '123456', NOW()),
+(37, '199510152025212034', 'SRY MULYA, S.M', 'Golongan IX', 'Penata Layanan Operasional (PPPK)', 'pegawai', 'Bidang Pengadaan & Kinerja', '123456', NOW()),
+(38, '199708082025212063', 'EVITA PUSPITA SARI EFENDI, S.I.Kom', 'Golongan IX', 'Penata Layanan Operasional (PPPK)', 'pegawai', 'Bidang Pengembangan SDA', '123456', NOW()),
+(39, '198807282025212042', 'SURIYA, S.IP', 'Golongan IX', 'Penata Layanan Operasional (PPPK)', 'pegawai', 'Subbag Perencanaan & Keuangan', '123456', NOW()),
+(40, '199805222025211024', 'YUSRIL RANAH MAHENDRA, S.Pd', 'Golongan IX', 'Penata Layanan Operasional (PPPK)', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(41, '198904212025211030', 'ABD.AZIS', 'Golongan V', 'Operator Layanan Operasional (PPPK)', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(42, '200210102025212003', 'SARDIYANTI PAWALLUNGI', 'Golongan V', 'Pengadministrasi Perkantoran (PPPK)', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW()),
+(43, '198401142003122001', 'PARHA ARIEF, S.AP', 'Pembina, IV/a', 'Kepala BKPSDM', 'kepala_bkpsdm', 'Pimpinan', '123456', NOW()),
+(44, '199110192025211043', 'ZAINUDDIN. M.S', 'Golongan V', 'Pengadministrasi Perkantoran (PPPK)', 'pegawai', 'Subbag Umum & Kepegawaian', '123456', NOW());
 
 --
 -- Data Surat Masuk
@@ -333,7 +376,7 @@ INSERT INTO `surat_keluar` (`id`, `no_agenda`, `bidang_pembuat`, `kode_klasifika
 (11, 'SK-2026-011', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.11.1', 'Surat Perintah Dinas/Surat Tugas', '800.1.11.1/011/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Surat Perintah Tugas An. Apriana', '2026-01-07', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (12, 'SK-2026-012', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.11.1', 'Surat Perintah Dinas/Surat Tugas', '800.1.11.1/012/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Surat Perintah Tugas An. Donna Ressania, S.Kom', '2026-01-07', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (13, 'SK-2026-013', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.11.1', 'Surat Perintah Dinas/Surat Tugas', '800.1.11.1/013/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Surat Permohonan fasilitas pemeriksaan kesehatan', '2026-01-07', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
-(14, 'SK-2026-014', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.11.1', 'Surat Perintah Dinas/Surat Tugas', '800.1.11.1/0114/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Surat Pembekalan Latsar CPNS Gel1 (Angkatan 1-5)', '2026-01-07', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
+(14, 'SK-2026-014', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.11.1', 'Surat Perintah Dinas/Surat Tugas', '800.1.11.1/014/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Surat Pembekalan Latsar CPNS Gel1 (Angkatan 1-5)', '2026-01-07', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (15, 'SK-2026-015', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.4.1', 'Usulan Tugas Belajar/Ijin Belajar/Diklat/Kursus/Magang/Uji an Dinas/Praktek Kerja di Instansi lain/Pertukaran antar ASN dengan pegawai swasta', '800.1.4.1/015/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Nota Dinas Permohonan Persetujuan SK TUBEL Program Pendidikan S.1 An. Hasti', '2026-01-07', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (16, 'SK-2026-016', 'Bidang Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', '800.1.4.4', 'Standar kinerja Pegawai (SKP) dan Penilaian Prestasi Kerja', '800.1.4.4/016/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Penyelesaian Disparitas Data Kinerja', '2026-01-07', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (17, 'SK-2026-017', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.3.1', 'Usulan Alih Status, Pindah Instansi, Pindah Wilayah Kerja,Diperbantukan, Dipekerjakan, Penugasan Sementara, Mutasi antar Perwakilan, Mutasi ke dan dari Perwakilan, Pemindahan Sementara, Persetujuan/Pertimbangan Kepala BKN', '800.1.3.1/17/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Permintaa Penugasan An. Putri Meli Hidayat', '2026-01-12', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
@@ -606,7 +649,7 @@ INSERT INTO `surat_keluar` (`id`, `no_agenda`, `bidang_pembuat`, `kode_klasifika
 (284, 'SK-2026-284', 'Bidang Pengembangan Sumber Daya Aparatur (Diklat)', '400.2.4.2', 'Data Perlindungan Anak', '400.2.4.2/294/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Peersetujuan Pelaksanaan BIMTEK Manajemen Puskesmas', '2026-04-14', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (285, 'SK-2026-285', 'Bidang Mutasi, Kepangkatan dan Pengembangan Karir', '800.1.4.1', 'Usulan Tugas Belajar/Ijin Belajar/Diklat/Kursus/Magang/Uji an Dinas/Praktek Kerja di Instansi lain/Pertukaran antar ASN dengan pegawai swasta', '800.1.4.1/295/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Permohonan Persetujuan Promosi (Kenaikan Jenjang) Jabatan Fungsional', '2026-04-15', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (286, 'SK-2026-286', 'Bidang Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', '800.1.9.1', 'Pengolahan Data dan Informasi Kepegawaian', '800.1.9.1/297/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Permintaan No.HP Kepala OPD dan Sekretarasi', '2026-04-15', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
-(287, 'SK-2026-287', 'Bidang Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', '400.12.3.2', 'Perkawinan dan Perceraian', '400.12.3.2/2997/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Izin percerfaian', '2026-04-15', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
+(287, 'SK-2026-287', 'Bidang Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', '400.12.3.2', 'Perkawinan dan Perceraian', '400.12.3.2/297/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Izin percerfaian', '2026-04-15', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (288, 'SK-2026-288', 'Bidang Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', '800.1.6.3', 'Pemberhentian Dengan Hormat', '800.1.6.3/298/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Usul Persetujuan Pemutusan Hubungan Perjanjian Kerja dengan Hormat sebagai pegawai pemerintah dan perjanjian kerja (PPPK) karena meninggal dunia', '2026-04-15', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (289, 'SK-2026-289', 'Bidang Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', '800.1.6.3', 'Pemberhentian Dengan Hormat', '800.1.6.3/299/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Usul Persetujuan Pemutusan Hubungan Perjanjian Kerja dengan Hormat sebagai pegawai pemerintah dan perjanjian kerja (PPPK) karena meninggal dunia', '2026-04-15', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),
 (290, 'SK-2026-290', 'Bidang Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian', '800.1.11.1', 'Surat Perintah Dinas/Surat Tugas', '800.1.11.1/300/BKPSDM', 'Instansi / Perangkat Daerah Terkait', 'Permohonan persetujuan melakukan perjalanan dinas ke kota palopo', '2026-04-15', 'Penting', 'PARHA ARIEF, S.AP', 'Fisik Manual (Tanda Tangan Basah)', 'Lemari Arsip Subbag Umum', 0, NULL, '', 'surat_keluar.pdf', NOW()),

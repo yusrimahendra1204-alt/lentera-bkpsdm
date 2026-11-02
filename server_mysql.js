@@ -516,10 +516,20 @@ const server = http.createServer(async (req, res) => {
       if (pathname === '/api/surat-tugas' && method === 'POST') {
         const body     = await parseBody(req);
         const tahun    = new Date().getFullYear();
-        const [cntRows]= await db.getPool().execute(
-          'SELECT COUNT(*)+41 AS n FROM surat_tugas WHERE YEAR(created_at) = ?', [tahun]);
-        const noSpt    = body.no_surat_tugas ||
-          `800.1.11.1/${String(cntRows[0].n).padStart(3,'0')}/BKPSDM-LT/X/${tahun}`;
+        const romawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+        const bulanRomawi = romawi[new Date().getMonth()];
+        const allSpt = await db.query('SELECT no_surat_tugas FROM surat_tugas');
+        let maxUrut = 0;
+        for (const r of allSpt) {
+          const m = (r.no_surat_tugas || '').match(/\/0*(\d+)\//);
+          if (m) {
+            const num = parseInt(m[1], 10);
+            if (num < 2000 && num > maxUrut) maxUrut = num;
+          }
+        }
+        const nextUrut = maxUrut > 0 ? maxUrut + 1 : (allSpt.length || 0) + 1;
+        const noSpt = body.no_surat_tugas ||
+          `800.1.11.1/${String(nextUrut).padStart(3,'0')}/BKPSDM/${bulanRomawi}/${tahun}`;
         const [result] = await db.getPool().execute(`
           INSERT INTO surat_tugas
             (no_surat_tugas,bidang_pengusul,kode_klasifikasi,nama_klasifikasi,

@@ -1,12 +1,34 @@
 // Surat Tugas (SPT) Module - Sistem Informasi Persuratan BKPSDM Luwu Timur
 // Alur Bisnis: Bidang menyusun naskah fisik SPT mandiri. Subbag Umum HANYA MENCATAT agenda & menerbitkan nomor SPT resmi terpusat.
 const SuratTugasModule = {
+  // Hitung nomor urut SPT berikutnya murni dari nomor registrasi riil tertinggi (tanpa offset dummy)
+  getNextUrutNumber(list = null) {
+    const items = list || Store.state.surat_tugas || [];
+    let max = 0;
+    for (const item of items) {
+      const m = (item.no_surat_tugas || '').match(/\/0*(\d+)\//);
+      if (m) {
+        const num = parseInt(m[1], 10);
+        if (num < 2000 && num > max) {
+          max = num;
+        }
+      }
+    }
+    return max > 0 ? max + 1 : (items.length || 0) + 1;
+  },
+
   render() {
     const container = document.getElementById('view-surat-tugas');
     if (!container) return;
 
     const list = Store.state.surat_tugas || [];
     const isAuth = Store.state.isLoggedIn;
+    const lastItem = list[0];
+    const nextUrut = this.getNextUrutNumber(list);
+    const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+    const monthRomawi = romawi[new Date().getMonth()];
+    const year = new Date().getFullYear();
+    const nextFormatPreview = `800.1.11.1/${String(nextUrut).padStart(3, '0')}/BKPSDM/${monthRomawi}/${year}`;
 
     container.innerHTML = `
       <div class="card">
@@ -34,6 +56,28 @@ const SuratTugasModule = {
               🔐 Login Petugas
             </button>
           `}
+        </div>
+
+        <!-- Papan Pemantauan Nomor SPT (Anti Nomor Ganda & Estimasi Urut) -->
+        <div style="margin: 0 24px 16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:4px solid #0284c7; border-radius:8px; padding:12px 14px;">
+            <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor SPT Terakhir Terbit di Agenda:</div>
+            <div style="font-family:monospace; font-weight:800; font-size:15px; color:#0369a1; margin-top:3px;">
+              ${lastItem ? lastItem.no_surat_tugas : '-'}
+            </div>
+            <div style="font-size:11.5px; color:#475569; margin-top:3px;">
+              📅 Jadwal: ${lastItem ? App.formatIndoDate(lastItem.tgl_berangkat) : '-'} • Pembuat: ${lastItem ? lastItem.bidang_pengusul : '-'}
+            </div>
+          </div>
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #16a34a; border-radius:8px; padding:12px 14px;">
+            <div style="font-size:11px; text-transform:uppercase; color:#166534; font-weight:700;">Estimasi Urut Berikutnya (Siap Digunakan):</div>
+            <div style="font-family:monospace; font-weight:800; font-size:15px; color:#15803d; margin-top:3px;">
+              ${nextFormatPreview}
+            </div>
+            <div style="font-size:11.5px; color:#166534; margin-top:3px;">
+              ✓ Urutan Ke-${nextUrut} (Murni Melanjutkan Registrasi Terakhir)
+            </div>
+          </div>
         </div>
 
         <!-- Banner Alur Bisnis SPT -->
@@ -154,12 +198,33 @@ const SuratTugasModule = {
     const body = document.getElementById('modal-body');
     const footer = document.getElementById('modal-footer');
 
-    const nextId = (Store.state.surat_tugas.length ? Math.max(...Store.state.surat_tugas.map(s => s.id)) : 0) + 1;
-    const defaultNoSpt = `800.1.11.1/${String(nextId + 40).padStart(3, '0')}/BKPSDM-LT/X/2026`;
+    const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+    const monthRomawi = romawi[new Date().getMonth()];
+    const year = new Date().getFullYear();
+    const allSPT = Store.state.surat_tugas || [];
+    const lastItem = allSPT[0];
+    const nextUrut = this.getNextUrutNumber(allSPT);
+    const defaultNoSpt = `800.1.11.1/${String(nextUrut).padStart(3, '0')}/BKPSDM/${monthRomawi}/${year}`;
 
     title.innerText = 'Pencatatan & Pengambilan Nomor Surat Perintah Tugas (SPT)';
     body.innerHTML = `
       <form id="form-surat-tugas">
+        <!-- Informasi Nomor SPT Terakhir & Urutan Real-time -->
+        <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <div style="font-size:10.5px; text-transform:uppercase; color:#166534; font-weight:700;">Nomor SPT Terakhir Terdaftar di Agenda:</div>
+            <div style="font-family:monospace; font-weight:800; font-size:13.5px; color:#15803d; margin-top:2px;">
+              ${lastItem ? lastItem.no_surat_tugas : '-'}
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10.5px; text-transform:uppercase; color:#0369a1; font-weight:700;">Estimasi Urut Berikutnya:</div>
+            <div style="font-family:monospace; font-weight:800; font-size:13.5px; color:#0284c7; margin-top:2px;">
+              Urutan Ke-${nextUrut} (Murni +1)
+            </div>
+          </div>
+        </div>
+
         <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px; margin-bottom:16px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-weight:700; color:#166534; font-size:13px;">
@@ -178,7 +243,7 @@ const SuratTugasModule = {
           <div class="form-group">
             <label class="form-label">Nomor SPT Resmi (Dikunci Otomatis oleh Sistem) <span class="required">*</span></label>
             <input type="text" id="spt-nomor" class="form-control" style="font-family:monospace; font-weight:800; color:var(--primary);" value="${defaultNoSpt}" required>
-            <span class="form-hint">Format otomatis: 800.1.11.1 / [No Urut] / BKPSDM-LT / [Bulan] / [Tahun]</span>
+            <span class="form-hint">Format otomatis: 800.1.11.1 / [No Urut] / BKPSDM / [Bulan] / [Tahun]</span>
           </div>
           <div class="form-group">
             <label class="form-label">Bidang / Unit Kerja Pembuat SPT <span class="required">*</span></label>
@@ -264,9 +329,9 @@ const SuratTugasModule = {
     div.style.border = '1px solid #cbd5e1';
 
     const pegawaiList = Store.state.pegawai || [];
-    const options = pegawaiList.map(p => `
+    const options = pegawaiList.map((p, idx) => `
       <option value="${p.id}" ${selectedPegawaiId === p.id ? 'selected' : ''}>
-        ${p.no || p.id}. ${p.nama} — ${p.jabatan} (${p.pangkat || '-'})
+        ${idx + 1}. ${p.nama} — ${p.jabatan} (${p.pangkat || '-'})
       </option>
     `).join('');
 

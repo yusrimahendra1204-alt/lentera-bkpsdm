@@ -571,8 +571,20 @@ const server = http.createServer(async (req, res) => {
       // 8. Create Surat Tugas (SPT) - Pencatatan & Penomoran Saja
       if (pathname === '/api/surat-tugas' && method === 'POST') {
         const body = await parseBody(req);
-        const newId = (appState.surat_tugas.length ? Math.max(...appState.surat_tugas.map(s => s.id)) : 0) + 1;
-        const noSpt = `800.1.11.1/${String(newId + 40).padStart(3, '0')}/BKPSDM-LT/X/2026`;
+        const newId = (appState.surat_tugas.length ? Math.max(...appState.surat_tugas.map(x => x.id)) : 0) + 1;
+        let maxUrut = 0;
+        for (const r of (appState.surat_tugas || [])) {
+          const m = (r.no_surat_tugas || '').match(/\/0*(\d+)\//);
+          if (m) {
+            const num = parseInt(m[1], 10);
+            if (num < 2000 && num > maxUrut) maxUrut = num;
+          }
+        }
+        const nextUrut = maxUrut > 0 ? maxUrut + 1 : (appState.surat_tugas.length || 0) + 1;
+        const romawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+        const bulanRomawi = romawi[new Date().getMonth()];
+        const tahun = new Date().getFullYear();
+        const noSpt = body.no_surat_tugas || `800.1.11.1/${String(nextUrut).padStart(3,'0')}/BKPSDM/${bulanRomawi}/${tahun}`;
 
         const newSpt = {
           id: newId,
