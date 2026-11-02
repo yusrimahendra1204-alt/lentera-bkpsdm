@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\KlasifikasiController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SuratKeluarController;
@@ -11,17 +12,19 @@ use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\SuratTugasController;
 use Illuminate\Support\Facades\Route;
 
-// Guest Routes
+// Public Landing Page (Beranda Publik seperti di JS)
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+
+// Guest Authentication Routes (Halaman Login persis seperti di JS)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 });
 
-// Authenticated Routes
+// Authenticated Routes (Aplikasi Persuratan Internal)
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/', [DashboardController::class, 'index'])->name('home');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Surat Masuk

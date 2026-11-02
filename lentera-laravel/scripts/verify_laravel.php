@@ -39,6 +39,19 @@ echo "   - Urutan Terakhir          : " . $st['last_number'] . "\n";
 echo "   - Estimasi Urut Berikutnya : " . $st['next_number'] . " (SEHARUSNYA 136: " . ($st['next_number'] === 136 ? "SESUAI ✓" : "GAGAL ✗") . ")\n";
 echo "   - Nomor Lengkap Berikutnya : " . $st['full_next_no'] . "\n";
 
+echo "\n--- UJI RENDER VIEW BLADE ---\n";
+echo "1. View auth.login: " . (strlen(view('auth.login')->render()) > 0 ? "OK (" . strlen(view('auth.login')->render()) . " bytes) ✓" : "GAGAL") . "\n";
+$stats = [
+    'total_surat_masuk' => App\Models\SuratMasuk::count(),
+    'total_surat_keluar' => App\Models\SuratKeluar::count(),
+    'total_surat_tugas' => App\Models\SuratTugas::count(),
+    'total_klasifikasi' => App\Models\KlasifikasiArsip::count(),
+    'total_pegawai' => App\Models\Pegawai::where('aktif', 1)->count(),
+];
+$keluarSeq = $sk;
+$tugasSeq = $st;
+echo "2. View landing: " . (strlen(view('landing', compact('stats', 'keluarSeq', 'tugasSeq'))->render()) > 0 ? "OK (" . strlen(view('landing', compact('stats', 'keluarSeq', 'tugasSeq'))->render()) . " bytes) ✓" : "GAGAL") . "\n";
+
 echo "\n========================================================\n";
 echo "SEMUA FITUR DAN DATA TERVERIFIKASI SEMPURNA!\n";
 echo "========================================================\n";
