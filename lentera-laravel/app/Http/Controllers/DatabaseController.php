@@ -485,3 +485,4 @@ class DatabaseController extends Controller
         return "'{$val}'";
     }
 }
+

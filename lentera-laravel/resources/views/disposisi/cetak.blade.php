@@ -83,7 +83,11 @@
                         @endphp
                         <div class="check-box-item">
                             <span class="square">{{ $isTarget ? '✓' : '' }}</span>
-                            <span style="{{ $isTarget ? 'font-weight: bold;' : '' }}">{{ $t }}</span>
+                            @if($isTarget)
+                                <strong>{{ $t }}</strong>
+                            @else
+                                <span>{{ $t }}</span>
+                            @endif
                         </div>
                     @endforeach
                 </div>

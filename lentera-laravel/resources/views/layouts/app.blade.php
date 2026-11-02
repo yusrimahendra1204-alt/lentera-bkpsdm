@@ -437,7 +437,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <img src="{{ asset('img/logo_bkpsdm.png') }}" alt="Logo BKPSDM" onerror="this.src='{{ asset('img/logo_lutim_juara.png') }}'">
+            <img src="{{ asset('img/logo_bkpsdm.png') }}" alt="Logo BKPSDM" onerror="this.onerror=null; this.src='/img/logo_lutim_juara.png';">
             <div class="brand-text">
                 <span class="brand-title">LENTERA</span>
                 <span class="brand-sub">BKPSDM KAB. LUWU TIMUR</span>

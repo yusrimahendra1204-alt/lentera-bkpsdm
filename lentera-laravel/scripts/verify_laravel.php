@@ -23,6 +23,7 @@ foreach (App\Models\SuratKeluar::orderBy('id', 'desc')->take(5)->get() as $item)
     echo "     ID {$item->id}: {$item->no_surat_keluar} (Tgl: " . ($item->tgl_surat ? $item->tgl_surat->format('Y-m-d') : '-') . ")\n";
 }
 echo "5. Surat Perintah Tugas (SPT): " . App\Models\SuratTugas::count() . " SPT\n";
+echo "   - Disposisi Tercatat: " . App\Models\Disposisi::count() . " disposisi\n";
 
 $sk = App\Services\NomorSuratService::getSuratKeluarSequenceInfo();
 echo "\n--- UJI LOGIKA PENOMORAN (ANTI-NOMOR GANDA) ---\n";
@@ -74,6 +75,29 @@ echo "6. View surat_tugas.create (Lama Hari & Multi-Personil): " . (strlen($stVi
 $klasCtrl = new App\Http\Controllers\KlasifikasiController();
 $klasView = $klasCtrl->index(new Illuminate\Http\Request());
 echo "7. View klasifikasi.index (Aksi Pakai Kode): " . (strlen($klasView->render()) > 0 ? "OK (" . strlen($klasView->render()) . " bytes) ✓" : "GAGAL") . "\n";
+
+$dispFirst = App\Models\Disposisi::first();
+if (!$dispFirst) {
+    $smFirst = App\Models\SuratMasuk::first();
+    $dispFirst = new App\Models\Disposisi([
+        'id' => 1,
+        'id_surat_masuk' => $smFirst ? $smFirst->id : 1,
+        'tujuan_nama' => 'Sekretaris Badan',
+        'sifat' => 'Biasa',
+        'batas_waktu' => '2026-10-20',
+        'instruksi' => ['Tindak lanjuti sesuai ketentuan', 'Pelajari dan siapkan bahan'],
+        'catatan' => 'Mohon segera dikoordinasikan dengan bidang terkait.',
+        'status' => 'Didisposisi',
+    ]);
+    $dispFirst->setRelation('suratMasuk', $smFirst);
+}
+
+$dispView = view('disposisi.cetak', [
+    'disposisi' => $dispFirst,
+    'tujuanResmi' => App\Http\Controllers\DisposisiController::TUJUAN_RESMI,
+    'instruksiResmi' => App\Http\Controllers\DisposisiController::INSTRUKSI_RESMI,
+])->render();
+echo "8. View disposisi.cetak (Format Resmi A4): " . (strlen($dispView) > 0 ? "OK (" . strlen($dispView) . " bytes) ✓" : "GAGAL") . "\n";
 
 echo "\n========================================================\n";
 echo "SEMUA FITUR DAN DATA TERVERIFIKASI SEMPURNA!\n";
