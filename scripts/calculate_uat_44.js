@@ -128,3 +128,4 @@ for (let cat in roleStats) {
   const avg = roleStats[cat].sumScore / roleStats[cat].count;
   console.log(`${cat}: Count = ${roleStats[cat].count}, Avg = ${avg.toFixed(2)} / 50, Pct = ${pct.toFixed(2)}%`);
 }
+

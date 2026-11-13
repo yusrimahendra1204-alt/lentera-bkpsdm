@@ -301,3 +301,4 @@ content = content.replace(/System Usability Scale \(SUS\)/g, 'User Acceptance Te
 
 fs.writeFileSync(targetMd, content, 'utf8');
 console.log('[+] Berhasil memperbarui DOKUMEN_SKRIPSI_BAB_IV_LENGKAP.md dengan UAT 100%!');
+
