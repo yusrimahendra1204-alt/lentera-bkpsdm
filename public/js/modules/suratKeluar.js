@@ -397,6 +397,18 @@ const SuratKeluarModule = {
             </div>
           </td>
           <td>
+            ${s.kode_usulan_bidang && s.kode_usulan_bidang !== s.kode_klasifikasi ? `
+              <div style="font-size:11px; margin-bottom:4px; display:inline-flex; align-items:center; gap:4px; background:#fffbeb; border:1px solid #fde68a; padding:2px 6px; border-radius:4px;">
+                <span style="color:#64748b; font-size:10px;">Usulan Bidang:</span>
+                <span style="font-family:monospace; text-decoration:line-through; color:#ef4444; font-weight:700;">${s.kode_usulan_bidang}</span>
+                <span style="color:#b45309; font-weight:700;">➔</span>
+                <span class="badge" style="background:#fef3c7; color:#92400e; font-size:9.5px; font-weight:700; padding:1px 4px;">⚡ Terkoreksi</span>
+              </div>
+            ` : (s.kode_usulan_bidang ? `
+              <div style="font-size:10.5px; margin-bottom:4px;">
+                <span class="badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-size:9.5px; font-weight:700; padding:1px 5px;">✓ Sesuai Usulan Bidang</span>
+              </div>
+            ` : '')}
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <span class="code-tag ${is800 ? 'code-tag-internal' : ''}" style="${!is800 ? 'background:#e0f2fe; color:#0369a1; border-color:#bae6fd;' : ''}">
                 ${s.kode_klasifikasi}
@@ -504,12 +516,12 @@ const SuratKeluarModule = {
           <span class="form-hint">⚡ Sistem akan mencari kode Perbup Luwu Timur secara otomatis saat Anda mengetik perihal.</span>
         </div>
 
-        <!-- Box Kodifikasi Perbup Luwu Timur No. 69 Tahun 2023 -->
-        <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:10px; padding:16px; margin-bottom:16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <!-- Box Kendali & Komparasi Kodifikasi: Usulan Bidang vs Perbup 69/2023 -->
+        <div style="background:#f8fafc; border:1.5px solid #86efac; border-radius:10px; padding:16px; margin-bottom:16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px dashed #bbf7d0; padding-bottom: 8px;">
             <div>
               <span style="font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">
-                KODIFIKASI PERATURAN BUPATI LUWU TIMUR NO. 69 TAHUN 2023
+                KOMPARASI KODIFIKASI: USULAN BIDANG VS PERBUP LUWU TIMUR NO. 69/2023
               </span>
             </div>
             <button type="button" class="btn btn-outline btn-sm" style="background:#ffffff; color:#166534; border-color:#86efac; font-weight:700;" onclick="SuratKeluarModule.togglePerbupDrawer()">
@@ -517,19 +529,47 @@ const SuratKeluarModule = {
             </button>
           </div>
 
-          <div class="form-row" style="margin-bottom:0;">
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label" style="color:#166534; font-size:12px;">Kode Klasifikasi yang Betul <span class="required">*</span></label>
-              <input type="text" id="sk-kode" class="form-control" style="font-family:monospace; font-weight:800; font-size:15px; color:#15803d; background:#ffffff;" placeholder="Contoh: 800.1.3.2" required oninput="SuratKeluarModule.onManualCodeInput(this.value)">
+          <!-- Dua Kolom Komparasi Berdampingan -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:10px;">
+            <!-- Kolom 1: Usulan Bidang -->
+            <div style="background:#ffffff; border:1px solid #bae6fd; border-radius:8px; padding:12px;">
+              <label class="form-label" style="color:#0369a1; font-size:12px; font-weight:700; margin-bottom:4px;">
+                1. Usulan Kode dari Bidang (Draf Naskah)
+              </label>
+              <input type="text" id="sk-kode-usulan" class="form-control" style="font-family:monospace; font-weight:700; font-size:14px; color:#0369a1; background:#f0f9ff;" placeholder="Contoh: 823 / 800.1.3 / draf..." oninput="SuratKeluarModule.onCompareCodes()">
+              <div style="font-size:10.5px; color:#64748b; margin-top:4px;">
+                * Kode awal yang tertera pada draf naskah/Word bidang pembuat
+              </div>
             </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label" style="color:#166534; font-size:12px;">Nama / Uraian Klasifikasi Perbup</label>
-              <input type="text" id="sk-nama-kode" class="form-control" placeholder="Nama klasifikasi Perbup" readonly style="background:#ffffff; font-weight:600; color:#0f172a;">
+
+            <!-- Kolom 2: Penetapan Baku Perbup 69/2023 -->
+            <div style="background:#ffffff; border:1px solid #86efac; border-radius:8px; padding:12px;">
+              <label class="form-label" style="color:#166534; font-size:12px; font-weight:700; margin-bottom:4px;">
+                2. Kode Baku Perbup 69/2023 (Tervalidasi) <span class="required">*</span>
+              </label>
+              <input type="text" id="sk-kode" class="form-control" style="font-family:monospace; font-weight:800; font-size:14.5px; color:#15803d; background:#f0fdf4;" placeholder="Contoh: 800.1.3.2" required oninput="SuratKeluarModule.onManualCodeInput(this.value); SuratKeluarModule.onCompareCodes();">
+              <div style="font-size:10.5px; color:#166534; margin-top:4px;">
+                * Kode resmi kearsipan daerah yang dikunci ke nomor surat keluar
+              </div>
+            </div>
+          </div>
+
+          <!-- Uraian Nama Kode Perbup -->
+          <div class="form-group" style="margin-bottom:8px;">
+            <label class="form-label" style="color:#166534; font-size:12px; font-weight:600;">Nama / Uraian Klasifikasi Resmi Perbup 69/2023:</label>
+            <input type="text" id="sk-nama-kode" class="form-control" placeholder="Nama uraian klasifikasi Perbup muncul otomatis..." readonly style="background:#ffffff; font-weight:600; color:#0f172a;">
+          </div>
+
+          <!-- Live Comparison Result Box -->
+          <div id="sk-comparison-result-box" style="margin-top:8px;">
+            <div style="background:#eff6ff; border:1px dashed #bfdbfe; border-radius:6px; padding:8px 12px; font-size:12px; color:#1e40af; display:flex; align-items:center; gap:8px;">
+              <span>ℹ️</span>
+              <span>Ketik perihal surat di atas untuk rekomendasi otomatis, lalu cocokkan dengan usulan kode dari bidang pembuat.</span>
             </div>
           </div>
 
           <!-- Live Hierarchy Verification Indicator -->
-          <div id="sk-hierarchy-box" style="margin-top:10px; padding:8px 12px; background:#dcfce7; border-radius:6px; font-size:12px; color:#166534; display:flex; align-items:center; gap:8px;">
+          <div id="sk-hierarchy-box" style="margin-top:8px; padding:8px 12px; background:#dcfce7; border-radius:6px; font-size:12px; color:#166534; display:flex; align-items:center; gap:8px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
             <span id="sk-hierarchy-text">Pilih atau ketik kode untuk memvalidasi kesesuaian dengan Lampiran Perbup Luwu Timur 2023</span>
           </div>
@@ -632,6 +672,7 @@ const SuratKeluarModule = {
       onSelect: (item) => {
         SuratKeluarModule.updateNumberWithCode(item.kode);
         SuratKeluarModule.updateHierarchyBox(item.kode, item.nama);
+        SuratKeluarModule.onCompareCodes();
 
         // Auto-select Rahasia for sensitive codes
         if (item.kode === '800.1.8.1' || item.kode === '800.1.6.2' || item.kode === '800.1.6.4' || item.kode === '800.1.6.5') {
@@ -660,6 +701,7 @@ const SuratKeluarModule = {
 
     this.updateNumberWithCode(kode);
     this.updateHierarchyBox(kode, nama, hierarki);
+    this.onCompareCodes();
 
     if (isRahasia) {
       const sifatSel = document.getElementById('sk-sifat');
@@ -677,6 +719,60 @@ const SuratKeluarModule = {
     const code = val.trim();
     this.updateNumberWithCode(code);
     this.updateHierarchyBox(code);
+    this.onCompareCodes();
+  },
+
+  onCompareCodes() {
+    const usulanInput = document.getElementById('sk-kode-usulan');
+    const kodePerbupInput = document.getElementById('sk-kode');
+    const namaPerbupInput = document.getElementById('sk-nama-kode');
+    const resultBox = document.getElementById('sk-comparison-result-box');
+    if (!resultBox) return;
+
+    const usulan = (usulanInput?.value || '').trim();
+    const perbup = (kodePerbupInput?.value || '').trim();
+    const namaPerbup = (namaPerbupInput?.value || '').trim();
+
+    if (!perbup) {
+      resultBox.innerHTML = `
+        <div style="font-size:11.5px; color:#64748b; font-style:italic;">
+          * Pilih atau ketik kode Perbup untuk melihat perbandingan dengan usulan bidang.
+        </div>
+      `;
+      return;
+    }
+
+    if (!usulan) {
+      resultBox.innerHTML = `
+        <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:6px; padding:8px 12px; font-size:12px; color:#475569; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:15px;">ℹ️</span>
+          <span>Kode usulan bidang belum diisi. Jika draf fisik membawa kode awal dari bidang, cantumkan di kolom atas untuk audit komparasi kearsipan.</span>
+        </div>
+      `;
+      return;
+    }
+
+    if (usulan === perbup) {
+      resultBox.innerHTML = `
+        <div style="background:#dcfce7; border:1px solid #86efac; border-radius:6px; padding:8px 12px; font-size:12px; color:#166534; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:16px;">✓</span>
+          <div>
+            <strong style="text-transform:uppercase;">Status: Sesuai Standar Perbup</strong><br>
+            Kode usulan dari bidang (<code>${usulan}</code>) telah selaras dan tepat memedomani Perbup Luwu Timur No. 69/2023.
+          </div>
+        </div>
+      `;
+    } else {
+      resultBox.innerHTML = `
+        <div style="background:#fffbeb; border:1px solid #fcd34d; border-radius:6px; padding:8px 12px; font-size:12px; color:#92400e; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:16px;">⚡</span>
+          <div>
+            <strong style="text-transform:uppercase;">Status: Dikoreksi Sistem</strong><br>
+            Usulan kode awal dari bidang (<code>${usulan}</code>) dikoreksi menjadi kode baku Perbup: <strong><code>${perbup}</code></strong>${namaPerbup ? ` (<em>${namaPerbup}</em>)` : ''}.
+          </div>
+        </div>
+      `;
+    }
   },
 
   updateNumberWithCode(code) {
@@ -718,6 +814,7 @@ const SuratKeluarModule = {
 
   async submitCreate() {
     const perihal = document.getElementById('sk-perihal')?.value.trim();
+    const kodeUsulan = (document.getElementById('sk-kode-usulan')?.value || '').trim();
     const kode = document.getElementById('sk-kode')?.value.trim();
     const namaKode = document.getElementById('sk-nama-kode')?.value.trim();
     const noSurat = document.getElementById('sk-no-surat')?.value.trim();
@@ -731,10 +828,15 @@ const SuratKeluarModule = {
       return;
     }
 
+    const finalKodeUsulan = kodeUsulan || kode;
+    const statusKomparasi = finalKodeUsulan === kode ? 'Sesuai Standar' : 'Dikoreksi Sistem';
+
     const created = await Store.addSuratKeluar({
       perihal: perihal,
+      kode_usulan_bidang: finalKodeUsulan,
       kode_klasifikasi: kode,
       nama_klasifikasi: namaKode || 'Kepegawaian',
+      status_komparasi_kode: statusKomparasi,
       no_surat_keluar: noSurat,
       bidang_pembuat: bidang,
       tgl_surat: tglSurat,
@@ -782,8 +884,33 @@ const SuratKeluarModule = {
           </button>
         </div>
 
-        <!-- Detail Penyandingan & Rujukan Perbup -->
+        <!-- Detail Penyandingan & Komparasi Usulan vs Perbup -->
         <div style="text-align:left; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; font-size:13px; line-height:1.5;">
+          <!-- Kartu Komparasi Usulan vs Perbup -->
+          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px; margin-bottom:14px;">
+            <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; color:#0369a1; letter-spacing:0.5px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+              <span>Komparasi Kodifikasi Naskah Dinas</span>
+              <span class="badge ${letter.status_komparasi_kode === 'Dikoreksi Sistem' ? 'badge-warning' : 'badge-success'}" style="font-size:10.5px; font-weight:700;">
+                ${letter.status_komparasi_kode || 'Sesuai Standar'}
+              </span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr auto 1.3fr; gap:10px; align-items:center;">
+              <div style="background:#f8fafc; border:1px solid ${letter.status_komparasi_kode === 'Dikoreksi Sistem' ? '#fde68a' : '#bbf7d0'}; border-radius:6px; padding:8px 10px;">
+                <div style="font-size:9.5px; color:#64748b; font-weight:700; text-transform:uppercase;">1. Usulan Awal Bidang:</div>
+                <div style="font-family:monospace; font-weight:800; font-size:14px; color:${letter.status_komparasi_kode === 'Dikoreksi Sistem' ? '#dc2626' : '#15803d'}; margin-top:2px;">
+                  ${letter.kode_usulan_bidang || letter.kode_klasifikasi}
+                </div>
+              </div>
+              <div style="font-size:18px; font-weight:900; color:#0284c7; text-align:center;">➔</div>
+              <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:6px; padding:8px 10px;">
+                <div style="font-size:9.5px; color:#166534; font-weight:700; text-transform:uppercase;">2. Kode Baku Perbup 69/2023:</div>
+                <div style="font-family:monospace; font-weight:800; font-size:14px; color:#15803d; margin-top:2px;">
+                  ${letter.kode_klasifikasi}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div><strong>No. Agenda:</strong> ${letter.no_agenda}</div>
             <div><strong>Sifat Surat:</strong> <span class="badge badge-${letter.sifat_surat.toLowerCase()}">${letter.sifat_surat}</span></div>
@@ -792,7 +919,7 @@ const SuratKeluarModule = {
               <span style="font-weight:700; color:#0f172a;">${letter.tgl_surat || '-'}</span>
             </div>
             <div>
-              <strong>Kode Klasifikasi yang Betul:</strong><br>
+              <strong>Klasifikasi Resmi:</strong><br>
               <span class="code-tag code-tag-internal">${letter.kode_klasifikasi}</span> ${letter.nama_klasifikasi}
             </div>
             <div>
@@ -839,6 +966,61 @@ const SuratKeluarModule = {
     title.innerText = `Detail Kendali Surat Keluar: ${s.no_agenda}`;
     body.innerHTML = `
       <div style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Kartu Kendali Komparasi Kodifikasi Naskah Dinas -->
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:16px;">
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#0369a1; letter-spacing:0.5px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <span>Komparasi Kodifikasi: Usulan Bidang vs Perbup 69/2023</span>
+            <span class="badge ${s.status_komparasi_kode === 'Dikoreksi Sistem' ? 'badge-warning' : 'badge-success'}" style="font-size:11px; font-weight:700;">
+              ${s.status_komparasi_kode === 'Dikoreksi Sistem' ? '⚡ Dikoreksi Sistem' : '✓ Sesuai Standar'}
+            </span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr auto 1.3fr; gap:12px; align-items:center;">
+            <!-- Sisi Kiri: Usulan Awal Bidang -->
+            <div style="background:#ffffff; border:1px solid ${s.status_komparasi_kode === 'Dikoreksi Sistem' ? '#fde68a' : '#bbf7d0'}; border-radius:8px; padding:12px;">
+              <div style="font-size:10px; color:#64748b; font-weight:700; text-transform:uppercase;">1. Usulan Awal Bidang Pembuat:</div>
+              <div style="font-family:monospace; font-weight:800; font-size:16px; color:${s.status_komparasi_kode === 'Dikoreksi Sistem' ? '#dc2626' : '#15803d'}; margin-top:3px;">
+                ${s.kode_usulan_bidang || s.kode_klasifikasi}
+              </div>
+              <div style="font-size:11.5px; color:#475569; margin-top:3px; line-height:1.3;">
+                ${s.bidang_pembuat || 'Bidang Terkait'}
+              </div>
+            </div>
+
+            <!-- Panah Verifikasi -->
+            <div style="font-size:24px; font-weight:900; color:#0284c7; text-align:center;">
+              ⇄
+            </div>
+
+            <!-- Sisi Kanan: Penetapan Resmi Perbup 69/2023 -->
+            <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:8px; padding:12px;">
+              <div style="font-size:10px; color:#166534; font-weight:700; text-transform:uppercase;">2. Kode Baku Perbup 69/2023:</div>
+              <div style="font-family:monospace; font-weight:800; font-size:16px; color:#15803d; margin-top:3px;">
+                ${s.kode_klasifikasi}
+              </div>
+              <div style="font-size:11.5px; font-weight:600; color:#166534; margin-top:3px; line-height:1.3;">
+                ${s.nama_klasifikasi}
+              </div>
+            </div>
+          </div>
+
+          ${s.status_komparasi_kode === 'Dikoreksi Sistem' ? `
+            <div style="margin-top:12px; font-size:12px; color:#92400e; background:#fffbeb; padding:8px 12px; border-radius:6px; border:1px solid #fde68a; display:flex; align-items:flex-start; gap:8px;">
+              <span style="font-size:15px; margin-top:1px;">⚡</span>
+              <div>
+                <strong>Koreksi Kearsipan Terverifikasi:</strong> Naskah draf awal dari bidang mencantumkan kode <code>${s.kode_usulan_bidang}</code>, yang kemudian diverifikasi dan disesuaikan oleh agendaris menjadi kode baku <strong><code>${s.kode_klasifikasi}</code></strong> memedomani Lampiran Perbup Luwu Timur No. 69 Tahun 2023.
+              </div>
+            </div>
+          ` : `
+            <div style="margin-top:12px; font-size:12px; color:#166534; background:#f0fdf4; padding:8px 12px; border-radius:6px; border:1px solid #bbf7d0; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:15px;">✓</span>
+              <div>
+                <strong>Validasi Kearsipan:</strong> Usulan kode klasifikasi yang diajukan bidang pembuat telah valid dan tepat memedomani regulasi kearsipan daerah.
+              </div>
+            </div>
+          `}
+        </div>
+
         <div style="background:#f8fafc; padding:16px; border-radius:8px; border:1px solid #e2e8f0;">
           <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor Surat Resmi BKPSDM (Digital Locked)</div>
           <div style="font-family:monospace; font-size:17px; font-weight:800; color:var(--primary); margin-top:4px; display:flex; align-items:center; gap:8px;">
@@ -912,14 +1094,22 @@ const SuratKeluarModule = {
     const body = document.getElementById('modal-body');
     const footer = document.getElementById('modal-footer');
 
+    const defaultUsulan = s.kode_usulan_bidang || s.kode_klasifikasi || '';
+    const defaultPerbup = s.kode_klasifikasi || '';
+
     title.innerText = `Ubah Data Surat Keluar: ${s.no_agenda}`;
     body.innerHTML = `
       <form id="form-edit-sk">
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px;">
-          <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor Surat Resmi Terkunci:</div>
-          <div style="font-family:monospace; font-size:16px; font-weight:800; color:var(--primary); margin-top:2px;">
-            ${s.no_surat_keluar}
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor Agenda & Surat Resmi:</div>
+            <div style="font-family:monospace; font-size:15px; font-weight:800; color:var(--primary); margin-top:2px;">
+              ${s.no_agenda} &bull; <span id="edit-sk-preview-no">${s.no_surat_keluar}</span>
+            </div>
           </div>
+          <span class="badge ${s.status_komparasi_kode === 'Dikoreksi Sistem' ? 'badge-warning' : 'badge-success'}" style="font-size:11px;" id="edit-sk-header-badge">
+            ${s.status_komparasi_kode || 'Sesuai Standar'}
+          </span>
         </div>
 
         <div class="form-row">
@@ -940,10 +1130,41 @@ const SuratKeluarModule = {
         </div>
 
         <div class="form-group">
+          <label class="form-label">Tujuan Surat / Instansi Penerima <span class="required">*</span></label>
+          <input type="text" id="edit-sk-tujuan" class="form-control" value="${s.tujuan_surat || ''}" required placeholder="Contoh: Kepala BKPSDM Provinsi Sulawesi Selatan">
+        </div>
+
+        <div class="form-group">
           <label class="form-label">Perihal Surat <span class="required">*</span></label>
           <div class="autosuggest-wrapper">
             <textarea id="edit-sk-perihal" class="form-control" rows="2" required>${s.perihal}</textarea>
           </div>
+        </div>
+
+        <!-- Box Komparasi Kode Klasifikasi (Usulan Bidang vs Perbup 69/2023) -->
+        <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:14px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; color:#1e293b; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <span>⚖️</span> Komparasi Kodifikasi Naskah (Audit Regulasi Perbup 69/2023)
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:12px; margin-bottom:10px;">
+            <div>
+              <label class="form-label" style="font-size:11.5px; color:#475569;">
+                1. Kode Usulan Bidang (Draf)
+              </label>
+              <input type="text" id="edit-sk-kode-usulan" class="form-control" value="${defaultUsulan}" placeholder="Contoh: 823 atau 800" oninput="SuratKeluarModule.onEditCompareCodes()" style="font-family:monospace; font-weight:700; background:#ffffff;">
+              <small style="color:#64748b; font-size:10.5px;">Kode awal saat berkas diserahkan bidang</small>
+            </div>
+            <div>
+              <label class="form-label" style="font-size:11.5px; color:#166534; font-weight:700;">
+                2. Kode Baku Perbup 69/2023 (Tervalidasi) <span class="required">*</span>
+              </label>
+              <input type="text" id="edit-sk-kode" class="form-control" value="${defaultPerbup}" placeholder="Contoh: 800.1.3.2" oninput="SuratKeluarModule.onEditCompareCodes()" style="font-family:monospace; font-weight:700; background:#ffffff; border-color:#86efac;" required>
+              <input type="text" id="edit-sk-nama-kode" class="form-control" value="${s.nama_klasifikasi || ''}" placeholder="Nama Klasifikasi" style="margin-top:4px; font-size:11px; background:#ffffff;">
+            </div>
+          </div>
+
+          <div id="edit-sk-comparison-result-box"></div>
         </div>
 
         <div class="form-row">
@@ -974,31 +1195,123 @@ const SuratKeluarModule = {
     `;
 
     App.openModal();
+    this.onEditCompareCodes();
+  },
+
+  onEditCompareCodes() {
+    const usulanInput = document.getElementById('edit-sk-kode-usulan');
+    const perbupInput = document.getElementById('edit-sk-kode');
+    const namaInput = document.getElementById('edit-sk-nama-kode');
+    const resultBox = document.getElementById('edit-sk-comparison-result-box');
+    const headerBadge = document.getElementById('edit-sk-header-badge');
+    const previewNo = document.getElementById('edit-sk-preview-no');
+
+    if (!resultBox) return;
+
+    const usulan = (usulanInput?.value || '').trim();
+    const perbup = (perbupInput?.value || '').trim();
+    const nama = (namaInput?.value || '').trim();
+
+    if (previewNo && perbup) {
+      const parts = previewNo.innerText.split('/');
+      if (parts.length >= 3) {
+        previewNo.innerText = `${perbup}/${parts[1]}/${parts.slice(2).join('/')}`;
+      }
+    }
+
+    if (!perbup) {
+      resultBox.innerHTML = `
+        <div style="font-size:11.5px; color:#dc2626;">
+          * Kode baku Perbup 69/2023 wajib diisi.
+        </div>
+      `;
+      return;
+    }
+
+    if (!usulan || usulan === perbup) {
+      if (headerBadge) {
+        headerBadge.className = 'badge badge-success';
+        headerBadge.innerText = 'Sesuai Standar';
+      }
+      resultBox.innerHTML = `
+        <div style="background:#dcfce7; border:1px solid #86efac; border-radius:6px; padding:8px 12px; font-size:12px; color:#166534; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:16px;">✓</span>
+          <div>
+            <strong>Status: Sesuai Standar Perbup</strong><br>
+            Kode usulan bidang telah identik dan selaras dengan standar Perbup No. 69/2023.
+          </div>
+        </div>
+      `;
+    } else {
+      if (headerBadge) {
+        headerBadge.className = 'badge badge-warning';
+        headerBadge.innerText = 'Dikoreksi Sistem';
+      }
+      resultBox.innerHTML = `
+        <div style="background:#fffbeb; border:1px solid #fcd34d; border-radius:6px; padding:8px 12px; font-size:12px; color:#92400e; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:16px;">⚡</span>
+          <div>
+            <strong>Status: Dikoreksi Sistem</strong><br>
+            Usulan draf bidang (<code>${usulan}</code>) terdeteksi berbeda dan disesuaikan menjadi <strong><code>${perbup}</code></strong>${nama ? ` (${nama})` : ''}.
+          </div>
+        </div>
+      `;
+    }
   },
 
   async submitEdit(id) {
+    const s = Store.state.surat_keluar.find(item => item.id === id);
+    if (!s) return;
+
     const bidang = document.getElementById('edit-sk-bidang')?.value;
     const perihal = document.getElementById('edit-sk-perihal')?.value.trim();
     const tgl = document.getElementById('edit-sk-tgl')?.value;
+    const tujuan = document.getElementById('edit-sk-tujuan')?.value.trim();
     const sifat = document.getElementById('edit-sk-sifat')?.value;
     const penandatangan = document.getElementById('edit-sk-penandatangan')?.value;
+    const kodeUsulan = document.getElementById('edit-sk-kode-usulan')?.value.trim() || '';
+    const kodeBaku = document.getElementById('edit-sk-kode')?.value.trim() || s.kode_klasifikasi;
+    const namaBaku = document.getElementById('edit-sk-nama-kode')?.value.trim() || s.nama_klasifikasi;
 
     if (!perihal) {
       App.showToast('Perihal surat wajib diisi', 'warning');
       return;
     }
 
+    if (!kodeBaku) {
+      App.showToast('Kode klasifikasi Perbup wajib diisi', 'warning');
+      return;
+    }
+
+    const finalKodeUsulan = kodeUsulan || kodeBaku;
+    const statusKomparasi = (finalKodeUsulan !== kodeBaku) ? 'Dikoreksi Sistem' : 'Sesuai Standar';
+
+    // Update format nomor surat keluar jika kodenya berubah
+    let noSuratKeluar = s.no_surat_keluar;
+    if (kodeBaku && noSuratKeluar) {
+      const parts = noSuratKeluar.split('/');
+      if (parts.length >= 3) {
+        noSuratKeluar = `${kodeBaku}/${parts[1]}/${parts.slice(2).join('/')}`;
+      }
+    }
+
     const updated = await Store.updateSuratKeluar(id, {
       bidang_pembuat: bidang,
+      tujuan_surat: tujuan,
       perihal: perihal,
       tgl_surat: tgl,
       sifat_surat: sifat,
-      penandatangan: penandatangan
+      penandatangan: penandatangan,
+      kode_usulan_bidang: finalKodeUsulan,
+      kode_klasifikasi: kodeBaku,
+      nama_klasifikasi: namaBaku,
+      status_komparasi_kode: statusKomparasi,
+      no_surat_keluar: noSuratKeluar
     });
 
     if (updated) {
       App.closeModal();
-      App.showToast('Data surat keluar berhasil diperbarui', 'success');
+      App.showToast('Data surat keluar dan verifikasi kodifikasi berhasil diperbarui', 'success');
       this.render();
       DashboardModule.render();
     }

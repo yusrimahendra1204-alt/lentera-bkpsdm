@@ -357,6 +357,7 @@ const Store = {
 
   // Add Surat Keluar
   async addSuratKeluar(data) {
+    let savedData = null;
     try {
       const res = await fetch('/api/surat-keluar', {
         method: 'POST',
@@ -366,19 +367,46 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
-          this.state.surat_keluar.unshift(json.data);
-          this.notify();
-          return json.data;
+          savedData = json.data;
         }
       }
     } catch (err) {
-      console.error('Failed to add surat keluar:', err);
+      console.warn('API /api/surat-keluar offline, simpan secara lokal:', err);
     }
-    return null;
+
+    if (!savedData) {
+      const newId = (this.state.surat_keluar.length ? Math.max(...this.state.surat_keluar.map(s => s.id)) : 0) + 1;
+      savedData = {
+        id: newId,
+        no_agenda: data.no_agenda || `SK-2026-${String(newId).padStart(3, '0')}`,
+        bidang_pembuat: data.bidang_pembuat || 'Bidang Terkait',
+        kode_usulan_bidang: data.kode_usulan_bidang || data.kode_klasifikasi || '000',
+        kode_klasifikasi: data.kode_klasifikasi || '000',
+        nama_klasifikasi: data.nama_klasifikasi || 'Kepegawaian',
+        status_komparasi_kode: data.status_komparasi_kode || (data.kode_usulan_bidang && data.kode_usulan_bidang !== data.kode_klasifikasi ? 'Dikoreksi Sistem' : 'Sesuai Standar'),
+        no_surat_keluar: data.no_surat_keluar || '',
+        tujuan_surat: data.tujuan_surat || '',
+        perihal: data.perihal || '',
+        tgl_surat: data.tgl_surat || new Date().toISOString().split('T')[0],
+        sifat_surat: data.sifat_surat || 'Biasa',
+        penandatangan: data.penandatangan || 'PARHA ARIEF, S.AP',
+        metode_dokumen: 'Fisik Manual (Tanda Tangan Basah)',
+        lokasi_arsip_fisik: 'Lemari Arsip Subbag Umum',
+        is_surat_balasan: Boolean(data.is_surat_balasan),
+        id_surat_masuk_asal: data.id_surat_masuk_asal || null,
+        no_surat_pengirim_asal: data.no_surat_pengirim_asal || '',
+        file_name: 'surat_keluar.pdf'
+      };
+    }
+
+    this.state.surat_keluar.unshift(savedData);
+    this.notify();
+    return savedData;
   },
 
   // Update Surat Keluar
   async updateSuratKeluar(id, data) {
+    let savedData = null;
     try {
       const res = await fetch(`/api/surat-keluar/${id}`, {
         method: 'PUT',
@@ -387,15 +415,19 @@ const Store = {
       });
       if (res.ok) {
         const json = await res.json();
-        if (json.success) {
-          const idx = this.state.surat_keluar.findIndex(s => s.id === id);
-          if (idx !== -1) this.state.surat_keluar[idx] = json.data;
-          this.notify();
-          return json.data;
-        }
+        if (json.success) savedData = json.data;
       }
     } catch (err) {
-      console.error('Failed to update surat keluar:', err);
+      console.warn('API /api/surat-keluar offline, update secara lokal:', err);
+    }
+
+    const index = this.state.surat_keluar.findIndex(s => s.id === id);
+    if (index !== -1) {
+      const current = this.state.surat_keluar[index];
+      savedData = savedData || { ...current, ...data };
+      this.state.surat_keluar[index] = savedData;
+      this.notify();
+      return savedData;
     }
     return null;
   },

@@ -479,30 +479,67 @@ const server = http.createServer(async (req, res) => {
         }
         const noUrut   = String(nextN).padStart(3, '0');
         const noSurat  = body.no_surat_keluar || `${kode}/${noUrut}/BKPSDM/${bulan}/${tahun}`;
-        const [result] = await db.getPool().execute(`
-          INSERT INTO surat_keluar
-            (no_agenda,bidang_pembuat,kode_klasifikasi,nama_klasifikasi,no_surat_keluar,
-             tujuan_surat,perihal,tgl_surat,sifat_surat,penandatangan,metode_dokumen,
-             lokasi_arsip_fisik,is_surat_balasan,id_surat_masuk_asal,no_surat_pengirim_asal,file_name)
-          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-          [noAgenda,
-           body.bidang_pembuat    || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
-           kode,
-           body.nama_klasifikasi  || 'Umum',
-           noSurat,
-           body.tujuan_surat      || '',
-           body.perihal           || '',
-           body.tgl_surat         || new Date().toISOString().split('T')[0],
-           body.sifat_surat       || 'Biasa',
-           body.penandatangan     || 'Kepala BKPSDM Kabupaten Luwu Timur',
-           body.metode_dokumen    || 'Fisik Manual (Tanda Tangan Basah)',
-           body.lokasi_arsip_fisik|| 'Lemari Arsip Subbag Umum',
-           body.is_surat_balasan  ? 1 : 0,
-           body.id_surat_masuk_asal ? parseInt(body.id_surat_masuk_asal, 10) : null,
-           body.no_surat_pengirim_asal || '',
-           body.file_name         || 'surat_keluar.pdf']
-        );
+        const kodeUsulan = body.kode_usulan_bidang || kode;
+        const statusKomparasi = body.status_komparasi_kode || (kodeUsulan !== kode ? 'Dikoreksi Sistem' : 'Sesuai Standar');
+
+        let result;
+        try {
+          [result] = await db.getPool().execute(`
+            INSERT INTO surat_keluar
+              (no_agenda,bidang_pembuat,kode_usulan_bidang,kode_klasifikasi,nama_klasifikasi,status_komparasi_kode,no_surat_keluar,
+               tujuan_surat,perihal,tgl_surat,sifat_surat,penandatangan,metode_dokumen,
+               lokasi_arsip_fisik,is_surat_balasan,id_surat_masuk_asal,no_surat_pengirim_asal,file_name)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [noAgenda,
+             body.bidang_pembuat    || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
+             kodeUsulan,
+             kode,
+             body.nama_klasifikasi  || 'Umum',
+             statusKomparasi,
+             noSurat,
+             body.tujuan_surat      || '',
+             body.perihal           || '',
+             body.tgl_surat         || new Date().toISOString().split('T')[0],
+             body.sifat_surat       || 'Biasa',
+             body.penandatangan     || 'Kepala BKPSDM Kabupaten Luwu Timur',
+             body.metode_dokumen    || 'Fisik Manual (Tanda Tangan Basah)',
+             body.lokasi_arsip_fisik|| 'Lemari Arsip Subbag Umum',
+             body.is_surat_balasan  ? 1 : 0,
+             body.id_surat_masuk_asal ? parseInt(body.id_surat_masuk_asal, 10) : null,
+             body.no_surat_pengirim_asal || '',
+             body.file_name         || 'surat_keluar.pdf']
+          );
+        } catch (colErr) {
+          // Fallback jika database MySQL belum di-alter kolom komparasi
+          [result] = await db.getPool().execute(`
+            INSERT INTO surat_keluar
+              (no_agenda,bidang_pembuat,kode_klasifikasi,nama_klasifikasi,no_surat_keluar,
+               tujuan_surat,perihal,tgl_surat,sifat_surat,penandatangan,metode_dokumen,
+               lokasi_arsip_fisik,is_surat_balasan,id_surat_masuk_asal,no_surat_pengirim_asal,file_name)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [noAgenda,
+             body.bidang_pembuat    || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
+             kode,
+             body.nama_klasifikasi  || 'Umum',
+             noSurat,
+             body.tujuan_surat      || '',
+             body.perihal           || '',
+             body.tgl_surat         || new Date().toISOString().split('T')[0],
+             body.sifat_surat       || 'Biasa',
+             body.penandatangan     || 'Kepala BKPSDM Kabupaten Luwu Timur',
+             body.metode_dokumen    || 'Fisik Manual (Tanda Tangan Basah)',
+             body.lokasi_arsip_fisik|| 'Lemari Arsip Subbag Umum',
+             body.is_surat_balasan  ? 1 : 0,
+             body.id_surat_masuk_asal ? parseInt(body.id_surat_masuk_asal, 10) : null,
+             body.no_surat_pengirim_asal || '',
+             body.file_name         || 'surat_keluar.pdf']
+          );
+        }
         const newSK = await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [result.insertId]);
+        if (newSK && !newSK.kode_usulan_bidang) {
+          newSK.kode_usulan_bidang = kodeUsulan;
+          newSK.status_komparasi_kode = statusKomparasi;
+        }
         return sendJSON(res, { success: true, data: newSK });
       }
 
@@ -512,22 +549,54 @@ const server = http.createServer(async (req, res) => {
         const body = await parseBody(req);
         const sk   = await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]);
         if (!sk) return sendJSON(res, { success: false, message: 'Surat keluar tidak ditemukan' }, 404);
-        await db.getPool().execute(`
-          UPDATE surat_keluar SET
-            tujuan_surat=?, perihal=?, tgl_surat=?, sifat_surat=?,
-            penandatangan=?, kode_klasifikasi=?, nama_klasifikasi=?, bidang_pembuat=?
-          WHERE id=?`,
-          [body.tujuan_surat    || sk.tujuan_surat,
-           body.perihal         || sk.perihal,
-           body.tgl_surat       || sk.tgl_surat,
-           body.sifat_surat     || sk.sifat_surat,
-           body.penandatangan   || sk.penandatangan,
-           body.kode_klasifikasi|| sk.kode_klasifikasi,
-           body.nama_klasifikasi|| sk.nama_klasifikasi,
-           body.bidang_pembuat  || sk.bidang_pembuat,
-           id]
-        );
+
+        const kodeUsulan = body.kode_usulan_bidang !== undefined ? body.kode_usulan_bidang : (sk.kode_usulan_bidang || sk.kode_klasifikasi);
+        const kodeBaku = body.kode_klasifikasi || sk.kode_klasifikasi;
+        const statusKomparasi = body.status_komparasi_kode || (kodeUsulan !== kodeBaku ? 'Dikoreksi Sistem' : 'Sesuai Standar');
+
+        try {
+          await db.getPool().execute(`
+            UPDATE surat_keluar SET
+              tujuan_surat=?, perihal=?, tgl_surat=?, sifat_surat=?,
+              penandatangan=?, kode_klasifikasi=?, nama_klasifikasi=?, bidang_pembuat=?,
+              kode_usulan_bidang=?, status_komparasi_kode=?, no_surat_keluar=?
+            WHERE id=?`,
+            [body.tujuan_surat    || sk.tujuan_surat,
+             body.perihal         || sk.perihal,
+             body.tgl_surat       || sk.tgl_surat,
+             body.sifat_surat     || sk.sifat_surat,
+             body.penandatangan   || sk.penandatangan,
+             kodeBaku,
+             body.nama_klasifikasi|| sk.nama_klasifikasi,
+             body.bidang_pembuat  || sk.bidang_pembuat,
+             kodeUsulan,
+             statusKomparasi,
+             body.no_surat_keluar || sk.no_surat_keluar,
+             id]
+          );
+        } catch (colErr) {
+          await db.getPool().execute(`
+            UPDATE surat_keluar SET
+              tujuan_surat=?, perihal=?, tgl_surat=?, sifat_surat=?,
+              penandatangan=?, kode_klasifikasi=?, nama_klasifikasi=?, bidang_pembuat=?, no_surat_keluar=?
+            WHERE id=?`,
+            [body.tujuan_surat    || sk.tujuan_surat,
+             body.perihal         || sk.perihal,
+             body.tgl_surat       || sk.tgl_surat,
+             body.sifat_surat     || sk.sifat_surat,
+             body.penandatangan   || sk.penandatangan,
+             kodeBaku,
+             body.nama_klasifikasi|| sk.nama_klasifikasi,
+             body.bidang_pembuat  || sk.bidang_pembuat,
+             body.no_surat_keluar || sk.no_surat_keluar,
+             id]
+          );
+        }
         const updated = await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]);
+        if (updated && !updated.kode_usulan_bidang) {
+          updated.kode_usulan_bidang = kodeUsulan;
+          updated.status_komparasi_kode = statusKomparasi;
+        }
         return sendJSON(res, { success: true, message: 'Surat keluar diperbarui', data: updated });
       }
 

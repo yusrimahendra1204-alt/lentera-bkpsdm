@@ -501,6 +501,8 @@ const server = http.createServer(async (req, res) => {
         const newId = (appState.surat_keluar.length ? Math.max(...appState.surat_keluar.map(s => s.id)) : 0) + 1;
         const noAgenda = `SK-2026-${String(newId).padStart(3, '0')}`;
         const kode = body.kode_klasifikasi || '000';
+        const kodeUsulan = body.kode_usulan_bidang ? body.kode_usulan_bidang.trim() : kode;
+        const statusKomparasi = body.status_komparasi_kode || (kodeUsulan !== kode ? 'Dikoreksi Sistem' : 'Sesuai Standar');
 
         const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         const monthRomawi = romawi[new Date().getMonth()];
@@ -512,8 +514,10 @@ const server = http.createServer(async (req, res) => {
           id: newId,
           no_agenda: noAgenda,
           bidang_pembuat: body.bidang_pembuat || 'Bidang Pengadaan, Mutasi & Informasi Kepegawaian',
+          kode_usulan_bidang: kodeUsulan,
           kode_klasifikasi: kode,
           nama_klasifikasi: body.nama_klasifikasi || 'Kepegawaian',
+          status_komparasi_kode: statusKomparasi,
           no_surat_keluar: body.no_surat_keluar || noSurat,
           tujuan_surat: body.tujuan_surat || '',
           perihal: body.perihal || '',
@@ -550,6 +554,8 @@ const server = http.createServer(async (req, res) => {
         if (body.kode_klasifikasi) sk.kode_klasifikasi = body.kode_klasifikasi;
         if (body.nama_klasifikasi) sk.nama_klasifikasi = body.nama_klasifikasi;
         if (body.bidang_pembuat) sk.bidang_pembuat = body.bidang_pembuat;
+        if (body.kode_usulan_bidang !== undefined) sk.kode_usulan_bidang = body.kode_usulan_bidang;
+        if (body.status_komparasi_kode !== undefined) sk.status_komparasi_kode = body.status_komparasi_kode;
 
         saveState();
         return sendJSON(res, { success: true, message: 'Surat keluar berhasil diperbarui', data: sk });
