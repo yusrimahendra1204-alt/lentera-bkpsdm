@@ -143,15 +143,6 @@ const SuratMasukModule = {
             <button class="btn btn-outline btn-sm" onclick="SuratMasukModule.showDetail(${s.id})" title="Lihat Rincian Agenda Surat">
               Detail
             </button>
-            ${s.status_disposisi === 'Menunggu Disposisi' ? `
-              <button class="btn btn-outline btn-sm" style="background:#fffbeb; color:#b45309; border-color:#fcd34d; font-weight:700;" onclick="DisposisiModule.openCreateModal(${s.id})" title="Catat Lembar Disposisi Surat Ini">
-                ✍️ Catat Disposisi
-              </button>
-            ` : `
-              <button class="btn btn-outline btn-sm" style="background:#f0fdf4; color:#15803d; border-color:#86efac; font-weight:700;" onclick="DisposisiModule.showDetailBySuratMasukId(${s.id})" title="Lihat Rincian Disposisi Surat Ini">
-                📄 Disposisi
-              </button>
-            `}
             <button class="btn btn-outline btn-sm" style="color:#0284c7; border-color:#bae6fd;" onclick="SuratMasukModule.openEditModal(${s.id})" title="Ubah Data Surat Masuk">
               Ubah
             </button>
@@ -529,7 +520,7 @@ const SuratMasukModule = {
         <!-- Riwayat Disposisi -->
         <div style="border-top:1px solid #e2e8f0; padding-top:16px;">
           <h4 style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:10px;">
-            Riwayat Disposisi Plt. Kepala BKPSDM (${disp.length})
+            Riwayat Disposisi Kepala BKPSDM (${disp.length})
           </h4>
           ${disp.length ? disp.map(d => `
             <div style="background:#fafbfc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:10px;">
@@ -549,8 +540,13 @@ const SuratMasukModule = {
               </div>
             </div>
           `).join('') : `
-            <div style="padding:14px; background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; font-size:12.5px; color:#92400e;">
-              Surat ini belum didisposisikan oleh Plt. Kepala BKPSDM.
+            <div style="padding:12px 14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; font-size:12.5px; color:#64748b; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                ⏳ <strong>Status:</strong> Surat ini masih menunggu lembar disposisi fisik dari Kepala BKPSDM.
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="App.closeModal(); App.navigate('disposisi');">
+                Buka Menu Disposisi →
+              </button>
             </div>
           `}
         </div>
@@ -559,9 +555,15 @@ const SuratMasukModule = {
 
     footer.innerHTML = `
       <button class="btn btn-outline" onclick="App.closeModal()">Tutup</button>
-      <button class="btn btn-primary" onclick="App.closeModal(); DisposisiModule.selectSuratAndNavigate(${s.id})">
-        ${disp.length ? '📄 Rincian Disposisi' : '✍️ Catat Disposisi'}
-      </button>
+      ${disp.length ? `
+        <button class="btn btn-primary" onclick="App.closeModal(); DisposisiModule.selectSuratAndNavigate(${s.id})">
+          📄 Kelola di Menu Disposisi →
+        </button>
+      ` : `
+        <button class="btn btn-outline" style="color:var(--primary); font-weight:600;" onclick="App.closeModal(); App.navigate('disposisi')">
+          📋 Ke Menu Disposisi →
+        </button>
+      `}
     `;
 
     App.openModal();

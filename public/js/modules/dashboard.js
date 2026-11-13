@@ -181,16 +181,10 @@ const DashboardModule = {
                           ${s.status_disposisi}
                         </span>
                       </td>
-                      <td>
-                        ${s.status_disposisi === 'Menunggu Disposisi' ? `
-                          <button class="btn btn-primary btn-sm" onclick="DisposisiModule.openCreateModal(${s.id})">
-                            ✍️ Catat Disposisi
-                          </button>
-                        ` : `
-                          <button class="btn btn-outline btn-sm" onclick="SuratMasukModule.showDetail(${s.id})">
-                            Detail
-                          </button>
-                        `}
+                      <td style="text-align:right;">
+                        <button class="btn btn-outline btn-sm" onclick="SuratMasukModule.showDetail(${s.id})" title="Lihat Rincian Surat Masuk">
+                          Detail
+                        </button>
                       </td>
                     </tr>
                   `).join('')}
