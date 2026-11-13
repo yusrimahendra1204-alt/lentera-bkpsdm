@@ -415,30 +415,40 @@ const DisposisiModule = {
           </div>
         </div>
 
+        <!-- Petunjuk Pengisian Berbasis Lembar Fisik -->
+        <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:10px 14px; margin-bottom:14px; font-size:12.5px; color:#1e40af; display:flex; align-items:flex-start; gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <div>
+            <strong>Panduan Pengisian:</strong> Disposisi ini merekam lembar fisik Kepala Badan. Pilihan <strong>Pejabat Tujuan</strong> dan <strong>Instruksi</strong> diisi dengan cara <u>mencentang kotak pilihan</u> di bawah (bukan diketik). Kolom ketik bebas tersedia pada bagian <em>"Catatan / Arahan Pimpinan"</em>.
+          </div>
+        </div>
+
         <!-- 3. Dua Kolom: Diteruskan Kepada & Dengan Hormat Harap -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
           <!-- Kolom Kiri: 6 Jabatan Struktural Resmi -->
-          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px;">
-            <div style="font-weight:800; font-size:12.5px; text-transform:uppercase; color:#0369a1; border-bottom:2px solid #bae6fd; padding-bottom:6px; margin-bottom:10px;">
-              Diteruskan kepada saudara : <span class="required">*</span>
+          <div id="box-diteruskan-group" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px; transition:border 0.2s;">
+            <div style="font-weight:800; font-size:12.5px; text-transform:uppercase; color:#0369a1; border-bottom:2px solid #bae6fd; padding-bottom:6px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span>Diteruskan kepada saudara : <span class="required">*</span></span>
+              <span class="badge badge-info" style="font-size:10px; text-transform:none;">Centang Kotak</span>
             </div>
             <div style="display:flex; flex-direction:column; gap:7px;">
-              ${this.JABATAN_TUJUAN.map(j => `
+              ${this.JABATAN_TUJUAN.map((j, idx) => `
                 <label style="display:flex; align-items:flex-start; gap:8px; font-size:12px; line-height:1.3; cursor:pointer; padding:3px 4px; border-radius:4px; hover:bg-slate-100;">
-                  <input type="checkbox" name="modal-diteruskan" value="${j}" style="margin-top:2px;">
+                  <input type="checkbox" name="modal-diteruskan" value="${j}" ${idx === 0 ? 'checked' : ''} style="margin-top:2px;">
                   <span style="font-weight:600; color:#1e293b;">${j}</span>
                 </label>
               `).join('')}
             </div>
             <div style="font-size:11px; color:#64748b; margin-top:8px; font-style:italic;">
-              * Centang satu atau lebih jabatan yang dituju pada lembar fisik
+              * Minimal centang 1 pejabat tujuan yang ditandai pada lembar fisik
             </div>
           </div>
 
           <!-- Kolom Kanan: 9 Butir Instruksi Resmi -->
-          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px;">
-            <div style="font-weight:800; font-size:12.5px; text-transform:uppercase; color:#15803d; border-bottom:2px solid #bbf7d0; padding-bottom:6px; margin-bottom:10px;">
-              Dengan hormat harap : <span class="required">*</span>
+          <div id="box-instruksi-group" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px; transition:border 0.2s;">
+            <div style="font-weight:800; font-size:12.5px; text-transform:uppercase; color:#15803d; border-bottom:2px solid #bbf7d0; padding-bottom:6px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span>Dengan hormat harap : <span class="required">*</span></span>
+              <span class="badge badge-success" style="font-size:10px; text-transform:none;">Centang Butir</span>
             </div>
             <div style="display:flex; flex-direction:column; gap:6px;">
               ${this.INSTRUKSI_RESMI.map((inst, idx) => `
@@ -462,6 +472,9 @@ const DisposisiModule = {
           <textarea id="modal-catatan" class="form-control" rows="3" placeholder="Ketikkan catatan petunjuk tulisan tangan pimpinan dari lembar fisik (misal: 'Segera koordinasikan dengan bidang terkait dan siapkan bahan laporannya')..."></textarea>
           <span class="form-hint">Transkripsi catatan yang tertulis pada kolom Catatan lembar fisik pimpinan</span>
         </div>
+
+        <!-- Kotak Peringatan Validasi Inline -->
+        <div id="disp-modal-alert" style="display:none; background:#fef2f2; border:1.5px solid #f87171; color:#991b1b; padding:10px 14px; border-radius:6px; font-size:12.5px; margin-bottom:16px; font-weight:600;"></div>
 
         <!-- 5. Pejabat Penandatangan Resmi -->
         <div style="background:#f8fafc; border:1px dashed #94a3b8; border-radius:6px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
@@ -525,13 +538,30 @@ const DisposisiModule = {
     const sifatEl = document.querySelector('input[name="modal-sifat"]:checked');
     const sifat = sifatEl ? sifatEl.value : 'B. Segera';
     const catatan = document.getElementById('modal-catatan')?.value.trim() || '';
+    const alertEl = document.getElementById('disp-modal-alert');
+    const boxDiteruskan = document.getElementById('box-diteruskan-group');
+    const boxInstruksi = document.getElementById('box-instruksi-group');
+
+    if (alertEl) alertEl.style.display = 'none';
+    if (boxDiteruskan) boxDiteruskan.style.borderColor = '#cbd5e1';
+    if (boxInstruksi) boxInstruksi.style.borderColor = '#cbd5e1';
 
     if (!checkedDiteruskan.length) {
+      if (alertEl) {
+        alertEl.innerHTML = '⚠️ <strong>Pilihan Wajib:</strong> Mohon centang minimal salah satu kotak jabatan struktural pada kolom <em>"Diteruskan kepada saudara :"</em>';
+        alertEl.style.display = 'block';
+      }
+      if (boxDiteruskan) boxDiteruskan.style.borderColor = '#ef4444';
       App.showToast('Mohon centang minimal satu jabatan pada "Diteruskan kepada saudara :"', 'warning');
       return;
     }
 
     if (!checkedInstruksi.length) {
+      if (alertEl) {
+        alertEl.innerHTML = '⚠️ <strong>Pilihan Wajib:</strong> Mohon centang minimal salah satu kotak instruksi pada kolom <em>"Dengan hormat harap :"</em>';
+        alertEl.style.display = 'block';
+      }
+      if (boxInstruksi) boxInstruksi.style.borderColor = '#ef4444';
       App.showToast('Mohon centang minimal satu butir pada "Dengan hormat harap :"', 'warning');
       return;
     }
@@ -666,6 +696,9 @@ const DisposisiModule = {
           </label>
           <textarea id="edit-catatan" class="form-control" rows="3">${catatanText}</textarea>
         </div>
+
+        <!-- Kotak Peringatan Validasi Inline Edit -->
+        <div id="disp-edit-alert" style="display:none; background:#fef2f2; border:1.5px solid #f87171; color:#991b1b; padding:10px 14px; border-radius:6px; font-size:12.5px; margin-bottom:16px; font-weight:600;"></div>
       </form>
     `;
 
@@ -685,13 +718,24 @@ const DisposisiModule = {
     const sifatEl = document.querySelector('input[name="edit-sifat"]:checked');
     const sifat = sifatEl ? sifatEl.value : 'B. Segera';
     const catatan = document.getElementById('edit-catatan')?.value.trim() || '';
+    const alertEl = document.getElementById('disp-edit-alert');
+
+    if (alertEl) alertEl.style.display = 'none';
 
     if (!checkedDiteruskan.length) {
+      if (alertEl) {
+        alertEl.innerHTML = '⚠️ <strong>Pilihan Wajib:</strong> Mohon centang minimal salah satu jabatan pada pilihan <em>"Diteruskan kepada saudara :"</em>';
+        alertEl.style.display = 'block';
+      }
       App.showToast('Mohon centang minimal satu jabatan pada "Diteruskan kepada saudara :"', 'warning');
       return;
     }
 
     if (!checkedInstruksi.length) {
+      if (alertEl) {
+        alertEl.innerHTML = '⚠️ <strong>Pilihan Wajib:</strong> Mohon centang minimal salah satu butir instruksi pada pilihan <em>"Dengan hormat harap :"</em>';
+        alertEl.style.display = 'block';
+      }
       App.showToast('Mohon centang minimal satu butir pada "Dengan hormat harap :"', 'warning');
       return;
     }

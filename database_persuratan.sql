@@ -6,7 +6,7 @@
 -- Rujukan Regulasi: Peraturan Bupati Luwu Timur Nomor 69 Tahun 2023
 -- Peneliti: Yusri Mahendra (NIM: IK2311011)
 -- Program Studi: Sarjana Informatika, Universitas Mega Buana Palopo
--- Waktu Pembuatan/Export: 2026-11-02 00:48:55
+-- Waktu Pembuatan/Export: 2026-11-13 09:47:38
 -- =====================================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -228,11 +228,11 @@ INSERT INTO `pegawai` (`id`, `nip`, `nama`, `pangkat`, `jabatan`, `role`, `unit`
 -- Data Surat Masuk
 --
 INSERT INTO `surat_masuk` (`id`, `no_agenda`, `no_surat_pengirim`, `instansi_pengirim`, `kode_internal`, `nama_klasifikasi_internal`, `perihal`, `tgl_surat`, `tgl_diterima`, `sifat_surat`, `lampiran`, `status_disposisi`, `file_name`, `created_at`) VALUES
-(1, 'SM-2026-001', '800.1.3.2/04/DINSOSP3A', 'Dinas Sosial Pemberdayaan Perempuan dan Perlindungan Anak', '800.1.3.2', 'Kenaikan Pangkat/ Golongan/ Jabatan', 'Terkirim daftar nominatif usulan kenaikan jenjang Dinas Sosial P3A Januari An. Rezki Aprianti Agus, SKM', '2026-01-07', '2026-01-07', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
-(2, 'SM-2026-002', '800.1.3.2/04/DPMPTSP', 'Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu', '800.1.3.2', 'Kenaikan Pangkat/ Golongan/ Jabatan', 'Terkirim daftar nominatif usulan kenaikan jenjang Dinas Sosial P3A Januari An. Faizah, S.Kom', '2026-01-07', '2026-01-07', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
-(3, 'SM-2026-003', '800.1.3.3/033/RSUD I Lagaligo', 'UPT Rumah Sakit Umum Daerah I Lagaligo', '800.1.3.3', 'Pengangkatan dan Pemberhentian Jabatan Struktural/Fungsional', 'Ketersediaan Formasi dalam Jabatan Pranata Laboraturium Kesehatan', '2026-01-08', '2026-01-08', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
-(4, 'SM-2026-004', '100.2/004/PEM', 'Sekretaris Daerah', '100.2', 'PEMERINTAHAN UMUM', 'Permintaan Data Dukung LPPD Tahun 2025', '2026-01-08', '2026-01-08', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
-(5, 'SM-2026-005', '1/F.0411/Tahun 2026', 'Bupati Luwu Timur', '800', 'Kepegawaian', 'Pelimpahan sebagai kekuasaan kepala daerah kepada pejabat perangkat daerah tahun anggaran 2026', '2026-01-09', '2026-01-09', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
+(1, 'SM-2026-001', '800.1.3.2/04/DINSOSP3A', 'Dinas Sosial Pemberdayaan Perempuan dan Perlindungan Anak', '800.1.3.2', 'Kenaikan Pangkat/ Golongan/ Jabatan', 'Terkirim daftar nominatif usulan kenaikan jenjang Dinas Sosial P3A Januari An. Rezki Aprianti Agus, SKM', '2026-01-07', '2026-01-07', 'Biasa', '1 Berkas', 'Didisposisi', 'surat_masuk.pdf', NOW()),
+(2, 'SM-2026-002', '800.1.3.2/04/DPMPTSP', 'Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu', '800.1.3.2', 'Kenaikan Pangkat/ Golongan/ Jabatan', 'Terkirim daftar nominatif usulan kenaikan jenjang Dinas Sosial P3A Januari An. Faizah, S.Kom', '2026-01-07', '2026-01-07', 'Biasa', '1 Berkas', 'Didisposisi', 'surat_masuk.pdf', NOW()),
+(3, 'SM-2026-003', '800.1.3.3/033/RSUD I Lagaligo', 'UPT Rumah Sakit Umum Daerah I Lagaligo', '800.1.3.3', 'Pengangkatan dan Pemberhentian Jabatan Struktural/Fungsional', 'Ketersediaan Formasi dalam Jabatan Pranata Laboraturium Kesehatan', '2026-01-08', '2026-01-08', 'Biasa', '1 Berkas', 'Didisposisi', 'surat_masuk.pdf', NOW()),
+(4, 'SM-2026-004', '100.2/004/PEM', 'Sekretaris Daerah', '100.2', 'PEMERINTAHAN UMUM', 'Permintaan Data Dukung LPPD Tahun 2025', '2026-01-08', '2026-01-08', 'Biasa', '1 Berkas', 'Didisposisi', 'surat_masuk.pdf', NOW()),
+(5, 'SM-2026-005', '1/F.0411/Tahun 2026', 'Bupati Luwu Timur', '800', 'Kepegawaian', 'Pelimpahan sebagai kekuasaan kepala daerah kepada pejabat perangkat daerah tahun anggaran 2026', '2026-01-09', '2026-01-09', 'Biasa', '1 Berkas', 'Didisposisi', 'surat_masuk.pdf', NOW()),
 (6, 'SM-2026-006', '800.1.11.1/008/1/ITIKAB', 'Inspektorat', '800.1.11.1', 'Surat Perintah Dinas/Surat Tugas', 'Melakukan opname kas dan persediaan barang pada dinas lingkungan hidup sekretariat DPRD, BKPSDM, DInas Pengendalian penduduk dan keluarga Berencana.', '2026-01-09', '2026-01-09', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
 (7, 'SM-2026-007', '800.1.4/1522/DLH', 'Dinas Lingkungan Hidup', '800.1.4', 'Pengembangan Karir', 'Usulan Perpindahan dari Jabatan Penelaah Teknis Kebijakan ke Jabatan Fungsional Pengendali dampak Lingkungan Ahli Pertama', '2026-01-12', '2026-01-12', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
 (8, 'SM-2026-008', '000/BKPSDM/8', 'Dinas Lingkungan Hidup', '000', 'UMUM', 'Permohonan Bantuann Klarifikasi', '2026-01-12', '2026-01-12', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
@@ -358,6 +358,16 @@ INSERT INTO `surat_masuk` (`id`, `no_agenda`, `no_surat_pengirim`, `instansi_pen
 (128, 'SM-2026-128', '900.1.13.4/500/BKAD', 'Sekretariat Daerah', '900.1.13.4', 'Pengelolaan Kekayaan Daerah, antara lain: Fasilitasi serta bimbingan teknis pengelolaan kekayaan , Fasilitasi serta bimbingan teknis investasi daerah, Penyiapan pelaksanaan monitoring dan evaluasi pengelolaan kekayaan dan investasi daerah', 'Rekonsiliasi BMD', '2026-06-26', '2026-06-26', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
 (129, 'SM-2026-129', '800.1.12/3725Keuda', 'Kementrian dalam negeri republik indonesia', '800.1.12', 'Kesejahteraan Pegawai', 'Undangan rapat', '2026-06-29', '2026-06-29', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW()),
 (130, 'SM-2026-130', '022/B/UMD/JMSI-Luwu Timur/VI/2026', 'Jaringan Media Siber Indonesia', '022', 'Kepegawaian', 'Undangan pelatihan', '2026-07-01', '2026-07-01', 'Biasa', '1 Berkas', 'Menunggu Disposisi', 'surat_masuk.pdf', NOW());
+
+--
+-- Data Disposisi Kepala BKPSDM
+--
+INSERT INTO `disposisi` (`id`, `id_surat_masuk`, `dari_user`, `tujuan_user_id`, `tujuan_nama`, `sifat`, `instruksi`, `catatan`, `batas_waktu`, `status_tindak_lanjut`, `tindak_lanjut_note`, `created_at`) VALUES
+(1, 1, 'PARHA ARIEF, S.AP (Kepala BKPSDM)', null, '4. Kabid. Pengembangan Sumber Daya Aparatur', 'B. Segera', 'Laksanakan; Proses Sesuai Ketentuan', 'Verifikasi berkas usulan kenaikan jenjang yang bersangkutan dan tindak lanjuti sesuai ketentuan BKN.', '2026-02-05', 'Diproses', '', NOW()),
+(2, 2, 'PARHA ARIEF, S.AP (Kepala BKPSDM)', null, '4. Kabid. Pengembangan Sumber Daya Aparatur', 'B. Segera', 'Proses Sesuai Ketentuan', 'Teliti kelengkapan dokumen kenaikan jenjang jabatan fungsional.', '2026-02-05', 'Diproses', '', NOW()),
+(3, 3, 'PARHA ARIEF, S.AP (Kepala BKPSDM)', null, '6. Kabid. Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian', 'B. Segera', 'Koordinasikan/Konfirmasikan; Siapkan Bahan', 'Cek peta jabatan dan ketersediaan formasi JF Pranata Laboratorium Kesehatan Dinkes.', '2026-02-06', 'Diproses', '', NOW()),
+(4, 4, 'PARHA ARIEF, S.AP (Kepala BKPSDM)', null, '1. Sekertaris, 3. Kasubag. Perencana dan Keuangan', 'A. Sangat Segera', 'Siapkan Bahan; Jadwalkan/Laporkan', 'Segera himpun data dukung capaian kinerja kepegawaian untuk LPPD Tahun 2025.', '2026-02-04', 'Diproses', '', NOW()),
+(5, 5, 'PARHA ARIEF, S.AP (Kepala BKPSDM)', null, '1. Sekertaris, 2. Kasubag. Umum dan Kepegawaian', 'B. Segera', 'Tanggapan/Saran; Laksanakan', 'Pelajari dan jadikan pedoman tata kelola administrasi kepegawaian TA 2026.', '2026-02-07', 'Diproses', '', NOW());
 
 --
 -- Data Surat Keluar
