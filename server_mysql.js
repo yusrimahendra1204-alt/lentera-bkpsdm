@@ -122,29 +122,42 @@ async function generateNoAgenda(prefix) {
 
 // Bangun state object dari MySQL (kompatibel dengan frontend lama)
 async function buildAppState() {
-  const pegawai     = await db.query('SELECT * FROM pegawai ORDER BY id');
-  const suratMasuk  = await db.query('SELECT * FROM surat_masuk ORDER BY id DESC');
-  const disposisi   = await db.query('SELECT * FROM disposisi ORDER BY id DESC');
-  const suratKeluar = await db.query('SELECT * FROM surat_keluar ORDER BY id DESC');
-  const suratTugas  = await db.query('SELECT * FROM surat_tugas ORDER BY id DESC');
+  try {
+    const pegawai     = await db.query('SELECT * FROM pegawai ORDER BY id');
+    const suratMasuk  = await db.query('SELECT * FROM surat_masuk ORDER BY id DESC');
+    const disposisi   = await db.query('SELECT * FROM disposisi ORDER BY id DESC');
+    const suratKeluar = await db.query('SELECT * FROM surat_keluar ORDER BY id DESC');
+    const suratTugas  = await db.query('SELECT * FROM surat_tugas ORDER BY id DESC');
 
-  // Parse instruksi & personil
-  disposisi.forEach(d => {
-    if (typeof d.instruksi === 'string') {
-      try { d.instruksi = JSON.parse(d.instruksi); }
-      catch { d.instruksi = d.instruksi ? d.instruksi.split(',') : []; }
-    }
-    if (!Array.isArray(d.instruksi)) d.instruksi = [];
-  });
-  suratTugas.forEach(st => {
-    if (typeof st.personil === 'string') {
-      try { st.personil = JSON.parse(st.personil); }
-      catch { st.personil = []; }
-    }
-    if (!Array.isArray(st.personil)) st.personil = [];
-  });
+    // Parse instruksi & personil
+    disposisi.forEach(d => {
+      if (typeof d.instruksi === 'string') {
+        try { d.instruksi = JSON.parse(d.instruksi); }
+        catch { d.instruksi = d.instruksi ? d.instruksi.split(',') : []; }
+      }
+      if (!Array.isArray(d.instruksi)) d.instruksi = [];
+    });
+    suratTugas.forEach(st => {
+      if (typeof st.personil === 'string') {
+        try { st.personil = JSON.parse(st.personil); }
+        catch { st.personil = []; }
+      }
+      if (!Array.isArray(st.personil)) st.personil = [];
+    });
 
-  return { pegawai, surat_masuk: suratMasuk, disposisi, surat_keluar: suratKeluar, surat_tugas: suratTugas };
+    return { pegawai, surat_masuk: suratMasuk, disposisi, surat_keluar: suratKeluar, surat_tugas: suratTugas };
+  } catch (err) {
+    console.warn('[MySQL FAIL] Gagal memuat dari MySQL, fallback ke current_state.json:', err.message);
+    const STATE_FILE = path.join(DATA_DIR, 'current_state.json');
+    if (fs.existsSync(STATE_FILE)) {
+      try {
+        return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+      } catch (parseErr) {
+        console.error('[STATE ERROR] Gagal parse JSON:', parseErr.message);
+      }
+    }
+    return { pegawai: [], surat_masuk: [], disposisi: [], surat_keluar: [], surat_tugas: [] };
+  }
 }
 
 // ============================================================
@@ -200,10 +213,25 @@ const server = http.createServer(async (req, res) => {
         const body = await parseBody(req);
         const nip  = (body.nip || '').trim();
         const pass = (body.password || '').trim();
-        const user = await db.queryOne(
-          'SELECT * FROM pegawai WHERE (nip = ? OR username = ? OR (role = "admin" AND LOWER(?) = "admin") OR LOWER(nama) LIKE ?) AND (aktif = 1 OR aktif IS NULL) LIMIT 1',
-          [nip, nip, nip, `%${nip.toLowerCase()}%`]
-        );
+        let user = null;
+        try {
+          user = await db.queryOne(
+            'SELECT * FROM pegawai WHERE (nip = ? OR username = ? OR (role = "admin" AND LOWER(?) = "admin") OR LOWER(nama) LIKE ?) AND (aktif = 1 OR aktif IS NULL) LIMIT 1',
+            [nip, nip, nip, `%${nip.toLowerCase()}%`]
+          );
+        } catch (dbErr) {
+          console.warn('[LOGIN FAIL] Gagal query MySQL, fallback ke master_pegawai_bkpsdm_final.json:', dbErr.message);
+          const MASTER_FILE = path.join(DATA_DIR, 'master_pegawai_bkpsdm_final.json');
+          if (fs.existsSync(MASTER_FILE)) {
+            const list = JSON.parse(fs.readFileSync(MASTER_FILE, 'utf8'));
+            user = list.find(p => 
+              p.nip === nip || 
+              (p.username && p.username.toLowerCase() === nip.toLowerCase()) || 
+              (nip.toLowerCase() === 'admin' && p.role === 'admin') || 
+              p.nama.toLowerCase().includes(nip.toLowerCase())
+            );
+          }
+        }
         if (!user)
           return sendJSON(res, { success: false, message: 'NIP / Nama pengguna tidak terdaftar di BKPSDM' }, 401);
         const validPass = user.password || '123456';
