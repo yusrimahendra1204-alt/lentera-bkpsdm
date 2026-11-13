@@ -297,3 +297,4 @@ content = content.replace(/20 orang responden/g, '44 orang responden');
 
 fs.writeFileSync(targetMd, content, 'utf8');
 console.log('[+] Berhasil memperbarui DOKUMEN_SKRIPSI_BAB_IV_LENGKAP.md menjadi 44 responden!');
+

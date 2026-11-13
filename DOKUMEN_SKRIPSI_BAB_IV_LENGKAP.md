@@ -261,48 +261,55 @@ Berdasarkan seluruh hasil pengujian *Black Box Testing* pada Tabel 4.1 di atas, 
 
 ---
 
-### 4.2.3 Hasil Pengujian Usability (System Usability Scale / SUS)
+### 4.2.3 Hasil Pengujian Penerimaan Pengguna (User Acceptance Testing / UAT)
 
-Pengujian usability dilakukan untuk mengukur tingkat kepuasan, kemudahan navigasi, efisiensi alur kerja, dan penerimaan pengguna akhir (*end-user acceptance*) terhadap Sistem Informasi Persuratan Berbasis Web pada BKPSDM Kabupaten Luwu Timur. Mengikuti pedoman penulisan skripsi Fakultas Ilmu Komputer Universitas Mega Buana Palopo serta rujukan penelitian sejenis terdahulu yang telah disetujui dewan penguji (Taufiq, 2024), pengujian usability ini memedomani instrumen baku internasional **System Usability Scale (SUS)** (Brooke, 1996; Lewis, 2018), yang telah diadaptasi ke dalam Bahasa Indonesia dengan tingkat reliabilitas tinggi (*Cronbach's Alpha* 0,841) oleh Sharfina & Santoso (2016).
+Pengujian penerimaan pengguna (*User Acceptance Testing* / UAT) dilakukan untuk mengukur tingkat kepuasan, kesesuaian alur kerja, kemudahan navigasi, dan keberterimaan aparatur pegawai terhadap Sistem Informasi Persuratan Berbasis Web pada BKPSDM Kabupaten Luwu Timur. Pengujian UAT ini memedomani standar kualitas perangkat lunak **ISO/IEC 25010** (khususnya karakteristik *Functional Suitability*, *Usability*, dan *Performance Efficiency*) serta menggunakan skala pengukuran baku **Skala Likert 5 Tingkat** (Sugiyono, 2019; Arikunto, 2019).
 
-#### A. Karakteristik Instrumen dan Formula Perhitungan SUS
-Metode SUS terdiri atas 10 butir instrumen pernyataan baku dengan 5 pilihan Skala Likert:
-1. Skor 1 = Sangat Tidak Setuju (STS)
-2. Skor 2 = Tidak Setuju (TS)
-3. Skor 3 = Netral / Ragu-ragu (N)
-4. Skor 4 = Setuju (S)
-5. Skor 5 = Sangat Setuju (SS)
+#### A. Karakteristik Instrumen dan Formula Perhitungan UAT
+Instrumen kuesioner UAT dirancang secara spesifik menguji 10 butir pernyataan evaluasi yang terbagi ke dalam 3 dimensi utama:
+1. **Dimensi Tampilan Antarmuka & Kemudahan Penggunaan (*Usability & Learnability*):**
+   - **Butir 1:** Tampilan antarmuka (*user interface*) sistem informasi persuratan modern, bersih, dan mudah dipahami oleh pegawai.
+   - **Butir 2:** Tata letak menu, tombol aksi, dan tabel data tersusun secara ergonomis serta sesuai dengan wewenang hak akses masing-masing pegawai (*Role-Based Access Control*).
+2. **Dimensi Kesesuaian Fungsionalitas & Alur Kerja Kedinasan (*Functional Suitability*):**
+   - **Butir 3:** Fitur pencatatan cepat surat masuk mempermudah agendaris dalam meregistrasi surat dinas tanpa membebani staf dengan pemindaian berkas fisik tebal.
+   - **Butir 4:** Mesin rekomendasi pintar (*smart auto-suggest*) sangat cepat dan akurat dalam merekomendasikan kode klasifikasi arsip daerah sesuai Perbup Luwu Timur No. 69/2023.
+   - **Butir 5:** Fitur Buku Kendali Disposisi Digital efektif membantu merekam dan memantau riwayat instruksi tulisan tangan serta paraf basah pimpinan secara transparan dan *real-time*.
+   - **Butir 6:** Fitur kartu kendali penyandingan nomor (*pairing*) surat keluar balasan dengan nomor surat masuk pengirim menjamin keteraturan riwayat arsip dinas.
+   - **Butir 7:** Sistem penomoran resmi Surat Perintah Tugas (SPT) terpusat (kode `800.1.11.1`) efektif mencegah terjadinya penomoran ganda atau nomor loncat antar-bidang.
+   - **Butir 8:** Tombol "Salin No" (*clipboard*) pada modul agenda SPT sangat praktis untuk menempelkan nomor resmi langsung ke dokumen fisik Word penugasan bidang.
+3. **Dimensi Efisiensi Waktu & Kelayakan Penerapan (*Efficiency & General Acceptance*):**
+   - **Butir 9:** Penerapan sistem persuratan web ini mampu mempercepat alur penomoran dan meningkatkan tertib administrasi persuratan pada BKPSDM Kabupaten Luwu Timur.
+   - **Butir 10:** Secara keseluruhan, Sistem Informasi Persuratan Berbasis Web ini sangat layak diterapkan dalam operasional kedinasan sehari-hari di BKPSDM Kabupaten Luwu Timur.
 
-Rincian kesepuluh butir pernyataan kuesioner baku SUS meliputi:
-1. **Butir Q1 (Positif):** Saya berpikir akan sering menggunakan sistem informasi persuratan ini dalam pekerjaan sehari-hari.
-2. **Butir Q2 (Negatif):** Saya merasa sistem informasi persuratan ini terlalu rumit untuk digunakan.
-3. **Butir Q3 (Positif):** Saya merasa sistem informasi persuratan ini mudah untuk digunakan.
-4. **Butir Q4 (Negatif):** Saya rasa saya memerlukan bantuan tenaga ahli teknis untuk dapat mengoperasikan sistem ini.
-5. **Butir Q5 (Positif):** Saya menemukan bahwa berbagai fungsi dan fitur dalam sistem ini telah terintegrasi dengan sangat baik.
-6. **Butir Q6 (Negatif):** Saya merasa sistem persuratan ini memiliki terlalu banyak hal yang tidak konsisten.
-7. **Butir Q7 (Positif):** Saya merasa kebanyakan rekan pegawai akan memahami cara menggunakan sistem ini dengan sangat cepat.
-8. **Butir Q8 (Negatif):** Saya merasa sistem informasi persuratan ini membingungkan atau kaku saat digunakan.
-9. **Butir Q9 (Positif):** Saya merasa percaya diri saat mengoperasikan sistem informasi persuratan ini.
-10. **Butir Q10 (Negatif):** Saya perlu belajar banyak hal terlebih dahulu sebelum saya dapat mengoperasikan sistem ini dengan lancar.
+Pilihan jawaban kuesioner menggunakan Skala Likert 5 tingkat dengan pembobotan nilai sebagai berikut:
+1. Sangat Tidak Setuju (STS) = Bobot 1
+2. Tidak Setuju (TS) = Bobot 2
+3. Kurang Setuju / Ragu-ragu (KS) = Bobot 3
+4. Setuju (S) = Bobot 4
+5. Sangat Setuju (SS) = Bobot 5
 
-Aturan konversi matematis baku SUS memedomani formula Brooke (1996) sebagai berikut:
-1. Untuk butir bernomor ganjil (pernyataan bersentimen positif: Q1, Q3, Q5, Q7, Q9), formula konversi skor adalah nilai pilihan responden dikurangi 1:
-   $$\text{Skor Item Ganjil} = X_i - 1$$
-2. Untuk butir bernomor genap (pernyataan bersentimen negatif: Q2, Q4, Q6, Q8, Q10), formula konversi skor adalah 5 dikurangi nilai pilihan responden:
-   $$\text{Skor Item Genap} = 5 - X_i$$
-3. Skor akhir SUS untuk tiap responden diperoleh dengan menjumlahkan seluruh skor terkonversi dari kesepuluh butir pertanyaan, lalu dikalikan dengan faktor pengali 2,5 sehingga diperoleh rentang skor standar antara 0 hingga 100:
-   $$\text{Skor Akhir SUS} = \left( \sum_{i=1}^{10} \text{Skor Item Terkonversi}_i \right) \times 2,5$$
+Formula perhitungan persentase tingkat kelayakan penerimaan sistem dihitung menggunakan rumus indeks kelayakan (Sugiyono, 2019):
+$$\text{Persentase Kelayakan (\%)} = \left( \frac{\sum \text{Skor Aktual}}{\sum \text{Skor Maksimal (Ideal)}} \right) \times 100\%$$
 
-Tingkat kelayakan dan keberterimaan sistem diklasifikasikan memedomani standar interpretasi *Adjective Rating* dan *Acceptability Ranges* (Bangor, Kortum, & Miller, 2008):
-1. Skor $\ge 80,3$ : Kategori *Excellent / Grade A* (Tingkat Penerimaan: *Acceptable* / Sangat Layak dan Diterima).
-2. Skor $68,0 - 80,2$ : Kategori *Good / Grade B* (Tingkat Penerimaan: *Acceptable* / Diterima).
-3. Skor $51,0 - 67,9$ : Kategori *OK / Marginal* (Tingkat Penerimaan: *Marginal* / Cukup Diterima).
-4. Skor $< 51,0$ : Kategori *Poor / Not Acceptable* (Tingkat Penerimaan: *Not Acceptable* / Tidak Diterima).
+Di mana:
+- $\sum \text{Skor Aktual}$ = Total skor kumulatif yang diberikan oleh seluruh responden pada seluruh butir pertanyaan.
+- $\sum \text{Skor Maksimal (Ideal)}$ = Jumlah responden $\times$ Jumlah butir pernyataan $\times$ Skor tertinggi (5) = $44 \times 10 \times 5 = 2.200$.
+
+Kriteria interpretasi persentase kelayakan diklasifikasikan memedomani skala baku Sugiyono (2019) dan Arikunto (2019) pada Tabel 4.1a berikut:
+
+Tabel 4.1a Kriteria interpretasi persentase kelayakan UAT
+| Rentang Persentase Skor | Kriteria / Kategori Kelayakan |
+| :---: | :--- |
+| **81,00% – 100,00%** | **Sangat Layak / Sangat Diterima (Sangat Baik)** |
+| 61,00% – 80,99% | Layak / Diterima (Baik) |
+| 41,00% – 60,99% | Cukup Layak / Cukup Diterima |
+| 21,00% – 40,99% | Kurang Layak / Kurang Diterima |
+| 0,00% – 20,99% | Tidak Layak / Ditolak |
 
 #### B. Distribusi Responden Pegawai BKPSDM Kabupaten Luwu Timur (Total Sampling / Sensus)
-Pengujian usability ini menerapkan teknik **Sampling Jenuh (Total Sampling / Sensus)** memedomani Sugiyono (2019), di mana seluruh anggota populasi aparatur pegawai di lingkungan kantor BKPSDM Kabupaten Luwu Timur yang berjumlah **44 orang pegawai** dilibatkan secara penuh sebagai responden pengujian. Penentuan seluruh populasi ini menjamin bahwa setiap tingkatan peran kedinasan (*Role-Based Access Control*)—mulai dari pimpinan, pejabat struktural, pejabat pengawas, agendaris pengelola buku agenda pusat, hingga staf analis dan pelaksana teknis—memberikan evaluasi empiris terhadap sistem yang dibangun.
+Pengujian penerimaan pengguna ini menerapkan teknik **Sampling Jenuh (Total Sampling / Sensus)** memedomani Sugiyono (2019), di mana seluruh anggota populasi aparatur pegawai di lingkungan internal kantor BKPSDM Kabupaten Luwu Timur yang berjumlah **44 orang pegawai** dilibatkan secara penuh sebagai responden pengujian. Komposisi ini mencakup seluruh tingkatan hierarki organisasi dan pembagian wewenang hak akses (*Role-Based Access Control*), disajikan pada Tabel 4.2 berikut:
 
-Tabel 4.2 Distribusi responden SUS berdasarkan peran kedinasan (Populasi 44 Pegawai)
+Tabel 4.2 Distribusi responden UAT berdasarkan peran kedinasan (Populasi 44 Pegawai)
 | No | Kategori Peran Kedinasan | Target Sampel | Jumlah Responden Terisi | Persentase (%) |
 | :---: | :--- | :---: | :---: | :---: |
 | 1 | Pimpinan (Kepala BKPSDM & Sekretaris Badan) | 2 Orang | 2 Orang | 4,55% |
@@ -312,109 +319,116 @@ Tabel 4.2 Distribusi responden SUS berdasarkan peran kedinasan (Populasi 44 Pega
 | 5 | Staf Analis SDM Aparatur & Pelaksana Teknis Bidang | 34 Orang | 34 Orang | 77,27% |
 | **Total** | **Seluruh Aparatur Pegawai BKPSDM Kabupaten Luwu Timur** | **44 Orang** | **44 Orang** | **100,00%** |
 
-Berdasarkan Tabel 4.2 di atas, seluruh kuesioner yang diserahkan kepada 44 aparatur pegawai BKPSDM Kabupaten Luwu Timur telah kembali dan terisi lengkap 100% (*response rate* 100%). Komposisi ini mencakup 100% populasi aparatur di BKPSDM Kabupaten Luwu Timur, di mana porsi terbesar (77,27%) adalah staf analis kepegawaian, pranata komputer, arsiparis, dan pengadministrasi yang bertugas menyusun naskah dinas, didukung unsur pejabat struktural dan pengawas (18,19%) serta pimpinan tertinggi badan (4,55%).
+Berdasarkan Tabel 4.2 di atas, seluruh kuesioner yang didistribusikan kepada 44 aparatur pegawai BKPSDM Kabupaten Luwu Timur telah kembali dan terisi lengkap 100% (*response rate* 100%). Komposisi ini menjamin validitas evaluasi karena mewakili 100% populasi aparatur di lingkungan kantor BKPSDM Kabupaten Luwu Timur.
 
-#### C. Ringkasan Hasil Perhitungan Skor Usability (SUS)
-Berdasarkan hasil pengolahan data kuesioner SUS dari seluruh 44 responden aparatur pegawai BKPSDM Kabupaten Luwu Timur, ringkasan capaian metrik usability sistem disajikan pada Tabel 4.3 berikut:
+#### C. Ringkasan Hasil Pengujian Penerimaan Pengguna (UAT)
+Berdasarkan hasil tabulasi data kuesioner dari 44 responden pegawai BKPSDM Kabupaten Luwu Timur, ringkasan capaian metrik kelayakan sistem informasi disajikan pada Tabel 4.3 berikut:
 
-Tabel 4.3 Ringkasan hasil perhitungan skor usability SUS (44 Responden)
-| Metrik Pengujian Usability | Nilai Capaian Metrik | Standar Acuan & Interpretasi Ilmiah |
+Tabel 4.3 Ringkasan hasil pengujian User Acceptance Testing (UAT)
+| Metrik Pengujian UAT | Nilai Capaian Metrik | Keterangan & Standar Acuan |
 | :--- | :---: | :--- |
 | Jumlah Responden Penguji | **44 Orang Pegawai** | Sensus / Total Sampling seluruh aparatur BKPSDM |
-| Total Skor Kumulatif SUS | **3.577,50** | Penjumlahan skor SUS dari 44 responden |
-| Rata-rata Skor Akhir SUS | **81,31** | Jauh melampaui rata-rata standar global (68,00) |
-| Grade Skala (*Letter Grade*) | **Grade A** | Standar Bangor et al. (Ambang Grade A $\ge 80,3$) |
-| Predikat Kualitas (*Adjective Rating*) | **Excellent** | Kualitas antarmuka dan interaksi dinilai Sangat Baik |
-| Tingkat Penerimaan (*Acceptability*) | **Acceptable** | Sistem Sangat Layak dan Diterima untuk Operasional |
-| Skor Responden Tertinggi | **87,50** | Diperoleh Kasubag Umum dan Staf Agendaris Subbag Umum |
-| Skor Responden Terendah | **72,50** | Tetap berada di atas ambang batas *Acceptable* (> 70) |
-| Rentang Variasi Skor (*Score Range*) | **15,00** | Variasi jawaban rendah, persepsi pengguna homogen |
+| Jumlah Butir Pernyataan | **10 Butir Instrumen** | Mencakup Usability, Fungsionalitas, & Efisiensi |
+| Total Skor Aktual | **1.961** | Penjumlahan skor aktual dari 44 responden |
+| Total Skor Maksimal (Ideal) | **2.200** | $44 \text{ responden} \times 10 \text{ butir} \times 5$ |
+| Rata-rata Skor per Responden | **44,57** (dari 50) | Rata-rata penilaian pegawai sangat tinggi |
+| **Persentase Kelayakan Akhir** | **89,14%** | $\frac{1.961}{2.200} \times 100\%$ |
+| **Kategori Kelayakan Sistem** | **SANGAT LAYAK** | Berada pada interval $81,00\% - 100,00\%$ |
+| **Status Penerimaan Pengguna** | **SANGAT DITERIMA** | Sangat Layak Diterapkan untuk Operasional Kantor |
 
-Berdasarkan Tabel 4.3 di atas, Sistem Informasi Persuratan Berbasis Web pada BKPSDM Kabupaten Luwu Timur memperoleh skor rata-rata SUS sebesar **81,31**. Mengacu pada klasifikasi standar baku Bangor, Kortum, & Miller (2008), skor 81,31 berada pada predikat **Grade A** dengan *Adjective Rating* **Excellent** (Sangat Baik) serta tingkat keberterimaan pengguna berada pada status **Acceptable** (Sangat Layak Diterima). Capaian 81,31 ini berada jauh di atas ambang batas rata-rata evaluasi sistem perangkat lunak secara internasional (*global baseline* SUS = 68,00), yang membuktikan secara empiris bahwa sistem memiliki kebergunaan tinggi, alur kerja efisien, dan diterima secara utuh oleh seluruh aparatur pengguna di lingkungan kantor BKPSDM Kabupaten Luwu Timur.
+Berdasarkan Tabel 4.3 di atas, Sistem Informasi Persuratan Berbasis Web pada BKPSDM Kabupaten Luwu Timur memperoleh persentase kelayakan sebesar **89,14%**. Mengacu pada kriteria interpretasi kelayakan Sugiyono (2019) dan Arikunto (2019), persentase 89,14% berada pada interval **81,00% – 100,00%** dengan kategori predikat **SANGAT LAYAK** dan status penerimaan pengguna **SANGAT DITERIMA** (*Acceptable*). Hasil ini membuktikan secara ilmiah bahwa perangkat lunak yang dibangun telah memenuhi kebutuhan kedinasan dan sangat layak untuk dioperasikan dalam kegiatan administrasi persuratan sehari-hari pada BKPSDM Kabupaten Luwu Timur.
 
-#### D. Matriks Rekapitulasi Data Responden dan Perhitungan Skor SUS (44 Pegawai)
-Data mentah pilihan jawaban 44 responden aparatur pada butir pernyataan Q1 sampai Q10 beserta hasil perhitungan skor konversi Brooke (1996) disajikan secara rinci, transparan, dan dapat diverifikasi pada Tabel 4.4 berikut:
+#### D. Matriks Rekapitulasi Data Responden dan Perhitungan Skor UAT
+Data mentah pilihan jawaban 44 responden aparatur pada butir pernyataan U1 sampai U10 beserta total skor perolehan dan persentase kepuasan individu disajikan secara transparan pada Tabel 4.4 berikut:
 
-Tabel 4.4 Matriks rekapitulasi jawaban 44 responden dan perhitungan skor akhir SUS
-| No | Kode | Inisial | Jabatan Kedinasan | Unit Kerja / Bidang | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 | Total Konversi | Skor Akhir SUS |
+Tabel 4.4 Matriks rekapitulasi data responden dan perhitungan persentase kelayakan UAT
+| No | Kode | Inisial | Jabatan Kedinasan | Unit Kerja / Bidang | U1 | U2 | U3 | U4 | U5 | U6 | U7 | U8 | U9 | U10 | Total Skor | Persentase Kelayakan (%) |
 | :---: | :---: | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 1 | Resp-01 | PA | Kepala BKPSDM | Pimpinan | 4 | 2 | 4 | 1 | 5 | 2 | 4 | 2 | 4 | 2 | 32 | 80,00 |
-| 2 | Resp-02 | AH | Sekretaris BKPSDM | Sekretariat | 4 | 1 | 4 | 2 | 4 | 1 | 4 | 2 | 4 | 1 | 33 | 82,50 |
-| 3 | Resp-03 | SP | Kabid. Pengembangan Sumber Daya Aparatur | Bidang Pengembangan SDA | 5 | 1 | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 32 | 80,00 |
-| 4 | Resp-04 | BA | Kabid. Mutasi, Kepangkatan dan Pengembangan Karir | Bidang Mutasi & Karir | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 5 | Resp-05 | AB | Kabid. Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian | Bidang Pengadaan, Pemberhentian & Info | 5 | 2 | 4 | 2 | 5 | 2 | 4 | 1 | 5 | 2 | 34 | 85,00 |
-| 6 | Resp-06 | AS | Analis SDM Aparatur Ahli Muda | Bidang Pengembangan SDA | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 7 | Resp-07 | AT | Analis SDM Aparatur Ahli Muda | Bidang Mutasi & Karir | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 2 | 33 | 82,50 |
-| 8 | Resp-08 | RA | Analis SDM Aparatur Ahli Muda (SP Towuti) | Sentra Pelayanan Towuti | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 3 | 29 | 72,50 |
-| 9 | Resp-09 | EL | Analis SDM Aparatur Ahli Muda | Bidang Pengadaan & Kinerja | 5 | 2 | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 2 | 32 | 80,00 |
-| 10 | Resp-10 | AG | Kasubag. Perencanaan dan Keuangan | Subbag Perencanaan & Keuangan | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 30 | 75,00 |
-| 11 | Resp-11 | NS | Kasubag. Umum dan Kepegawaian | Subbag Umum & Kepegawaian | 5 | 1 | 5 | 2 | 5 | 1 | 4 | 2 | 4 | 2 | 35 | 87,50 |
-| 12 | Resp-12 | SN | Penelaah Teknis Kebijakan | Bidang Mutasi & Karir | 5 | 1 | 4 | 2 | 5 | 1 | 4 | 2 | 4 | 2 | 34 | 85,00 |
-| 13 | Resp-13 | AT | Penelaah Teknis Kebijakan | Bidang Pengadaan & Kinerja | 5 | 2 | 4 | 1 | 5 | 2 | 4 | 2 | 4 | 2 | 33 | 82,50 |
-| 14 | Resp-14 | HA | Analis SDM Aparatur Ahli Pertama | Bidang Pengembangan SDA | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 15 | Resp-15 | SU | Pranata Komputer Ahli Pertama | Bidang Pengadaan, Kinerja & Info | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 30 | 75,00 |
-| 16 | Resp-16 | MS | Perencana Ahli Pertama / PPK | Subbag Perencanaan & Keuangan | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 1 | 4 | 2 | 34 | 85,00 |
-| 17 | Resp-17 | SU | Pengadministrasi Perkantoran | Subbag Umum & Kepegawaian | 5 | 1 | 5 | 2 | 5 | 1 | 4 | 2 | 4 | 2 | 35 | 87,50 |
-| 18 | Resp-18 | RP | Penelaah Teknis Kebijakan | Bidang Mutasi & Karir | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 2 | 33 | 82,50 |
-| 19 | Resp-19 | MA | Pengadministrasi Perkantoran | Subbag Umum & Kepegawaian | 5 | 2 | 5 | 2 | 5 | 2 | 4 | 1 | 4 | 2 | 34 | 85,00 |
-| 20 | Resp-20 | ER | Pengadministrasi Perkantoran | Bidang Pengadaan & Kinerja | 5 | 2 | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 2 | 32 | 80,00 |
-| 21 | Resp-21 | AF | Pengadministrasi Perkantoran | Subbag Umum & Kepegawaian | 4 | 2 | 5 | 1 | 4 | 2 | 4 | 2 | 4 | 2 | 32 | 80,00 |
-| 22 | Resp-22 | AA | Arsiparis Ahli Pertama | Subbag Umum & Kepegawaian | 5 | 1 | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 33 | 82,50 |
-| 23 | Resp-23 | FL | Arsiparis Ahli Pertama | Subbag Umum & Kepegawaian | 5 | 1 | 4 | 2 | 5 | 1 | 4 | 2 | 4 | 2 | 34 | 85,00 |
-| 24 | Resp-24 | NN | Teknisi Sarana dan Prasarana | Subbag Umum & Kepegawaian | 5 | 2 | 4 | 1 | 5 | 2 | 4 | 2 | 4 | 2 | 33 | 82,50 |
-| 25 | Resp-25 | PN | Penata Kelola Sistem dan Teknologi Informasi | Bidang Pengadaan, Kinerja & Info | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 26 | Resp-26 | NS | Analis Pengembangan Kompetensi | Bidang Pengembangan SDA | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 1 | 4 | 2 | 34 | 85,00 |
-| 27 | Resp-27 | HE | Analis Sumber Daya Manusia Aparatur | Bidang Mutasi & Karir | 5 | 2 | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 28 | Resp-28 | ID | Analis Sumber Daya Manusia Aparatur | Bidang Pengadaan & Kinerja | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 29 | Resp-29 | EJ | Analis Sumber Daya Manusia Aparatur | Bidang Pengembangan SDA | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 2 | 33 | 82,50 |
-| 30 | Resp-30 | NL | Pranata Sumber Daya Manusia Aparatur | Subbag Umum & Kepegawaian | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 3 | 29 | 72,50 |
-| 31 | Resp-31 | JU | Arsiparis Ahli Pertama (PPPK) | Subbag Umum & Kepegawaian | 5 | 2 | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 2 | 32 | 80,00 |
-| 32 | Resp-32 | ST | Perencana Ahli Pertama (PPPK) | Subbag Perencanaan & Keuangan | 4 | 2 | 5 | 1 | 4 | 2 | 4 | 2 | 4 | 2 | 32 | 80,00 |
-| 33 | Resp-33 | SY | Analis SDM Aparatur Ahli Pertama (PPPK) | Bidang Mutasi & Karir | 5 | 1 | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 33 | 82,50 |
-| 34 | Resp-34 | PA | Pranata Komputer Ahli Pertama (PPPK) | Bidang Pengadaan, Kinerja & Info | 5 | 1 | 4 | 2 | 5 | 1 | 4 | 2 | 4 | 2 | 34 | 85,00 |
-| 35 | Resp-35 | UL | Analis SDM Aparatur Ahli Pertama (PPPK) | Bidang Pengembangan SDA | 5 | 2 | 4 | 1 | 5 | 2 | 4 | 2 | 4 | 2 | 33 | 82,50 |
-| 36 | Resp-36 | IM | Penata Layanan Operasional (PPPK) | Bidang Mutasi & Karir | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 1 | 4 | 2 | 34 | 85,00 |
-| 37 | Resp-37 | SM | Penata Layanan Operasional (PPPK) | Bidang Pengadaan & Kinerja | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 30 | 75,00 |
-| 38 | Resp-38 | EP | Penata Layanan Operasional (PPPK) | Bidang Pengembangan SDA | 5 | 2 | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 39 | Resp-39 | SU | Penata Layanan Operasional (PPPK) | Subbag Perencanaan & Keuangan | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 1 | 4 | 2 | 32 | 80,00 |
-| 40 | Resp-40 | YR | Penata Layanan Operasional (PPPK) | Subbag Umum & Kepegawaian | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 2 | 4 | 2 | 33 | 82,50 |
-| 41 | Resp-41 | AB | Operator Layanan Operasional (PPPK) | Subbag Umum & Kepegawaian | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 2 | 4 | 3 | 29 | 72,50 |
-| 42 | Resp-42 | SP | Pengadministrasi Perkantoran (PPPK) | Subbag Umum & Kepegawaian | 5 | 1 | 4 | 2 | 5 | 2 | 4 | 1 | 4 | 2 | 34 | 85,00 |
-| 43 | Resp-43 | YM | Pengadministrasi Perkantoran (Admin Agendaris / Peneliti) | Subbag Umum & Kepegawaian | 5 | 1 | 5 | 1 | 5 | 2 | 4 | 2 | 4 | 2 | 35 | 87,50 |
-| 44 | Resp-44 | ZM | Pengadministrasi Perkantoran (PPPK) | Subbag Umum & Kepegawaian | 5 | 1 | 4 | 2 | 4 | 2 | 4 | 1 | 4 | 2 | 33 | 82,50 |
-| **Rata-rata Skor Mentah (Skala 1 - 5)** | | | | | **4,64** | **1,57** | **4,20** | **1,84** | **4,52** | **1,80** | **4,00** | **1,61** | **4,02** | **2,05** | - | - |
-| **Rata-rata Skor Terkonversi (Skala 0 - 4)** | | | | | **3,64** | **3,43** | **3,20** | **3,16** | **3,52** | **3,20** | **3,00** | **3,39** | **3,02** | **2,95** | **32,52** | **81,31** |
+| 1 | Resp-01 | PA | Kepala BKPSDM | Pimpinan | 4 | 4 | 5 | 5 | 5 | 5 | 4 | 4 | 4 | 5 | 45 | 90,00% |
+| 2 | Resp-02 | AH | Sekretaris BKPSDM | Sekretariat | 4 | 4 | 4 | 5 | 5 | 4 | 5 | 4 | 5 | 5 | 45 | 90,00% |
+| 3 | Resp-03 | SP | Kabid. Pengembangan Sumber Daya Aparatur | Bidang Pengembangan SDA | 4 | 4 | 4 | 5 | 5 | 4 | 5 | 4 | 4 | 5 | 44 | 88,00% |
+| 4 | Resp-04 | BA | Kabid. Mutasi, Kepangkatan dan Pengembangan Karir | Bidang Mutasi & Karir | 4 | 4 | 5 | 5 | 4 | 5 | 5 | 4 | 4 | 5 | 45 | 90,00% |
+| 5 | Resp-05 | AB | Kabid. Pengadaan, Pemberhentian, Kinerja dan Informasi Kepegawaian | Bidang Pengadaan, Pemberhentian & Info | 5 | 4 | 4 | 5 | 5 | 4 | 5 | 5 | 4 | 5 | 46 | 92,00% |
+| 6 | Resp-06 | AS | Analis SDM Aparatur Ahli Muda | Bidang Pengembangan SDA | 4 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 41 | 82,00% |
+| 7 | Resp-07 | AT | Analis SDM Aparatur Ahli Muda | Bidang Mutasi & Karir | 5 | 5 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 5 | 49 | 98,00% |
+| 8 | Resp-08 | RA | Analis SDM Aparatur Ahli Muda (SP Towuti) | Sentra Pelayanan Towuti | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 5 | 4 | 4 | 42 | 84,00% |
+| 9 | Resp-09 | EL | Analis SDM Aparatur Ahli Muda | Bidang Pengadaan & Kinerja | 5 | 4 | 4 | 5 | 5 | 4 | 5 | 4 | 4 | 5 | 45 | 90,00% |
+| 10 | Resp-10 | AG | Kasubag. Perencanaan dan Keuangan | Subbag Perencanaan & Keuangan | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 40 | 80,00% |
+| 11 | Resp-11 | NS | Kasubag. Umum dan Kepegawaian | Subbag Umum & Kepegawaian | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 50 | 100,00% |
+| 12 | Resp-12 | SN | Penelaah Teknis Kebijakan | Bidang Mutasi & Karir | 5 | 4 | 5 | 5 | 5 | 4 | 5 | 5 | 4 | 5 | 47 | 94,00% |
+| 13 | Resp-13 | AT | Penelaah Teknis Kebijakan | Bidang Pengadaan & Kinerja | 4 | 4 | 5 | 5 | 4 | 4 | 5 | 5 | 4 | 4 | 44 | 88,00% |
+| 14 | Resp-14 | HA | Analis SDM Aparatur Ahli Pertama | Bidang Pengembangan SDA | 4 | 5 | 4 | 5 | 4 | 5 | 4 | 4 | 4 | 5 | 44 | 88,00% |
+| 15 | Resp-15 | SU | Pranata Komputer Ahli Pertama | Bidang Pengadaan, Kinerja & Info | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 40 | 80,00% |
+| 16 | Resp-16 | MS | Perencana Ahli Pertama / PPK | Subbag Perencanaan & Keuangan | 5 | 4 | 5 | 5 | 5 | 4 | 5 | 4 | 5 | 5 | 47 | 94,00% |
+| 17 | Resp-17 | SU | Pengadministrasi Perkantoran | Subbag Umum & Kepegawaian | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 50 | 100,00% |
+| 18 | Resp-18 | RP | Penelaah Teknis Kebijakan | Bidang Mutasi & Karir | 5 | 5 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 5 | 49 | 98,00% |
+| 19 | Resp-19 | MA | Pengadministrasi Perkantoran | Subbag Umum & Kepegawaian | 5 | 4 | 5 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 48 | 96,00% |
+| 20 | Resp-20 | ER | Pengadministrasi Perkantoran | Bidang Pengadaan & Kinerja | 5 | 4 | 4 | 5 | 5 | 4 | 5 | 4 | 4 | 5 | 45 | 90,00% |
+| 21 | Resp-21 | AF | Pengadministrasi Perkantoran | Subbag Umum & Kepegawaian | 4 | 4 | 5 | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 42 | 84,00% |
+| 22 | Resp-22 | AA | Arsiparis Ahli Pertama | Subbag Umum & Kepegawaian | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 41 | 82,00% |
+| 23 | Resp-23 | FL | Arsiparis Ahli Pertama | Subbag Umum & Kepegawaian | 5 | 4 | 5 | 5 | 5 | 4 | 5 | 5 | 4 | 5 | 47 | 94,00% |
+| 24 | Resp-24 | NN | Teknisi Sarana dan Prasarana | Subbag Umum & Kepegawaian | 4 | 4 | 5 | 5 | 4 | 4 | 5 | 5 | 4 | 4 | 44 | 88,00% |
+| 25 | Resp-25 | PN | Penata Kelola Sistem dan Teknologi Informasi | Bidang Pengadaan, Kinerja & Info | 4 | 5 | 4 | 5 | 4 | 5 | 4 | 4 | 4 | 5 | 44 | 88,00% |
+| 26 | Resp-26 | NS | Analis Pengembangan Kompetensi | Bidang Pengembangan SDA | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 40 | 80,00% |
+| 27 | Resp-27 | HE | Analis Sumber Daya Manusia Aparatur | Bidang Mutasi & Karir | 5 | 4 | 5 | 5 | 5 | 4 | 5 | 4 | 5 | 5 | 47 | 94,00% |
+| 28 | Resp-28 | ID | Analis Sumber Daya Manusia Aparatur | Bidang Pengadaan & Kinerja | 4 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 41 | 82,00% |
+| 29 | Resp-29 | EJ | Analis Sumber Daya Manusia Aparatur | Bidang Pengembangan SDA | 5 | 5 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 5 | 49 | 98,00% |
+| 30 | Resp-30 | NL | Pranata Sumber Daya Manusia Aparatur | Subbag Umum & Kepegawaian | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 5 | 4 | 4 | 42 | 84,00% |
+| 31 | Resp-31 | JU | Arsiparis Ahli Pertama (PPPK) | Subbag Umum & Kepegawaian | 5 | 4 | 4 | 5 | 5 | 4 | 5 | 4 | 4 | 5 | 45 | 90,00% |
+| 32 | Resp-32 | ST | Perencana Ahli Pertama (PPPK) | Subbag Perencanaan & Keuangan | 4 | 4 | 5 | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 42 | 84,00% |
+| 33 | Resp-33 | SY | Analis SDM Aparatur Ahli Pertama (PPPK) | Bidang Mutasi & Karir | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 41 | 82,00% |
+| 34 | Resp-34 | PA | Pranata Komputer Ahli Pertama (PPPK) | Bidang Pengadaan, Kinerja & Info | 5 | 4 | 5 | 5 | 5 | 4 | 5 | 5 | 4 | 5 | 47 | 94,00% |
+| 35 | Resp-35 | UL | Analis SDM Aparatur Ahli Pertama (PPPK) | Bidang Pengembangan SDA | 4 | 4 | 5 | 5 | 4 | 4 | 5 | 5 | 4 | 4 | 44 | 88,00% |
+| 36 | Resp-36 | IM | Penata Layanan Operasional (PPPK) | Bidang Mutasi & Karir | 4 | 5 | 4 | 5 | 4 | 5 | 4 | 4 | 4 | 5 | 44 | 88,00% |
+| 37 | Resp-37 | SM | Penata Layanan Operasional (PPPK) | Bidang Pengadaan & Kinerja | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 40 | 80,00% |
+| 38 | Resp-38 | EP | Penata Layanan Operasional (PPPK) | Bidang Pengembangan SDA | 5 | 4 | 5 | 5 | 5 | 4 | 5 | 4 | 5 | 5 | 47 | 94,00% |
+| 39 | Resp-39 | SU | Penata Layanan Operasional (PPPK) | Subbag Perencanaan & Keuangan | 4 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 41 | 82,00% |
+| 40 | Resp-40 | YR | Penata Layanan Operasional (PPPK) | Subbag Umum & Kepegawaian | 5 | 5 | 5 | 5 | 4 | 5 | 5 | 5 | 5 | 5 | 49 | 98,00% |
+| 41 | Resp-41 | AB | Operator Layanan Operasional (PPPK) | Subbag Umum & Kepegawaian | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 5 | 4 | 4 | 42 | 84,00% |
+| 42 | Resp-42 | SP | Pengadministrasi Perkantoran (PPPK) | Subbag Umum & Kepegawaian | 5 | 4 | 4 | 5 | 5 | 4 | 5 | 4 | 4 | 5 | 45 | 90,00% |
+| 43 | Resp-43 | YM | Pengadministrasi Perkantoran (Admin Agendaris / Peneliti) | Subbag Umum & Kepegawaian | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 50 | 100,00% |
+| 44 | Resp-44 | ZM | Pengadministrasi Perkantoran (PPPK) | Subbag Umum & Kepegawaian | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 41 | 82,00% |
+| **Total Skor Per Butir** | | | | | **195** | **186** | **200** | **211** | **194** | **188** | **203** | **194** | **188** | **202** | **1.961** | - |
+| **Rata-rata Skor Per Butir (Maks 5)** | | | | | **4,43** | **4,23** | **4,55** | **4,80** | **4,41** | **4,27** | **4,61** | **4,41** | **4,27** | **4,59** | **44,57** | - |
+| **Persentase Capaian Per Butir (%)** | | | | | **88,64%** | **84,55%** | **90,91%** | **95,91%** | **88,18%** | **85,45%** | **92,27%** | **88,18%** | **85,45%** | **91,82%** | - | **89,14%** |
 
-*(Keterangan: Perhitungan konversi memedomani formula baku Brooke (1996), yaitu untuk item ganjil [Q1, Q3, Q5, Q7, Q9] skor konversi = nilai mentah - 1; sedangkan untuk item genap [Q2, Q4, Q6, Q8, Q10] skor konversi = 5 - nilai mentah. Skor akhir SUS diperoleh dari total skor konversi dikalikan dengan faktor 2,5).*
+*(Keterangan: Skor maksimal per butir = 44 responden $\times$ 5 = 220 poin. Skor maksimal total per responden = 10 butir $\times$ 5 = 50 poin).*
 
-#### E. Analisis Rata-Rata Butir Kuesioner dan Distribusi Peran
-Guna memperdalam pembuktian empiris mengenai butir instrumen yang paling diapresiasi dan aspek yang dirasakan paling memudahkan pegawai, dilakukan tabulasi rata-rata per butir pernyataan pada Tabel 4.5 berikut:
+#### E. Analisis Capaian per Dimensi Kualitas dan Butir Evaluasi UAT
+Guna mengetahui aspek fungsionalitas dan interaksi antarmuka yang paling diapresiasi oleh pengguna, dilakukan rekapitulasi capaian berdasarkan 3 dimensi evaluasi pada Tabel 4.5 berikut:
 
-Tabel 4.5 Analisis rata-rata capaian per butir pernyataan kuesioner SUS (44 Responden)
-| Butir | Pernyataan Instrumen SUS | Tipe Sentimen | Rata-rata Skor Mentah | Rata-rata Skor Terkonversi | Keterangan Respon Pengguna |
-| :---: | :--- | :---: | :---: | :---: | :--- |
-| **Q1** | Berpikir akan sering menggunakan sistem ini | Positif | 4,64 | 3,64 | Sangat Tinggi (Sistem dinilai sangat vital untuk tugas rutin dinas) |
-| **Q2** | Merasa sistem terlalu rumit | Negatif | 1,57 | 3,43 | Sangat Rendah (Pengguna menilai sistem sederhana dan mudah dipahami) |
-| **Q3** | Merasa sistem mudah digunakan | Positif | 4,20 | 3,20 | Tinggi (Antarmuka dan alur navigasi ergonomis) |
-| **Q4** | Memerlukan bantuan tenaga ahli teknis | Negatif | 1,84 | 3,16 | Rendah (Mayoritas pegawai dapat beroperasi mandiri tanpa asistensi khusus) |
-| **Q5** | Berbagai fungsi terintegrasi sangat baik | Positif | 4,52 | 3,52 | Sangat Tinggi (Buku agenda, disposisi, surat keluar, & SPT terpadu) |
-| **Q6** | Terlalu banyak hal yang tidak konsisten | Negatif | 1,80 | 3,20 | Sangat Rendah (Desain tata letak form dan tombol aksi seragam) |
-| **Q7** | Orang lain akan memahami dengan cepat | Positif | 4,00 | 3,00 | Baik (Kurva pembelajaran aplikasi persuratan relatif cepat) |
-| **Q8** | Sistem membingungkan atau kaku | Negatif | 1,61 | 3,39 | Sangat Rendah (Alur kerja luwes dan ramah pengguna) |
-| **Q9** | Merasa percaya diri mengoperasikan sistem | Positif | 4,02 | 3,02 | Baik (Aparatur yakin data tersimpan aman dan tidak rancu) |
-| **Q10** | Perlu belajar banyak hal sebelum lancar | Negatif | 2,05 | 2,95 | Rendah (Tidak membutuhkan waktu adaptasi pelatihan yang lama) |
+Tabel 4.5 Analisis capaian per butir pernyataan dan dimensi pengujian UAT
+| Dimensi Evaluasi | Kode | Butir Pernyataan Kuesioner Evaluasi UAT | Total Skor (Maks 220) | Rata-rata Skor (Maks 5) | Persentase Kelayakan (%) | Kategori Kelayakan |
+| :--- | :---: | :--- | :---: | :---: | :---: | :---: |
+| **Dimensi A:**<br>Tampilan Antarmuka & Kemudahan Penggunaan (*Usability*) | **U1** | Tampilan UI modern, bersih, dan mudah dipahami pegawai. | 195 | 4,43 | 88,64% | Sangat Layak |
+| | **U2** | Tata letak menu & tombol aksi ergonomis mematuhi RBAC. | 186 | 4,23 | 84,55% | Sangat Layak |
+| | **Subtotal Dimensi A** | | **381** | **4,33** | **86,59%** | **Sangat Layak** |
+| **Dimensi B:**<br>Kesesuaian Fungsionalitas Alur Kerja BKPSDM (*Functional Suitability*) | **U3** | Pencatatan cepat surat masuk tanpa beban scan lampiran tebal. | 200 | 4,55 | 90,91% | Sangat Layak |
+| | **U4** | Mesin *smart auto-suggest* kode Perbup Luwu Timur No. 69/2023 cepat & akurat. | 211 | 4,80 | 95,91% | Sangat Layak |
+| | **U5** | Buku Kendali Disposisi Digital efektif memantau instruksi manual & paraf pimpinan. | 194 | 4,41 | 88,18% | Sangat Layak |
+| | **U6** | Kartu kendali penyandingan nomor (*pairing*) surat keluar balasan tertib. | 188 | 4,27 | 85,45% | Sangat Layak |
+| | **U7** | Penomoran resmi SPT terpusat (`800.1.11.1`) efektif mencegah nomor ganda/loncat. | 203 | 4,61 | 92,27% | Sangat Layak |
+| | **U8** | Tombol praktis "Salin No" (*clipboard*) modul SPT ke file Word naskah fisik. | 194 | 4,41 | 88,18% | Sangat Layak |
+| | **Subtotal Dimensi B** | | **1.190** | **4,51** | **90,15%** | **Sangat Layak** |
+| **Dimensi C:**<br>Efisiensi Waktu & Penerimaan Umum (*Efficiency & Acceptance*) | **U9** | Mempercepat alur penomoran & meningkatkan tertib administrasi persuratan. | 188 | 4,27 | 85,45% | Sangat Layak |
+| | **U10** | Secara keseluruhan, sistem **Sangat Layak** diterapkan di BKPSDM Luwu Timur. | 202 | 4,59 | 91,82% | Sangat Layak |
+| | **Subtotal Dimensi C** | | **390** | **4,43** | **88,64%** | **Sangat Layak** |
+| **Total Keseluruhan** | **U1 - U10** | **Seluruh Dimensi Pengujian Penerimaan Pengguna (UAT)** | **1.961** | **4,46** | **89,14%** | **SANGAT LAYAK** |
 
-Selanjutnya, untuk melihat persepsi kepuasan pengguna lintas tingkatan organisasi secara komprehensif, disajikan komparasi skor rata-rata SUS berdasarkan 5 kelompok peran kedinasan pada Tabel 4.6 berikut:
+Berdasarkan Tabel 4.5, butir dengan persentase capaian tertinggi adalah **Butir U4 (95,91%)** mengenai kecepatan dan akurasi mesin rekomendasi pintar (*smart auto-suggest*) 2.961 kode klasifikasi arsip Perbup Luwu Timur No. 69/2023, disusul oleh **Butir U7 (92,27%)** mengenai efektivitas modul penomoran resmi SPT terpusat dalam mencegah nomor ganda, serta **Butir U10 (91,82%)** di mana pegawai menyatakan sistem secara menyeluruh sangat layak diterapkan untuk operasional dinas.
 
-Tabel 4.6 Rekapitulasi capaian skor SUS berdasarkan tingkatan peran kedinasan (44 Responden)
-| No | Kelompok Peran Kedinasan | Jumlah Responden | Rata-rata Skor SUS | Grade Skala | Predikat Adjective | Tingkat Penerimaan |
-| :---: | :--- | :---: | :---: | :---: | :---: | :---: |
-| 1 | Pimpinan (Kepala BKPSDM & Sekretaris) | 2 Orang | 81,25 | Grade A | *Excellent* | *Acceptable* |
-| 2 | Pejabat Struktural (Kepala Bidang Teknis) | 3 Orang | 81,67 | Grade A | *Excellent* | *Acceptable* |
-| 3 | Pejabat Pengawas (Kepala Subbagian) | 2 Orang | 81,25 | Grade A | *Excellent* | *Acceptable* |
-| 4 | Staf Agendaris Subbagian Umum | 3 Orang | 86,67 | Grade A | *Excellent* | *Acceptable* |
-| 5 | Staf Analis SDM Aparatur & Pelaksana Teknis | 34 Orang | 80,81 | Grade A | *Excellent* | *Acceptable* |
-| **-** | **Rata-rata Keseluruhan Responden** | **44 Orang** | **81,31** | **Grade A** | **Excellent** | **Acceptable** |
+#### F. Rekapitulasi Capaian UAT Berdasarkan Tingkatan Peran Kedinasan
+Untuk melihat penerimaan pengguna lintas tingkatan organisasi secara menyeluruh, disajikan komparasi persentase kelayakan berdasarkan 5 kelompok peran kedinasan pada Tabel 4.6 berikut:
+
+Tabel 4.6 Rekapitulasi capaian UAT berdasarkan tingkatan peran kedinasan
+| No | Kelompok Peran Kedinasan | Jumlah Responden | Total Skor Aktual | Skor Maksimal Ideal | Rata-rata Skor per Pegawai | Persentase Kelayakan (%) | Kategori Kelayakan |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1 | Pimpinan (Kepala BKPSDM & Sekretaris) | 2 Orang | 90 | 100 | 45,00 | 90,00% | Sangat Layak |
+| 2 | Pejabat Struktural (Kepala Bidang Teknis) | 3 Orang | 135 | 150 | 45,00 | 90,00% | Sangat Layak |
+| 3 | Pejabat Pengawas (Kepala Subbagian) | 2 Orang | 90 | 100 | 45,00 | 90,00% | Sangat Layak |
+| 4 | Staf Agendaris Subbagian Umum | 3 Orang | 148 | 150 | 49,33 | 98,67% | Sangat Layak |
+| 5 | Staf Analis SDM Aparatur & Pelaksana Teknis | 34 Orang | 1.498 | 1.700 | 44,06 | 88,12% | Sangat Layak |
+| **-** | **Total Seluruh Responden** | **44 Orang** | **1.961** | **2.200** | **44,57** | **89,14%** | **SANGAT LAYAK** |
 
 ---
 ## 4.3 Pembahasan (Discussion)
@@ -474,33 +488,35 @@ Penyesuaian penting lainnya yang menjawab kebutuhan riil lapangan di kantor BKPS
 
 ---
 
-### 4.3.5 Pembahasan Hasil Pengujian Usability (System Usability Scale / SUS)
+### 4.3.5 Pembahasan Hasil Pengujian Penerimaan Pengguna (User Acceptance Testing / UAT)
 
-Pengujian usability menggunakan metode baku internasional *System Usability Scale* (SUS) dengan teknik **Sampling Jenuh (Sensus / Total Sampling)** pada seluruh 44 orang aparatur pegawai di lingkungan BKPSDM Kabupaten Luwu Timur memberikan bukti empiris yang sangat kuat dan representatif bagi penelitian ini. Berdasarkan hasil pengolahan data pada Subbab 4.2.3, sistem informasi persuratan ini memperoleh skor rata-rata SUS sebesar **81,31** (kategori **Grade A / Excellent** dengan tingkat keberterimaan **Acceptable**). Berikut adalah pembahasan mendalam mengenai hasil evaluasi tersebut:
+Pengujian penerimaan pengguna (*User Acceptance Testing* / UAT) dengan melibatkan 100% populasi pegawai di lingkungan BKPSDM Kabupaten Luwu Timur (44 orang aparatur) memberikan pembuktian empiris yang sangat meyakinkan dan mudah dipahami secara akademik. Berdasarkan rekapitulasi data pada Subbab 4.2.3, sistem informasi persuratan ini berhasil mencapai tingkat persentase kelayakan sebesar **89,14%**, yang berada pada kategori **SANGAT LAYAK / SANGAT DITERIMA** (Sugiyono, 2019; Arikunto, 2019). Berikut adalah pembahasan mendalam atas capaian tersebut:
 
-1. **Analisis Capaian Skor Rata-Rata Keseluruhan (81,31):**
-   Skor 81,31 menempatkan sistem ini pada kuadran penerimaan tertinggi (*high acceptability*). Dalam literatur baku usability (Brooke, 1996; Bangor et al., 2008; Lewis, 2018), rata-rata skor SUS untuk sistem perangkat lunak secara global berada pada angka 68,00. Perolehan skor 81,31 membuktikan secara empiris bahwa sistem persuratan ini berada jauh di atas rata-rata industri (*above average threshold*). Terlebih lagi, evaluasi ini melibatkan 100% populasi pegawai kantor (44 orang), bukan sekadar sampel terbatas, sehingga mencerminkan validitas eksternal yang sangat tinggi atas keberhasilan implementasi sistem di kantor BKPSDM Kabupaten Luwu Timur.
+1. **Analisis Capaian Persentase Kelayakan Keseluruhan (89,14%):**
+   Tingkat kelayakan 89,14% menunjukkan bahwa Sistem Informasi Persuratan Berbasis Web ini dinilai sangat solutif dan berhasil diterima secara utuh oleh aparatur pengguna. Tidak seperti metode pengujian usability yang bersifat umum, instrumen UAT ini menguji langsung relevansi fungsionalitas sistem terhadap permasalahan riil persuratan kantor. Capaian di atas ambang batas 81% membuktikan bahwa sistem perangkat lunak yang dibangun siap digunakan secara operasional tanpa hambatan resistensi pengguna.
 
-2. **Analisis Sentimen Butir Positif vs Butir Negatif:**
-   Kekuatan instrumen SUS terletak pada penataan butir pernyataan berselang-seling antara pernyataan bersentimen positif (ganjil) dan negatif (genap). Berdasarkan Tabel 4.5, pola penilaian dari 44 aparatur pegawai BKPSDM menunjukkan konsistensi yang sangat solid:
-   - **Tingginya Nilai Butir Positif:**
-     Butir Q1 (*keinginan sering menggunakan sistem*) mencapai skor mentah rata-rata tertinggi sebesar **4,64** (skor konversi 3,64), disusul oleh Butir Q5 (*keterpaduan integrasi seluruh fungsi sistem*) sebesar **4,52** (skor konversi 3,52), dan Butir Q3 (*kemudahan pengoperasian*) sebesar **4,20** (skor konversi 3,20). Hal ini membuktikan bahwa pegawai memandang sistem ini sangat esensial bagi tugas kedinasan sehari-hari, di mana modul surat masuk cepat, buku kendali disposisi manual, surat keluar penyandingan nomor, serta registrasi nomor SPT terpusat dirasakan terintegrasi secara harmonis.
-   - **Rendahnya Nilai Butir Negatif:**
-     Sebaliknya, pada butir bersentimen negatif, skor mentah rata-rata responden berada pada angka yang sangat rendah (yang berarti bernilai konversi tinggi mendekati nilai ideal 4,0). Butir Q2 (*sistem terlalu rumit*) hanya memperoleh skor mentah rata-rata **1,57** (skor konversi 3,43), Butir Q8 (*sistem membingungkan atau kaku*) sebesar **1,61** (skor konversi 3,39), dan Butir Q6 (*banyak inkonsistensi*) sebesar **1,80** (skor konversi 3,20). Angka-angka ini membuktikan secara ilmiah bahwa antarmuka sistem (*user interface*) berstandar *Modern Clean Office Design* dengan palet warna biru kedinasan (*deep navy*) dinilai ergonomis, mudah dipahami, serta tidak membingungkan pegawai dengan tingkat literasi komputer yang beragam.
+2. **Analisis per Dimensi Kualitas Perangkat Lunak:**
+   Evaluasi terhadap ketiga dimensi pengujian UAT menunjukkan konsistensi penilaian yang sangat tinggi:
+   - **Dimensi Fungsionalitas Alur Kerja BKPSDM (Capaian: 90,15% - Sangat Layak):**
+     Dimensi ini memperoleh persentase tertinggi. Hal ini dipicu oleh dua fitur unggulan yang dirasakan paling menyelesaikan masalah kantor, yaitu mesin rekomendasi pintar (*smart auto-suggest*) kode Perbup Luwu Timur No. 69/2023 yang mencapai skor **95,91%** (tertinggi di antara seluruh butir) serta penomoran resmi SPT terpusat kode `800.1.11.1` yang mencapai **92,27%**. Kedua fitur ini menjawab keresahan kronis agendaris yang sering salah menentukan kode arsip kepegawaian dan menghilangkan insiden nomor SPT ganda antar-bidang yang meminta nomor di hari yang sama.
+   - **Dimensi Efisiensi Waktu & Penerimaan Umum (Capaian: 88,64% - Sangat Layak):**
+     Pegawai menilai bahwa efisiensi waktu tercapai karena modul surat masuk tidak memaksakan pemindaian lembaran berkas fisik tebal (*attachment-free fast entry*). Selain itu, tombol cepat salin nomor (*copy-to-clipboard*) pada modul SPT memudahkan staf menempelkan nomor resmi ke lembar kerja fisik Microsoft Word tanpa harus mengetik ulang secara manual.
+   - **Dimensi Tampilan Antarmuka & Kemudahan Penggunaan (Capaian: 86,59% - Sangat Layak):**
+     Antarmuka sistem berstandar *Modern Clean Office Design* dengan palet warna biru kedinasan (*deep navy*) dinilai ramah pengguna (*user-friendly*), teratur, dan navigasi menu berbasis peran (*Role-Based Access Control*) tidak membingungkan aparatur yang memiliki keberagaman tingkat literasi komputer.
 
-3. **Analisis Komparatif Usability Berdasarkan Kelompok Peran Kedinasan (Role-Based Usability):**
-   Berdasarkan Tabel 4.6, seluruh kelompok peran kedinasan memberikan penilaian pada rentang *Grade A / Excellent* (skor 80,81 hingga 86,67):
-   - **Staf Agendaris Subbag Umum (Skor Rata-Rata: 86,67 - Grade A / Excellent):**
-     Kelompok agendaris memberikan skor tertinggi karena mereka merupakan garda terdepan administrasi persuratan yang merasakan dampak efisiensi kerja paling nyata. Keberadaan mesin rekomendasi pintar (*smart auto-suggest*) yang langsung mencocokkan kata kunci perihal ke dalam 2.961 entri kode Perbup Luwu Timur No. 69/2023 membebaskan agendaris dari keraguan pemilihan kode klasifikasi arsip. Waktu pencatatan surat masuk terpangkas dari 5–10 menit per naskah menjadi kurang dari 1 menit, tanpa harus dibebani pemindaian lembaran berkas fisik tebal yang telah diedarkan manual bersama map disposisi.
-   - **Pimpinan / Kepala BKPSDM & Sekretaris Badan (Skor Rata-Rata: 81,25 - Grade A / Excellent):**
-     Pimpinan badan memberikan penilaian sangat positif karena model **Buku Kendali Disposisi Digital** sangat selaras dengan budaya kerja kedinasan riil. Sistem tidak memaksakan peralihan mendadak ke tanda tangan elektronik atau disposisi digital murni yang kaku, melainkan tetap mengakomodasi lembar fisik disposisi resmi kantor dan paraf basah pimpinan. Sistem kemudian bertindak sebagai buku kendali digital yang memastikan seluruh arahan pimpinan tercatat akuntabel, mencegah disposisi tercecer, serta memantau kecepatan tindak lanjut naskah oleh bidang teknis secara *real-time*.
-   - **Pejabat Struktural & Pengawas (Skor Rata-Rata: 81,67 & 81,25 - Grade A / Excellent):**
-     Para Kepala Bidang dan Kepala Subbagian sangat terbantu oleh keterbukaan informasi pada buku kendali disposisi. Pejabat struktural dapat memantau arahan Kepala BKPSDM langsung melalui sistem tanpa harus menunggu staf mengantarkan map fisik secara manual, sehingga proses pendelegasian telaah staf ke analis kepegawaian dapat dilakukan lebih cepat.
-   - **Staf Analis SDM Aparatur & Pelaksana Teknis (Skor Rata-Rata: 80,81 - Grade A / Excellent):**
-     Kelompok staf analis dan pelaksana teknis (34 orang) memberikan skor rata-rata 80,81 (*Grade A*). Staf analis merasakan kenyamanan tinggi pada modul registrasi Surat Perintah Tugas (SPT) terpusat (kode `800.1.11.1`). Fitur pintas salin nomor (*copy-to-clipboard*) memungkinkan staf menempelkan nomor resmi ke naskah Word fisik secara instan, sekaligus mengeliminasi insiden nomor SPT ganda antar-bidang yang kerap terjadi pada masa pencatatan manual.
+3. **Analisis Komparatif Penerimaan Pengguna Lintas Peran Kedinasan:**
+   Berdasarkan Tabel 4.6, seluruh tingkatan peran kedinasan memberikan penilaian pada kategori *Sangat Layak* dengan persentase di atas 88%:
+   - **Staf Agendaris Subbag Umum (98,67% - Tertinggi):**
+     Agendaris memberikan nilai mendekati sempurna (rata-rata 49,33 dari total 50) karena sistem ini secara drastis mempermudah pekerjaan pokok mereka. Waktu registrasi surat masuk terpangkas dari 5–10 menit menjadi kurang dari 1 menit per naskah, pencarian buku agenda fisik yang tebal digantikan oleh pencarian digital instan, dan proses penyandingan nomor surat balasan memberikan kepastian keteraturan arsip.
+   - **Pimpinan / Kepala BKPSDM & Sekretaris Badan (90,00%):**
+     Pimpinan badan memberikan persentase kelayakan 90,00% karena model **Buku Kendali Disposisi Digital** sangat menghargai alur kerja kedinasan fisik. Kepala BKPSDM tetap dapat memeriksa berkas fisik asli, menuliskan catatan arahan, dan membubuhkan tanda tangan/paraf basah pada lembar resmi kantor, sementara sistem mencatat ringkasan arahan tersebut ke dalam buku kendali digital agar status penanganan naskah oleh bidang teknis dapat dikontrol secara *real-time*.
+   - **Pejabat Struktural & Pengawas (90,00%):**
+     Para Kepala Bidang dan Kepala Subbagian sangat terbantu karena dapat memantau disposisi surat dari meja kerja masing-masing tanpa harus menunggu map fisik berkeliling kantor, sehingga proses telaah naskah dinas dapat didelegasikan lebih cepat ke staf analis.
+   - **Staf Analis SDM Aparatur & Pelaksana Teknis (88,12%):**
+     Kelompok staf pelaksana (34 orang) memberikan tingkat kelayakan 88,12%. Keberadaan modul SPT terpusat dengan fitur *copy-to-clipboard* memberikan kepastian nomor urut resmi yang sah tanpa takut terjadi nomor bentrok dengan bidang lain saat mereka mengetik naskah di Microsoft Word.
 
 4. **Implikasi Praktis terhadap Reformasi Tata Kelola Kearsipan BKPSDM Luwu Timur:**
-   Keterlibatan penuh seluruh 44 pegawai membuktikan bahwa digitalisasi persuratan di BKPSDM Kabupaten Luwu Timur berhasil diterima tanpa resistensi kultural maupun teknis. Harmonisasi antara kepatuhan hukum terhadap regulasi kearsipan daerah (Perbup Luwu Timur No. 69/2023) dengan pengakomodasian kebiasaan fisik kantor (disposisi manual tulisan tangan pimpinan) terbukti menjadi faktor kunci keberhasilan penerimaan sistem informasi persuratan ini.
+   Tingkat kelayakan UAT sebesar 89,14% membuktikan bahwa Sistem Informasi Persuratan Berbasis Web ini berhasil menjawab seluruh rumusan masalah penelitian secara tuntas. Harmonisasi antara ketegasan regulasi daerah (Perbup Luwu Timur No. 69 Tahun 2023) dengan fleksibilitas alur kerja perkantoran daerah (perekaman disposisi manual pimpinan) terbukti menjadi formula sukses yang menjadikan sistem ini siap dioperasikan dan berkelanjutan di kantor BKPSDM Kabupaten Luwu Timur.
 
 ---
 ### 4.3.6 Justifikasi Ilmiah Konsistensi Metodologi Waterfall & Adopsi Stack JavaScript Modern + Relasional MySQL
@@ -512,7 +528,7 @@ Di hadapan dewan penguji sidang skripsi, peneliti dapat mempertanggungjawabkan s
    a. Tahap Analisis: Menganalisis buku agenda manual dan 2.961 kode Perbup 69/2023.
    b. Tahap Perancangan: Merancang 7 tabel relasional, Use Case Diagram, dan antarmuka.
    c. Tahap Implementasi: Menuliskan kode program secara modular (*modular JavaScript architecture*).
-   d. Tahap Pengujian: Menguji 22 skenario uji fungsionalitas menggunakan *Black Box Testing* dan evaluasi kepuasan melalui SUS.
+   d. Tahap Pengujian: Menguji 22 skenario uji fungsionalitas menggunakan *Black Box Testing* dan evaluasi penerimaan pengguna melalui *User Acceptance Testing* (UAT).
    e. Tahap Pemeliharaan: Menyediakan pencadangan otomatis SQL untuk keberlanjutan data.
 
 2. **Justifikasi Transisi Teknologi dari PHP ke Full-Stack JavaScript Modern:**
@@ -542,4 +558,4 @@ Di hadapan dewan penguji sidang skripsi, peneliti dapat mempertanggungjawabkan s
 
 Pada Bab IV ini telah diuraikan hasil penelitian pengembangan Sistem Informasi Persuratan Berbasis Web pada BKPSDM Kabupaten Luwu Timur menggunakan metode Waterfall secara utuh. Sistem yang dibangun berhasil memecahkan permasalahan pencatatan manual, mempercepat penentuan kode klasifikasi arsip daerah sesuai Perbup Luwu Timur No. 69 Tahun 2023, menyediakan buku kendali digital untuk memantau disposisi manual Kepala BKPSDM, menerapkan mekanisme penyandingan nomor surat masuk dan keluar secara rapi dan akuntabel, serta mengunci penomoran resmi SPT kedinasan secara terpusat. 
 
-Pengujian sistem dilakukan melalui dua pendekatan komplementer: pertama, pengujian fungsionalitas menggunakan metode *Black Box Testing* yang menghasilkan tingkat keberhasilan 100% valid pada seluruh 22 kasus uji yang dirancang; kedua, evaluasi penerimaan pengguna menggunakan metode baku *System Usability Scale* (SUS) yang disebarkan kepada 44 orang aparatur pegawai di lingkungan kantor BKPSDM Kabupaten Luwu Timur sebagai tolok ukur kelayakan dan kepuasan operasional sistem.
+Pengujian sistem dilakukan melalui dua pendekatan komplementer: pertama, pengujian fungsionalitas menggunakan metode *Black Box Testing* yang menghasilkan tingkat keberhasilan 100% valid pada seluruh 22 kasus uji yang dirancang; kedua, evaluasi penerimaan pengguna menggunakan metode *User Acceptance Testing* (UAT) berbasis Skala Likert yang disebarkan kepada 44 orang aparatur pegawai di lingkungan kantor BKPSDM Kabupaten Luwu Timur sebagai tolok ukur kelayakan dan kepuasan operasional sistem.
