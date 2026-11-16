@@ -390,6 +390,10 @@ const PenggunaModule = {
           <label class="form-label">Ganti Kata Sandi (Kosongkan jika tidak diubah)</label>
           <input type="password" id="edit-peg-password" class="form-control" placeholder="Kata sandi baru">
         </div>
+        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; font-weight:600;">
+          <input type="checkbox" id="edit-peg-akses-login" ${p.role === 'admin' || p.akses_login === 1 ? 'checked' : ''}>
+          Izinkan pengguna ini untuk login ke sistem
+        </label>
       </form>
     `;
 
@@ -409,8 +413,9 @@ const PenggunaModule = {
     const unit = document.getElementById('edit-peg-unit')?.value.trim();
     const role = document.getElementById('edit-peg-role')?.value;
     const password = document.getElementById('edit-peg-password')?.value;
+    const akses_login = document.getElementById('edit-peg-akses-login')?.checked ? 1 : 0;
 
-    const payload = { nip, nama, pangkat, jabatan, unit, role };
+    const payload = { nip, nama, pangkat, jabatan, unit, role, akses_login };
     if (password) payload.password = password.trim();
 
     App.showToast('Memperbarui data...', 'info');

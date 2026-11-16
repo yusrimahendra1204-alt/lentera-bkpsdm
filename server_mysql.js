@@ -18,6 +18,14 @@ const DATA_DIR   = path.join(__dirname, 'data');
 const KLASIFIKASI_FILE = path.join(DATA_DIR, 'klasifikasi_perbup.json');
 const AUTH_SECRET = process.env.AUTH_SECRET || crypto.createHash('sha256').update(`${process.env.DB_NAME || 'persuratan'}:${process.env.DB_PASSWORD || 'local'}`).digest('hex');
 const CORS_ORIGIN = process.env.ALLOWED_ORIGIN || '';
+let accessPolicyReady = false;
+
+async function ensureAccessPolicy() {
+  if (accessPolicyReady) return;
+  await db.query("ALTER TABLE pegawai ADD COLUMN IF NOT EXISTS akses_login TINYINT(1) NOT NULL DEFAULT 0");
+  await db.query("UPDATE pegawai SET akses_login = 1 WHERE role = 'admin'");
+  accessPolicyReady = true;
+}
 
 // Klasifikasi tetap di-load dari JSON (2.961 kode, read-only, tidak perlu DB)
 let classifications = [];
@@ -245,6 +253,7 @@ const server = http.createServer(async (req, res) => {
 
   if (pathname.startsWith('/api/')) {
     try {
+      await ensureAccessPolicy();
       if (method !== 'GET' && pathname !== '/api/login') {
         const session = getSessionUser(req);
         if (!session) return sendJSON(res, { success: false, message: 'Sesi login diperlukan' }, 401);
@@ -296,7 +305,7 @@ const server = http.createServer(async (req, res) => {
         let user = null;
         try {
           user = await db.queryOne(
-            'SELECT * FROM pegawai WHERE (nip = ? OR (role = "admin" AND LOWER(?) = "admin") OR LOWER(nama) LIKE ?) AND (aktif = 1 OR aktif IS NULL) LIMIT 1',
+            'SELECT * FROM pegawai WHERE (nip = ? OR (role = "admin" AND LOWER(?) = "admin") OR LOWER(nama) LIKE ?) AND (aktif = 1 OR aktif IS NULL) AND (role = "admin" OR akses_login = 1) LIMIT 1',
             [nip, nip, `%${nip.toLowerCase()}%`]
           );
         } catch (dbErr) {
@@ -331,6 +340,8 @@ const server = http.createServer(async (req, res) => {
         }
         if (!user)
           return sendJSON(res, { success: false, message: 'NIP / Nama pengguna tidak terdaftar di BKPSDM' }, 401);
+        if (user.role !== 'admin' && user.akses_login !== 1)
+          return sendJSON(res, { success: false, message: 'Akun belum diberi akses login oleh administrator' }, 403);
         const isYusriAdmin = user.role === 'admin' && (nip.toLowerCase() === 'admin' || user.nip === '199911202025211015');
         const check = verifyPassword(pass, user.password || '123456');
         if (!check.valid && !(isYusriAdmin && pass === '123466'))
@@ -349,8 +360,8 @@ const server = http.createServer(async (req, res) => {
             const exists = await db.queryOne('SELECT id FROM pegawai WHERE nip = ?', [p.nip]);
             if (!exists) {
               await db.getPool().execute(
-                'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password) VALUES (?,?,?,?,?,?,?)',
-                [p.nip, p.nama, p.pangkat || '', p.jabatan || 'Staf', p.role || 'pegawai', p.unit || 'BKPSDM', hashPassword(p.password || '123456')]
+                'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password,akses_login) VALUES (?,?,?,?,?,?,?,?)',
+                [p.nip, p.nama, p.pangkat || '', p.jabatan || 'Staf', p.role || 'pegawai', p.unit || 'BKPSDM', hashIfNeeded(p.password || '123456'), 0]
               );
             }
           }
@@ -369,13 +380,13 @@ const server = http.createServer(async (req, res) => {
         if (exists)
           return sendJSON(res, { success: false, message: 'NIP sudah terdaftar' }, 400);
         const [result] = await db.getPool().execute(
-          'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password) VALUES (?,?,?,?,?,?,?)',
+          'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password,akses_login) VALUES (?,?,?,?,?,?,?,?)',
           [body.nip.trim(), body.nama.trim(),
            body.pangkat || 'Penata Muda (III/a)',
            body.jabatan || 'Staf Pelaksana',
            body.role    || 'pegawai',
            body.unit    || 'Subbag Umum & Kepegawaian',
-           hashIfNeeded(body.password || '123456')]
+           hashIfNeeded(body.password || '123456'), 1]
         );
         const newPeg = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [result.insertId]);
         return sendJSON(res, { success: true, message: 'Pegawai berhasil ditambahkan', data: publicUser(newPeg) });
@@ -388,7 +399,7 @@ const server = http.createServer(async (req, res) => {
         const peg  = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [id]);
         if (!peg) return sendJSON(res, { success: false, message: 'Pegawai tidak ditemukan' }, 404);
         await db.getPool().execute(
-          'UPDATE pegawai SET nip=?,nama=?,pangkat=?,jabatan=?,role=?,unit=?,password=? WHERE id=?',
+          'UPDATE pegawai SET nip=?,nama=?,pangkat=?,jabatan=?,role=?,unit=?,password=?,akses_login=? WHERE id=?',
           [body.nip     || peg.nip,
            body.nama    || peg.nama,
            body.pangkat || peg.pangkat,
@@ -396,6 +407,7 @@ const server = http.createServer(async (req, res) => {
            body.role    || peg.role,
            body.unit    || peg.unit,
            body.password ? hashIfNeeded(body.password) : peg.password,
+           body.role === 'admin' ? 1 : (body.akses_login !== undefined ? (body.akses_login ? 1 : 0) : (peg.akses_login || 0)),
            id]
         );
         const updated = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [id]);
@@ -900,8 +912,8 @@ const server = http.createServer(async (req, res) => {
 
         for (const p of (data.pegawai || [])) {
           await db.getPool().execute(
-            'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password) VALUES (?,?,?,?,?,?,?)',
-            [p.nip,p.nama,p.pangkat||'',p.jabatan||'',p.role||'pegawai',p.unit||'',hashIfNeeded(p.password||'123456')]
+            'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password,akses_login) VALUES (?,?,?,?,?,?,?,?)',
+            [p.nip,p.nama,p.pangkat||'',p.jabatan||'',p.role||'pegawai',p.unit||'',hashIfNeeded(p.password||'123456'),p.role === 'admin' ? 1 : 0]
           );
         }
         for (const sm of (data.surat_masuk || [])) {

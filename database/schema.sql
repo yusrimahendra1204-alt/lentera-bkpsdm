@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `pegawai` (
              COMMENT 'Role RBAC: admin=Agendaris, kepala_bkpsdm=Pimpinan, kabid=Kepala Bidang, pegawai=Staf',
   `unit`     VARCHAR(150) DEFAULT 'Subbag Umum & Kepegawaian',
   `password` VARCHAR(255) DEFAULT '123456' COMMENT 'Password default: 123456',
+  `akses_login` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Akses login diberikan admin; admin aktif otomatis',
   `aktif`    TINYINT(1)   NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

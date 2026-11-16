@@ -314,6 +314,10 @@ const server = http.createServer(async (req, res) => {
           p.nama.toLowerCase().includes(nip.toLowerCase())
         );
 
+        if (user && user.role !== 'admin' && user.akses_login !== 1) {
+          return sendJSON(res, { success: false, message: 'Akun belum diberi akses login oleh administrator' }, 403);
+        }
+
         if (!user) {
           return sendJSON(res, { success: false, message: 'NIP / Username tidak terdaftar' }, 401);
         }
@@ -373,6 +377,7 @@ const server = http.createServer(async (req, res) => {
           role: body.role || 'pegawai',
           unit: body.unit || 'Subbag Umum & Kepegawaian',
             password: hashIfNeeded(body.password || '123456')
+          ,akses_login: 1
         };
 
         appState.pegawai.push(newPegawai);
@@ -397,6 +402,8 @@ const server = http.createServer(async (req, res) => {
         if (body.role) peg.role = body.role;
         if (body.unit) peg.unit = body.unit.trim();
           if (body.password) peg.password = hashIfNeeded(body.password.trim());
+          if (body.akses_login !== undefined) peg.akses_login = body.role === 'admin' ? 1 : (body.akses_login ? 1 : 0);
+          if (peg.role === 'admin') peg.akses_login = 1;
 
         saveState();
         return sendJSON(res, { success: true, message: 'Data pegawai berhasil diperbarui', data: publicUser(peg) });
@@ -841,7 +848,7 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'Setiap pegawai wajib memiliki NIP dan nama' }, 400);
 
         appState = {
-          pegawai: (importedData.pegawai || []).map(p => ({ ...p, password: hashIfNeeded(p.password || '123456') })),
+          pegawai: (importedData.pegawai || []).map(p => ({ ...p, akses_login: p.role === 'admin' ? 1 : 0, password: hashIfNeeded(p.password || '123456') })),
           surat_masuk: importedData.surat_masuk || [],
           disposisi: importedData.disposisi || [],
           surat_keluar: importedData.surat_keluar || [],
