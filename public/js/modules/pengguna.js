@@ -29,7 +29,8 @@ const PenggunaModule = {
       return;
     }
 
-    const list = Store.state.pegawai || [];
+    const allUsers = Store.state.pegawai || [];
+    const list = allUsers.filter(p => p.role === 'admin' || p.akses_login === 1);
     const totalAdmin = list.filter(p => p.role === 'admin').length;
     const totalPimpinan = list.filter(p => p.role === 'kepala_bkpsdm' || p.role === 'sekretaris' || p.role === 'kabid').length;
     const totalStaf = list.filter(p => p.role === 'pegawai').length;
@@ -54,6 +55,9 @@ const PenggunaModule = {
             <button class="btn btn-outline" onclick="PenggunaModule.loadMasterData()" title="Muat 44 Master Pegawai BKPSDM 2026 (Opsional)">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               Muat 44 Master Pegawai
+            </button>
+            <button class="btn btn-outline" onclick="PenggunaModule.openAccessMasterModal()" title="Pilih pegawai master yang diberi akses login">
+              Kelola Akses Master
             </button>
             <button class="btn btn-primary" onclick="PenggunaModule.openCreateModal()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -194,7 +198,7 @@ const PenggunaModule = {
 
   filterTable() {
     const q = (document.getElementById('search-pegawai')?.value || '').toLowerCase();
-    const list = (Store.state.pegawai || []).filter(p => 
+    const list = (Store.state.pegawai || []).filter(p => (p.role === 'admin' || p.akses_login === 1) &&
       p.nip.toLowerCase().includes(q) ||
       p.nama.toLowerCase().includes(q) ||
       p.jabatan.toLowerCase().includes(q) ||
@@ -203,6 +207,29 @@ const PenggunaModule = {
     );
     const tbody = document.getElementById('tbody-pegawai');
     if (tbody) tbody.innerHTML = this.renderRows(list);
+  },
+
+  openAccessMasterModal() {
+    const inactive = (Store.state.pegawai || []).filter(p => p.role !== 'admin' && p.akses_login !== 1);
+    const body = document.getElementById('modal-body');
+    const title = document.getElementById('modal-title');
+    const footer = document.getElementById('modal-footer');
+    title.innerText = 'Pilih Pegawai Master yang Diberi Akses Login';
+    body.innerHTML = `<div style="font-size:13px;color:#475569;margin-bottom:12px;">Data berikut tetap tersimpan untuk Surat Tugas, tetapi belum dapat login.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto;">
+        ${inactive.length ? inactive.map(p => `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;"><div><strong>${p.nama}</strong><div style="font-size:11px;color:#64748b;">${p.nip} · ${p.jabatan || '-'}</div></div><button class="btn btn-primary btn-sm" onclick="PenggunaModule.grantLoginAccess(${p.id})">Beri Akses</button></div>`).join('') : '<div style="padding:20px;text-align:center;color:#64748b;">Semua pegawai sudah memiliki akses.</div>'}
+      </div>`;
+    footer.innerHTML = '<button class="btn btn-outline" onclick="App.closeModal()">Tutup</button>';
+    App.openModal();
+  },
+
+  async grantLoginAccess(id) {
+    const result = await Store.updatePegawai(id, { akses_login: 1 });
+    if (result && result.success) {
+      App.showToast('Akses login berhasil diberikan', 'success');
+      App.closeModal();
+      this.render();
+    } else App.showToast(result?.message || 'Gagal memberikan akses login', 'danger');
   },
 
   openCreateModal() {
