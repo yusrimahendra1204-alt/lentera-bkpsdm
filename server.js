@@ -13,6 +13,7 @@ const KLASIFIKASI_FILE = path.join(DATA_DIR, 'klasifikasi_perbup.json');
 const SQL_FILE = path.join(__dirname, 'database_persuratan.sql');
 const CURRENT_YEAR = new Date().getFullYear();
 const AUTH_SECRET = process.env.AUTH_SECRET || crypto.createHash('sha256').update(`${process.env.DB_NAME || 'persuratan'}:${process.env.DB_PASSWORD || 'local'}`).digest('hex');
+const CORS_ORIGIN = process.env.ALLOWED_ORIGIN || '';
 
 const { generateSqlFile } = require('./scripts/generate_sql');
 
@@ -108,10 +109,10 @@ function parseBody(req) {
 function sendJSON(res, data, status = 200) {
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type'
   };
+  if (CORS_ORIGIN) headers['Access-Control-Allow-Origin'] = CORS_ORIGIN;
   const cookie = res.getHeader('Set-Cookie');
   if (cookie) headers['Set-Cookie'] = cookie;
   res.writeHead(status, headers);
@@ -123,6 +124,26 @@ function publicUser(user) {
   const safe = { ...user };
   delete safe.password;
   return safe;
+}
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const key = crypto.scryptSync(String(password), salt, 64).toString('hex');
+  return `scrypt$${salt}$${key}`;
+}
+
+function hashIfNeeded(password) {
+  return String(password || '').startsWith('scrypt$') ? String(password) : hashPassword(password || '123456');
+}
+
+function verifyPassword(password, stored) {
+  if (!stored) return { valid: false, needsUpgrade: false };
+  if (!String(stored).startsWith('scrypt$')) return { valid: String(password) === String(stored), needsUpgrade: true };
+  const [, salt, expected] = String(stored).split('$');
+  try {
+    const actual = crypto.scryptSync(String(password), salt, 64).toString('hex');
+    return { valid: actual.length === expected.length && crypto.timingSafeEqual(Buffer.from(actual), Buffer.from(expected)), needsUpgrade: false };
+  } catch { return { valid: false, needsUpgrade: false }; }
 }
 
 function createSession(user) {
@@ -213,10 +234,10 @@ const server = http.createServer(async (req, res) => {
   // Handle CORS Preflight
   if (method === 'OPTIONS') {
     res.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type'
     });
+    if (CORS_ORIGIN) res.setHeader('Access-Control-Allow-Origin', CORS_ORIGIN);
     return res.end();
   }
 
@@ -298,11 +319,11 @@ const server = http.createServer(async (req, res) => {
         }
 
         // Check password (accept user's password, 123, 123456, admin, admin123)
-        const validPassword = user.password || '123456';
-        const allowedPasswords = [validPassword, '123', '123456', 'admin', 'admin123'];
-        if (!allowedPasswords.includes(password)) {
+        const check = verifyPassword(password, user.password || '123456');
+        if (!check.valid) {
           return sendJSON(res, { success: false, message: 'Kata sandi / Password salah' }, 401);
         }
+        if (check.needsUpgrade) { user.password = hashPassword(password); saveState(); }
 
         setSessionCookie(res, user);
         return sendJSON(res, {
@@ -350,7 +371,7 @@ const server = http.createServer(async (req, res) => {
           jabatan: body.jabatan || 'Staf Pelaksana',
           role: body.role || 'pegawai',
           unit: body.unit || 'Subbag Umum & Kepegawaian',
-          password: body.password || '123456'
+            password: hashIfNeeded(body.password || '123456')
         };
 
         appState.pegawai.push(newPegawai);
@@ -374,7 +395,7 @@ const server = http.createServer(async (req, res) => {
         if (body.jabatan) peg.jabatan = body.jabatan.trim();
         if (body.role) peg.role = body.role;
         if (body.unit) peg.unit = body.unit.trim();
-        if (body.password) peg.password = body.password.trim();
+          if (body.password) peg.password = hashIfNeeded(body.password.trim());
 
         saveState();
         return sendJSON(res, { success: true, message: 'Data pegawai berhasil diperbarui', data: publicUser(peg) });
@@ -736,8 +757,7 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'Pengguna tidak ditemukan' }, 404);
         }
 
-        const validPass = user.password || '123456';
-        if (oldPass !== validPass && oldPass !== '123456') {
+        if (!verifyPassword(oldPass, user.password || '123456').valid) {
           return sendJSON(res, { success: false, message: 'Kata sandi lama tidak sesuai' }, 400);
         }
 
@@ -745,7 +765,7 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'Kata sandi baru minimal 5 karakter' }, 400);
         }
 
-        user.password = newPass;
+        user.password = hashIfNeeded(newPass);
         saveState();
         return sendJSON(res, { success: true, message: 'Kata sandi berhasil diperbarui' });
       }
@@ -785,7 +805,6 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, {
           'Content-Type': 'application/sql; charset=utf-8',
           'Content-Disposition': 'attachment; filename="database_persuratan.sql"',
-          'Access-Control-Allow-Origin': '*'
         });
         return res.end(fileContent);
       }
@@ -795,11 +814,12 @@ const server = http.createServer(async (req, res) => {
         const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         const filename = `backup_persuratan_bkpsdm_${dateStr}.json`;
         const content = JSON.stringify(appState, null, 2);
-        res.writeHead(200, {
+        const backupHeaders = {
           'Content-Type': 'application/json; charset=utf-8',
-          'Content-Disposition': `attachment; filename="${filename}"`,
-          'Access-Control-Allow-Origin': '*'
-        });
+          'Content-Disposition': `attachment; filename="${filename}"`
+        };
+        if (CORS_ORIGIN) backupHeaders['Access-Control-Allow-Origin'] = CORS_ORIGIN;
+        res.writeHead(200, backupHeaders);
         return res.end(content);
       }
 
@@ -811,9 +831,16 @@ const server = http.createServer(async (req, res) => {
         if (!importedData.pegawai || !Array.isArray(importedData.pegawai)) {
           return sendJSON(res, { success: false, message: 'Format data cadangan tidak valid (wajib memiliki array pegawai)' }, 400);
         }
+        const collections = ['surat_masuk', 'disposisi', 'surat_keluar', 'surat_tugas'];
+        if (collections.some(key => importedData[key] !== undefined && !Array.isArray(importedData[key])))
+          return sendJSON(res, { success: false, message: 'Struktur backup tidak valid' }, 400);
+        if (importedData.pegawai.length > 10000 || collections.some(key => (importedData[key] || []).length > 100000))
+          return sendJSON(res, { success: false, message: 'Ukuran backup melebihi batas aman' }, 413);
+        if (importedData.pegawai.some(p => !p || !String(p.nip || '').trim() || !String(p.nama || '').trim()))
+          return sendJSON(res, { success: false, message: 'Setiap pegawai wajib memiliki NIP dan nama' }, 400);
 
         appState = {
-          pegawai: importedData.pegawai || [],
+          pegawai: (importedData.pegawai || []).map(p => ({ ...p, password: hashIfNeeded(p.password || '123456') })),
           surat_masuk: importedData.surat_masuk || [],
           disposisi: importedData.disposisi || [],
           surat_keluar: importedData.surat_keluar || [],
