@@ -8,7 +8,7 @@
       "jabatan": "Administrator Sistem Persuratan (Subbag Umum)",
       "role": "admin",
       "unit": "Subbag Umum & Kepegawaian",
-      "password": "123466",
+      "password": "scrypt$8a14aa8753b9476de472338ef7d03ec7$6fa5fdc31f8dfed717402acf368f196b0354954ae9f807d64f602dc3e97ff6a5882025b39447833164bd1eab2d45ab8b1a3f1063d89ebdb034a189443617d973",
       "created_at": "2026-10-28T20:13:02.000Z",
       "aktif": 1,
       "username": "admin"
