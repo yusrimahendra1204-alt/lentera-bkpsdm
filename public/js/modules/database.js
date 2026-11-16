@@ -67,7 +67,7 @@ const DatabaseModule = {
             </div>
           </div>
           <div class="stat-value">${this.stats ? this.stats.disposisi : Store.state.disposisi.length} / ${this.stats ? this.stats.surat_keluar : Store.state.surat_keluar.length}</div>
-          <div class="stat-desc">${Store.state.surat_tugas.length} Surat Perintah Tugas (SPT Dinas)</div>
+          <div class="stat-desc">${Store.state.surat_tugas.length} Surat Tugas Dinas</div>
         </div>
 
         <div class="stat-card">
@@ -173,7 +173,7 @@ const DatabaseModule = {
               <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: var(--radius-md);">
                 <div>
                   <div style="font-weight: 600; font-size: 14px; color: #be123c;">Bersihkan Semua Data Transaksi (Dummy)</div>
-                  <div style="font-size: 12px; color: #9f1239;">Kosongkan seluruh data surat masuk, disposisi, surat keluar, & SPT dinas</div>
+                  <div style="font-size: 12px; color: #9f1239;">Kosongkan seluruh data surat masuk, disposisi, surat keluar, & surat tugas dinas</div>
                 </div>
                 <button class="btn btn-sm" style="background:#e11d48; color:#ffffff; font-weight:600;" onclick="DatabaseModule.clearDummyTransactions()">
                   Bersihkan Data

@@ -472,6 +472,10 @@ const DisposisiModule = {
           <textarea id="modal-catatan" class="form-control" rows="3" placeholder="Ketikkan catatan petunjuk tulisan tangan pimpinan dari lembar fisik (misal: 'Segera koordinasikan dengan bidang terkait dan siapkan bahan laporannya')..."></textarea>
           <span class="form-hint">Transkripsi catatan yang tertulis pada kolom Catatan lembar fisik pimpinan</span>
         </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Batas Waktu Tindak Lanjut</label>
+          <input type="date" id="modal-batas-waktu" class="form-control">
+        </div>
 
         <!-- Kotak Peringatan Validasi Inline -->
         <div id="disp-modal-alert" style="display:none; background:#fef2f2; border:1.5px solid #f87171; color:#991b1b; padding:10px 14px; border-radius:6px; font-size:12.5px; margin-bottom:16px; font-weight:600;"></div>
@@ -538,6 +542,7 @@ const DisposisiModule = {
     const sifatEl = document.querySelector('input[name="modal-sifat"]:checked');
     const sifat = sifatEl ? sifatEl.value : 'B. Segera';
     const catatan = document.getElementById('modal-catatan')?.value.trim() || '';
+    const batasWaktu = document.getElementById('modal-batas-waktu')?.value || '';
     const alertEl = document.getElementById('disp-modal-alert');
     const boxDiteruskan = document.getElementById('box-diteruskan-group');
     const boxInstruksi = document.getElementById('box-instruksi-group');
@@ -575,7 +580,8 @@ const DisposisiModule = {
         tujuan_nama: checkedDiteruskan.join(', '),
         sifat: sifat,
         instruksi: checkedInstruksi,
-        catatan: catatan
+        catatan: catatan,
+        batas_waktu: batasWaktu
       });
       App.showToast(`Pencatatan disposisi untuk surat ${sm.no_agenda} berhasil diperbarui!`, 'success');
     } else {
@@ -587,7 +593,8 @@ const DisposisiModule = {
         tujuan_nama: checkedDiteruskan.join(', '),
         sifat: sifat,
         instruksi: checkedInstruksi,
-        catatan: catatan
+        catatan: catatan,
+        batas_waktu: batasWaktu
       });
       App.showToast(`Pencatatan disposisi untuk surat ${sm.no_agenda} berhasil disimpan!`, 'success');
     }
@@ -615,6 +622,9 @@ const DisposisiModule = {
     const instruksiSelected = disp.instruksi || [];
     const sifatSelected = disp.sifat || 'B. Segera';
     const catatanText = disp.catatan || '';
+    const statusSelected = disp.status_tindak_lanjut || 'Diproses';
+    const batasWaktuText = disp.batas_waktu || '';
+    const tindakLanjutNote = disp.tindak_lanjut_note || '';
 
     title.innerText = `Ubah Pencatatan Disposisi: ${sm.no_agenda}`;
     body.innerHTML = `
@@ -644,7 +654,7 @@ const DisposisiModule = {
               <span style="color:#b45309;">B. Segera</span>
             </label>
             <label style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-weight:600; font-size:13px;">
-              <input type="radio" name="edit-sifat" value="C. Rahasia" ${sifatSelected === 'C. Rahasia' ? 'checked' : ''}>
+              <input type="radio" name="edit-sifat" value="C. Rahasia" ${sifatSelected === 'C. Rahasia' || sifatSelected === 'Biasa' ? 'checked' : ''}>
               <span style="color:#6b21a8;">C. Rahasia</span>
             </label>
           </div>
@@ -697,6 +707,25 @@ const DisposisiModule = {
           <textarea id="edit-catatan" class="form-control" rows="3">${catatanText}</textarea>
         </div>
 
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Batas Waktu Tindak Lanjut</label>
+            <input type="date" id="edit-batas-waktu" class="form-control" value="${batasWaktuText}">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Status Tindak Lanjut</label>
+            <select id="edit-status-tindak-lanjut" class="form-control">
+              <option value="Diproses" ${statusSelected === 'Diproses' ? 'selected' : ''}>Diproses</option>
+              <option value="Selesai" ${statusSelected === 'Selesai' ? 'selected' : ''}>Selesai</option>
+              <option value="Ditangguhkan" ${statusSelected === 'Ditangguhkan' ? 'selected' : ''}>Ditangguhkan</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Catatan Tindak Lanjut</label>
+          <textarea id="edit-tindak-lanjut-note" class="form-control" rows="2">${tindakLanjutNote}</textarea>
+        </div>
+
         <!-- Kotak Peringatan Validasi Inline Edit -->
         <div id="disp-edit-alert" style="display:none; background:#fef2f2; border:1.5px solid #f87171; color:#991b1b; padding:10px 14px; border-radius:6px; font-size:12.5px; margin-bottom:16px; font-weight:600;"></div>
       </form>
@@ -718,6 +747,9 @@ const DisposisiModule = {
     const sifatEl = document.querySelector('input[name="edit-sifat"]:checked');
     const sifat = sifatEl ? sifatEl.value : 'B. Segera';
     const catatan = document.getElementById('edit-catatan')?.value.trim() || '';
+    const statusTindakLanjut = document.getElementById('edit-status-tindak-lanjut')?.value || 'Diproses';
+    const batasWaktu = document.getElementById('edit-batas-waktu')?.value || '';
+    const tindakLanjutNote = document.getElementById('edit-tindak-lanjut-note')?.value.trim() || '';
     const alertEl = document.getElementById('disp-edit-alert');
 
     if (alertEl) alertEl.style.display = 'none';
@@ -745,7 +777,10 @@ const DisposisiModule = {
       tujuan_nama: checkedDiteruskan.join(', '),
       sifat: sifat,
       instruksi: checkedInstruksi,
-      catatan: catatan
+      catatan: catatan,
+      status_tindak_lanjut: statusTindakLanjut,
+      batas_waktu: batasWaktu,
+      tindak_lanjut_note: tindakLanjutNote
     });
 
     if (updated) {
@@ -798,6 +833,11 @@ const DisposisiModule = {
                 ${disp.sifat || 'B. Segera'}
               </span>
             </div>
+          </div>
+          <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+            <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Status Tindak Lanjut:</div>
+            <div style="margin-top:4px; font-size:13px; font-weight:700; color:#0f172a;">${disp.status_tindak_lanjut || 'Diproses'}</div>
+            <div style="font-size:11.5px; color:#64748b; margin-top:4px;">Batas waktu: ${disp.batas_waktu || 'Tidak ditentukan'}</div>
           </div>
           <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
             <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Tanggal Pencatatan:</div>

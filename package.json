@@ -13,9 +13,6 @@
     "db:generate": "node scripts/generate_sql.js",
     "backup": "node scripts/generate_sql.js"
   },
-  "dependencies": {
-    "mysql2": "^3.0.0"
-  },
   "keywords": [
     "persuratan",
     "bkpsdm",

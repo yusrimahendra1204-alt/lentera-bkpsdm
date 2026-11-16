@@ -102,7 +102,7 @@ const DashboardModule = {
 
         <div class="stat-card purple" onclick="App.navigate('surat-tugas')">
           <div class="stat-info">
-            <div class="stat-label">Surat Perintah Tugas (SPT)</div>
+            <div class="stat-label">Surat Tugas</div>
             <div class="stat-value">${spt.length}</div>
             <div class="stat-desc">
               <span style="color:#7c3aed; font-weight:600;">Kode Arsip 800.1.11.1</span>
@@ -230,7 +230,7 @@ const DashboardModule = {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7.5" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
                   </div>
                   <div class="quick-action-text">
-                    <div class="title">Terbitkan Surat Tugas (SPT)</div>
+                    <div class="title">Terbitkan Surat Tugas</div>
                     <div class="subtitle">Multi-personil & template resmi BKPSDM</div>
                   </div>
                 </div>

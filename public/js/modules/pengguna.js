@@ -274,7 +274,7 @@ const PenggunaModule = {
               <option value="kepala_bkpsdm">Kepala BKPSDM (Pemberi Disposisi Utama)</option>
               <option value="sekretaris">Sekretaris BKPSDM (Verifikator Naskah)</option>
               <option value="kabid">Kepala Bidang (Penerima Disposisi Struktural)</option>
-              <option value="pegawai" selected>Staf Pelaksana (Tindak Lanjut & SPT)</option>
+              <option value="pegawai" selected>Staf Pelaksana (Tindak Lanjut & Surat Tugas)</option>
             </select>
           </div>
         </div>

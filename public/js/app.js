@@ -178,7 +178,7 @@ const App = {
     this.showScreen('app');
     document.title = 'Register Nomor Surat Keluar (Akses Staf Kantor) - BKPSDM';
 
-    // Batasi sidebar navigation: hanya tampilkan menu Surat Keluar dan SPT
+    // Batasi sidebar navigation: hanya tampilkan menu Surat Keluar dan Surat Tugas
     document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
       const view = item.getAttribute('data-view');
       if (view === 'surat-keluar' || view === 'surat-tugas' || item.classList.contains('nav-item-landing')) {
@@ -343,7 +343,7 @@ const App = {
       case 'surat-masuk': return 'Pengelolaan Surat Masuk';
       case 'disposisi': return 'Pengelolaan & Pencatatan Disposisi Surat Masuk';
       case 'surat-keluar': return 'Pengelolaan Surat Keluar';
-      case 'surat-tugas': return 'Surat Perintah Tugas (SPT)';
+      case 'surat-tugas': return 'Surat Tugas';
       case 'klasifikasi': return 'Kamus Kode Perbup Luwu Timur No. 69/2023';
       case 'laporan': return 'Buku Agenda & Rekapitulasi Laporan';
       case 'pengguna': return 'Manajemen Data Pegawai & Hak Akses (RBAC)';

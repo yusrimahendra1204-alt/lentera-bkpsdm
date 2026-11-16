@@ -82,7 +82,8 @@ const Store = {
   },
 
   // Authentication Logout
-  logout() {
+  async logout() {
+    try { await fetch('/api/logout', { method: 'POST' }); } catch (err) { /* tetap bersihkan sesi lokal */ }
     this.state.isLoggedIn = false;
     localStorage.setItem('bkpsdm_logged_in', 'false');
     localStorage.removeItem('bkpsdm_user_id');
@@ -323,6 +324,9 @@ const Store = {
       if (savedData.status_tindak_lanjut === 'Selesai') {
         const sm = this.state.surat_masuk.find(s => s.id === savedData.id_surat_masuk);
         if (sm) sm.status_disposisi = 'Selesai';
+      } else if (savedData.status_tindak_lanjut === 'Diproses' || savedData.status_tindak_lanjut === 'Ditangguhkan') {
+        const sm = this.state.surat_masuk.find(s => s.id === savedData.id_surat_masuk);
+        if (sm) sm.status_disposisi = 'Didisposisi';
       }
       this.notify();
       return savedData;
@@ -378,7 +382,7 @@ const Store = {
       const newId = (this.state.surat_keluar.length ? Math.max(...this.state.surat_keluar.map(s => s.id)) : 0) + 1;
       savedData = {
         id: newId,
-        no_agenda: data.no_agenda || `SK-2026-${String(newId).padStart(3, '0')}`,
+        no_agenda: data.no_agenda || `SK-${new Date().getFullYear()}-${String(newId).padStart(3, '0')}`,
         bidang_pembuat: data.bidang_pembuat || 'Bidang Terkait',
         kode_usulan_bidang: data.kode_usulan_bidang || data.kode_klasifikasi || '000',
         kode_klasifikasi: data.kode_klasifikasi || '000',

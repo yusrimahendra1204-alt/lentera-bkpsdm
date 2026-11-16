@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -10,6 +11,8 @@ const STATE_FILE = path.join(DATA_DIR, 'current_state.json');
 const INITIAL_FILE = path.join(DATA_DIR, 'initial_state.json');
 const KLASIFIKASI_FILE = path.join(DATA_DIR, 'klasifikasi_perbup.json');
 const SQL_FILE = path.join(__dirname, 'database_persuratan.sql');
+const CURRENT_YEAR = new Date().getFullYear();
+const AUTH_SECRET = process.env.AUTH_SECRET || crypto.createHash('sha256').update(`${process.env.DB_NAME || 'persuratan'}:${process.env.DB_PASSWORD || 'local'}`).digest('hex');
 
 const { generateSqlFile } = require('./scripts/generate_sql');
 
@@ -103,13 +106,45 @@ function parseBody(req) {
 
 // Helper: JSON response
 function sendJSON(res, data, status = 200) {
-  res.writeHead(status, {
+  const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type'
-  });
+  };
+  const cookie = res.getHeader('Set-Cookie');
+  if (cookie) headers['Set-Cookie'] = cookie;
+  res.writeHead(status, headers);
   res.end(JSON.stringify(data));
+}
+
+function publicUser(user) {
+  if (!user) return user;
+  const safe = { ...user };
+  delete safe.password;
+  return safe;
+}
+
+function createSession(user) {
+  const payload = Buffer.from(JSON.stringify({ id: user.id, role: user.role, exp: Date.now() + 8 * 60 * 60 * 1000 })).toString('base64url');
+  const signature = crypto.createHmac('sha256', AUTH_SECRET).update(payload).digest('base64url');
+  return `${payload}.${signature}`;
+}
+
+function getSessionUser(req) {
+  const raw = String(req.headers.cookie || '').split(';').map(v => v.trim()).find(v => v.startsWith('lentera_session='))?.slice(16);
+  if (!raw) return null;
+  const [payload, signature] = raw.split('.');
+  if (!payload || !signature) return null;
+  const expected = crypto.createHmac('sha256', AUTH_SECRET).update(payload).digest('base64url');
+  if (signature.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return null;
+  try { const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')); return data.exp > Date.now() ? data : null; }
+  catch { return null; }
+}
+
+function setSessionCookie(res, user) {
+  const secure = process.env.VERCEL === '1' ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `lentera_session=${createSession(user)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=28800${secure}`);
 }
 
 function searchKlasifikasi(query, kategori = '', limit = 25) {
@@ -188,6 +223,18 @@ const server = http.createServer(async (req, res) => {
   // API ROUTES
   if (pathname.startsWith('/api/')) {
     try {
+      if (method !== 'GET' && pathname !== '/api/login') {
+        const session = getSessionUser(req);
+        if (!session) return sendJSON(res, { success: false, message: 'Sesi login diperlukan' }, 401);
+        req.authUser = session;
+        const adminOnly = pathname === '/api/reset' || pathname === '/api/clear-dummy' || pathname.includes('/database/') || pathname === '/api/pegawai' || pathname.startsWith('/api/pegawai/');
+        if (adminOnly && session.role !== 'admin') return sendJSON(res, { success: false, message: 'Akses khusus administrator' }, 403);
+      }
+
+      if (pathname === '/api/logout' && method === 'POST') {
+        res.setHeader('Set-Cookie', 'lentera_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
+        return sendJSON(res, { success: true });
+      }
       // 1. Search classifications
       if (pathname === '/api/klasifikasi' && method === 'GET') {
         const q = parsedUrl.query.q || '';
@@ -199,7 +246,10 @@ const server = http.createServer(async (req, res) => {
 
       // 2. Get full state
       if (pathname === '/api/state' && method === 'GET') {
-        return sendJSON(res, { success: true, data: appState });
+        return sendJSON(res, { success: true, data: {
+          ...appState,
+          pegawai: (appState.pegawai || []).map(publicUser)
+        }});
       }
 
       // 3. Reset state to default
@@ -232,6 +282,10 @@ const server = http.createServer(async (req, res) => {
         const nip = (body.nip || '').trim();
         const password = (body.password || '').trim();
 
+        if (!nip || !password) {
+          return sendJSON(res, { success: false, message: 'NIP / username dan kata sandi wajib diisi' }, 400);
+        }
+
         const user = appState.pegawai.find(p => 
           p.nip === nip || 
           (p.username && p.username.toLowerCase() === nip.toLowerCase()) ||
@@ -246,14 +300,15 @@ const server = http.createServer(async (req, res) => {
         // Check password (accept user's password, 123, 123456, admin, admin123)
         const validPassword = user.password || '123456';
         const allowedPasswords = [validPassword, '123', '123456', 'admin', 'admin123'];
-        if (password && !allowedPasswords.includes(password)) {
+        if (!allowedPasswords.includes(password)) {
           return sendJSON(res, { success: false, message: 'Kata sandi / Password salah' }, 401);
         }
 
+        setSessionCookie(res, user);
         return sendJSON(res, {
           success: true,
           message: `Selamat datang, ${user.nama}`,
-          user: user
+          user: publicUser(user)
         });
       }
 
@@ -267,7 +322,7 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { 
             success: true, 
             message: `Berhasil memuat ${masterList.length} master pegawai resmi BKPSDM`, 
-            data: masterList 
+            data: masterList.map(publicUser)
           });
         }
         return sendJSON(res, { success: false, message: 'File master pegawai tidak ditemukan' }, 404);
@@ -300,7 +355,7 @@ const server = http.createServer(async (req, res) => {
 
         appState.pegawai.push(newPegawai);
         saveState();
-        return sendJSON(res, { success: true, message: 'Data pegawai berhasil ditambahkan', data: newPegawai });
+        return sendJSON(res, { success: true, message: 'Data pegawai berhasil ditambahkan', data: publicUser(newPegawai) });
       }
 
       // 3.3 Update Pegawai
@@ -322,7 +377,7 @@ const server = http.createServer(async (req, res) => {
         if (body.password) peg.password = body.password.trim();
 
         saveState();
-        return sendJSON(res, { success: true, message: 'Data pegawai berhasil diperbarui', data: peg });
+        return sendJSON(res, { success: true, message: 'Data pegawai berhasil diperbarui', data: publicUser(peg) });
       }
 
       // 3.4 Delete Pegawai
@@ -347,7 +402,7 @@ const server = http.createServer(async (req, res) => {
       if (pathname === '/api/surat-masuk' && method === 'POST') {
         const body = await parseBody(req);
         const newId = (appState.surat_masuk.length ? Math.max(...appState.surat_masuk.map(s => s.id)) : 0) + 1;
-        const noAgenda = `SM-2026-${String(newId).padStart(3, '0')}`;
+        const noAgenda = `SM-${CURRENT_YEAR}-${String(newId).padStart(3, '0')}`;
 
         const newSurat = {
           id: newId,
@@ -411,6 +466,13 @@ const server = http.createServer(async (req, res) => {
       // 5. Create Disposisi Plt. Kepala BKPSDM
       if (pathname === '/api/disposisi' && method === 'POST') {
         const body = await parseBody(req);
+        const suratMasukId = parseInt(body.id_surat_masuk, 10);
+        const instruksi = Array.isArray(body.instruksi) ? body.instruksi.filter(Boolean) : (body.instruksi ? [body.instruksi] : []);
+        const tujuan = Array.isArray(body.diteruskan_kepada) ? body.diteruskan_kepada.filter(Boolean) : (body.diteruskan_kepada ? [body.diteruskan_kepada] : []);
+        if (!Number.isInteger(suratMasukId)) return sendJSON(res, { success: false, message: 'Surat masuk wajib dipilih' }, 400);
+        if (!appState.surat_masuk.some(s => s.id === suratMasukId)) return sendJSON(res, { success: false, message: 'Surat masuk tidak ditemukan' }, 404);
+        if (!tujuan.length) return sendJSON(res, { success: false, message: 'Tujuan disposisi wajib diisi' }, 400);
+        if (!instruksi.length) return sendJSON(res, { success: false, message: 'Instruksi disposisi wajib diisi' }, 400);
         const newId = (appState.disposisi.length ? Math.max(...appState.disposisi.map(d => d.id)) : 0) + 1;
 
         const diteruskanList = Array.isArray(body.diteruskan_kepada) 
@@ -419,16 +481,16 @@ const server = http.createServer(async (req, res) => {
 
         const newDisposisi = {
           id: newId,
-          id_surat_masuk: parseInt(body.id_surat_masuk, 10),
+          id_surat_masuk: suratMasukId,
           dari_user: body.dari_user || 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
           diteruskan_kepada: diteruskanList,
           tujuan_user_id: body.tujuan_user_id ? parseInt(body.tujuan_user_id, 10) : null,
           tujuan_nama: body.tujuan_nama || diteruskanList.join(', '),
           sifat: body.sifat || 'B. Segera',
-          instruksi: Array.isArray(body.instruksi) ? body.instruksi : (body.instruksi ? [body.instruksi] : []),
+          instruksi,
           catatan: body.catatan || '',
           batas_waktu: body.batas_waktu || '',
-          status_tindak_lanjut: 'Diproses',
+          status_tindak_lanjut: ['Diproses', 'Selesai', 'Ditangguhkan'].includes(body.status_tindak_lanjut) ? body.status_tindak_lanjut : 'Diproses',
           created_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
           tindak_lanjut_note: ''
         };
@@ -462,13 +524,23 @@ const server = http.createServer(async (req, res) => {
         if (body.sifat) disp.sifat = body.sifat;
         if (body.instruksi) disp.instruksi = Array.isArray(body.instruksi) ? body.instruksi : [body.instruksi];
         if (body.catatan !== undefined) disp.catatan = body.catatan;
-        if (body.status_tindak_lanjut) disp.status_tindak_lanjut = body.status_tindak_lanjut;
+        if (body.status_tindak_lanjut !== undefined) {
+          if (!['Diproses', 'Selesai', 'Ditangguhkan'].includes(body.status_tindak_lanjut)) {
+            return sendJSON(res, { success: false, message: 'Status tindak lanjut tidak valid' }, 400);
+          }
+          disp.status_tindak_lanjut = body.status_tindak_lanjut;
+        }
         if (body.tindak_lanjut_note) disp.tindak_lanjut_note = body.tindak_lanjut_note;
+        if (body.tindak_lanjut_note === '') disp.tindak_lanjut_note = '';
+        if (body.batas_waktu !== undefined) disp.batas_waktu = body.batas_waktu || '';
 
         // If completed, check if surat masuk can be marked Selesai
         if (disp.status_tindak_lanjut === 'Selesai') {
           const sm = appState.surat_masuk.find(s => s.id === disp.id_surat_masuk);
           if (sm) sm.status_disposisi = 'Selesai';
+        } else if (disp.status_tindak_lanjut === 'Diproses' || disp.status_tindak_lanjut === 'Ditangguhkan') {
+          const sm = appState.surat_masuk.find(s => s.id === disp.id_surat_masuk);
+          if (sm) sm.status_disposisi = 'Didisposisi';
         }
 
         saveState();
@@ -499,7 +571,7 @@ const server = http.createServer(async (req, res) => {
       if (pathname === '/api/surat-keluar' && method === 'POST') {
         const body = await parseBody(req);
         const newId = (appState.surat_keluar.length ? Math.max(...appState.surat_keluar.map(s => s.id)) : 0) + 1;
-        const noAgenda = `SK-2026-${String(newId).padStart(3, '0')}`;
+        const noAgenda = `SK-${CURRENT_YEAR}-${String(newId).padStart(3, '0')}`;
         const kode = body.kode_klasifikasi || '000';
         const kodeUsulan = body.kode_usulan_bidang ? body.kode_usulan_bidang.trim() : kode;
         const statusKomparasi = body.status_komparasi_kode || (kodeUsulan !== kode ? 'Dikoreksi Sistem' : 'Sesuai Standar');
@@ -604,7 +676,7 @@ const server = http.createServer(async (req, res) => {
           tgl_berangkat: body.tgl_berangkat || new Date().toISOString().split('T')[0],
           tgl_kembali: body.tgl_kembali || new Date().toISOString().split('T')[0],
           lama_hari: parseInt(body.lama_hari || '1', 10),
-          pembebanan_anggaran: body.pembebanan_anggaran || 'DPA-SKPD BKPSDM Kabupaten Luwu Timur TA 2026',
+          pembebanan_anggaran: body.pembebanan_anggaran || `DPA-SKPD BKPSDM Kabupaten Luwu Timur TA ${CURRENT_YEAR}`,
           pejabat_penandatangan: body.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
           jabatan_penandatangan: body.jabatan_penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur',
           status_naskah_fisik: 'Naskah fisik disusun & dicetak manual oleh bidang (Tanda tangan basah manual)',
@@ -781,7 +853,8 @@ const server = http.createServer(async (req, res) => {
   const filePath = path.join(PUBLIC_DIR, safePath);
 
   // Security check: ensure path is within PUBLIC_DIR
-  if (!filePath.startsWith(PUBLIC_DIR)) {
+  const publicRoot = path.resolve(PUBLIC_DIR) + path.sep;
+  if (path.resolve(filePath) !== path.resolve(PUBLIC_DIR) && !path.resolve(filePath).startsWith(publicRoot)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     return res.end('Access Denied');
   }

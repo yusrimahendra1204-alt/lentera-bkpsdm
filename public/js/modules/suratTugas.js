@@ -36,20 +36,20 @@ const SuratTugasModule = {
           <div class="card-title-group">
             <div style="display:flex; align-items:center; gap:8px;">
               <span class="code-tag code-tag-internal">Kode Klasifikasi: 800.1.11.1</span>
-              <span style="font-size:12px; color:#166534; font-weight:700;">Buku Agenda Surat Perintah Tugas</span>
+              <span style="font-size:12px; color:#166534; font-weight:700;">Buku Agenda Surat Tugas</span>
               ${!isAuth ? `
                 <span class="badge badge-info" style="font-size:11px; padding:3px 8px; font-weight:700;">
                   🔒 Mode Baca Terbuka Staf Kantor (Read-Only)
                 </span>
               ` : ''}
             </div>
-            <h2 style="margin-top:4px;">Buku Agenda & Pencatatan Surat Perintah Tugas (SPT)</h2>
-            <p>Pencatatan data agenda perjalanan dinas & penerbitan nomor SPT resmi terpusat. Naskah fisik surat tugas disusun & dicetak mandiri oleh bidang pembuat penugasan.</p>
+            <h2 style="margin-top:4px;">Buku Agenda & Pencatatan Surat Tugas</h2>
+            <p>Pencatatan data agenda perjalanan dinas & penerbitan nomor surat tugas resmi terpusat. Naskah fisik surat tugas disusun & dicetak mandiri oleh bidang pembuat penugasan.</p>
           </div>
           ${isAuth ? `
             <button class="btn btn-primary" onclick="SuratTugasModule.openCreateModal()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              + Catat & Ambil Nomor SPT
+              + Catat & Ambil Nomor Surat Tugas
             </button>
           ` : `
             <button class="btn btn-outline" style="border-color:#0284c7; color:#0284c7; font-weight:700;" onclick="App.checkAuthState()">
@@ -61,7 +61,7 @@ const SuratTugasModule = {
         <!-- Papan Pemantauan Nomor SPT (Anti Nomor Ganda & Estimasi Urut) -->
         <div style="margin: 0 24px 16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
           <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:4px solid #0284c7; border-radius:8px; padding:12px 14px;">
-            <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor SPT Terakhir Terbit di Agenda:</div>
+            <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor Surat Tugas Terakhir Terbit di Agenda:</div>
             <div style="font-family:monospace; font-weight:800; font-size:15px; color:#0369a1; margin-top:3px;">
               ${lastItem ? lastItem.no_surat_tugas : '-'}
             </div>
@@ -84,8 +84,8 @@ const SuratTugasModule = {
         <div style="margin: 0 24px 16px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 16px; display:flex; align-items:flex-start; gap:12px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
           <div style="font-size:12.5px; color:#1e40af; line-height:1.45;">
-            <strong>Ketentuan Alur Tata Kelola SPT di BKPSDM:</strong><br>
-            Surat Perintah Tugas (SPT) disusun dan dicetak naskah fisiknya oleh masing-masing <strong>Bidang Pembuat</strong> untuk diteken basah oleh Kepala BKPSDM. Sistem persuratan ini di Subbagian Umum bertugas <strong>hanya mencatat agenda dan mengunci nomor urut resmi (digital numbering)</strong> agar tidak terjadi nomor ganda. Sistem tidak mencetak naskah fisik SPT.
+            <strong>Ketentuan Alur Tata Kelola Surat Tugas di BKPSDM:</strong><br>
+            Surat tugas disusun dan dicetak naskah fisiknya oleh masing-masing <strong>Bidang Pembuat</strong> untuk diteken basah oleh Kepala BKPSDM. Sistem persuratan ini di Subbagian Umum bertugas <strong>hanya mencatat agenda dan mengunci nomor urut resmi (digital numbering)</strong> agar tidak terjadi nomor ganda. Sistem tidak mencetak naskah fisik surat tugas.
           </div>
         </div>
 
@@ -94,7 +94,7 @@ const SuratTugasModule = {
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width:190px;">Nomor SPT Resmi</th>
+                  <th style="width:190px;">Nomor Surat Tugas Resmi</th>
                   <th style="width:180px;">Bidang Pembuat / Pengusul</th>
                   <th>Maksud Tugas Kedinasan</th>
                   <th>Tujuan & Jadwal</th>
@@ -110,10 +110,10 @@ const SuratTugasModule = {
         </div>
         <div class="card-footer">
           <span style="font-size:12.5px; color:var(--text-muted);">
-            Menampilkan <strong>${list.length}</strong> catatan agenda Surat Perintah Tugas terdaftar
+            Menampilkan <strong>${list.length}</strong> catatan agenda surat tugas terdaftar
           </span>
           <button class="btn btn-outline btn-sm" onclick="App.navigate('laporan')">
-            Cetak Rekap Agenda SPT
+            Cetak Rekap Agenda Surat Tugas
           </button>
         </div>
       </div>
@@ -172,17 +172,17 @@ const SuratTugasModule = {
         </td>
         <td style="text-align:right;">
           <div style="display:inline-flex; gap:4px; flex-wrap:wrap; justify-content:flex-end;">
-            <button class="btn btn-outline btn-sm" onclick="SuratTugasModule.viewDetailAgendaSPT(${spt.id})" title="Lihat Rincian Agenda">
+        <button class="btn btn-outline btn-sm" onclick="SuratTugasModule.viewDetailAgendaSPT(${spt.id})" title="Lihat Rincian Agenda Surat Tugas">
               Detail
             </button>
-            <button class="btn btn-sm" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;" onclick="SuratTugasModule.copyNoSpt('${spt.no_surat_tugas}')" title="Salin Nomor SPT">
+              <button class="btn btn-sm" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;" onclick="SuratTugasModule.copyNoSpt('${spt.no_surat_tugas}')" title="Salin Nomor Surat Tugas">
               📋 Salin No
             </button>
             ${Store.state.isLoggedIn ? `
-              <button class="btn btn-outline btn-sm" style="color:#0284c7; border-color:#bae6fd;" onclick="SuratTugasModule.openEditModal(${spt.id})" title="Ubah Data SPT">
+              <button class="btn btn-outline btn-sm" style="color:#0284c7; border-color:#bae6fd;" onclick="SuratTugasModule.openEditModal(${spt.id})" title="Ubah Data Surat Tugas">
                 Ubah
               </button>
-              <button class="btn btn-outline btn-sm" style="color:#dc2626; border-color:#fecaca;" onclick="SuratTugasModule.confirmDelete(${spt.id})" title="Hapus SPT">
+              <button class="btn btn-outline btn-sm" style="color:#dc2626; border-color:#fecaca;" onclick="SuratTugasModule.confirmDelete(${spt.id})" title="Hapus Surat Tugas">
                 Hapus
               </button>
             ` : ''}
@@ -206,13 +206,13 @@ const SuratTugasModule = {
     const nextUrut = this.getNextUrutNumber(allSPT);
     const defaultNoSpt = `800.1.11.1/${String(nextUrut).padStart(3, '0')}/BKPSDM/${monthRomawi}/${year}`;
 
-    title.innerText = 'Pencatatan & Pengambilan Nomor Surat Perintah Tugas (SPT)';
+    title.innerText = 'Pencatatan & Pengambilan Nomor Surat Tugas';
     body.innerHTML = `
       <form id="form-surat-tugas">
         <!-- Informasi Nomor SPT Terakhir & Urutan Real-time -->
         <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <div>
-            <div style="font-size:10.5px; text-transform:uppercase; color:#166534; font-weight:700;">Nomor SPT Terakhir Terdaftar di Agenda:</div>
+            <div style="font-size:10.5px; text-transform:uppercase; color:#166534; font-weight:700;">Nomor Surat Tugas Terakhir Terdaftar di Agenda:</div>
             <div style="font-family:monospace; font-weight:800; font-size:13.5px; color:#15803d; margin-top:2px;">
               ${lastItem ? lastItem.no_surat_tugas : '-'}
             </div>
@@ -231,22 +231,22 @@ const SuratTugasModule = {
               ⚡ Kode Klasifikasi Perbup Luwu Timur: 800.1.11.1
             </span>
             <span style="font-size:11px; background:#dcfce7; color:#15803d; font-weight:700; padding:2px 8px; border-radius:10px;">
-              Surat Perintah Tugas Kedinasan
+              Surat Tugas Kedinasan
             </span>
           </div>
           <div style="font-size:11.5px; color:#166534; margin-top:4px; line-height:1.4;">
-            Sistem mengunci Nomor SPT resmi terpusat untuk dicatat pada buku agenda. Naskah fisik SPT tetap disusun dan dicetak mandiri oleh bidang pengusul tugas.
+            Sistem mengunci nomor surat tugas resmi terpusat untuk dicatat pada buku agenda. Naskah fisik surat tugas tetap disusun dan dicetak mandiri oleh bidang pengusul tugas.
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Nomor SPT Resmi (Dikunci Otomatis oleh Sistem) <span class="required">*</span></label>
+            <label class="form-label">Nomor Surat Tugas Resmi (Dikunci Otomatis oleh Sistem) <span class="required">*</span></label>
             <input type="text" id="spt-nomor" class="form-control" style="font-family:monospace; font-weight:800; color:var(--primary);" value="${defaultNoSpt}" required>
             <span class="form-hint">Format otomatis: 800.1.11.1 / [No Urut] / BKPSDM / [Bulan] / [Tahun]</span>
           </div>
           <div class="form-group">
-            <label class="form-label">Bidang / Unit Kerja Pembuat SPT <span class="required">*</span></label>
+            <label class="form-label">Bidang / Unit Kerja Pembuat Surat Tugas <span class="required">*</span></label>
             <select id="spt-bidang" class="form-control" required>
               <option value="Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian" selected>Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian</option>
               <option value="Bidang Mutasi, Kepangkatan dan Pengembangan Karir">Bidang Mutasi, Kepangkatan dan Pengembangan Karir</option>
@@ -254,7 +254,7 @@ const SuratTugasModule = {
               <option value="Sekretariat / Subbagian Umum dan Kepegawaian">Sekretariat / Subbagian Umum dan Kepegawaian</option>
               <option value="Subbagian Perencanaan dan Keuangan">Subbagian Perencanaan dan Keuangan</option>
             </select>
-            <span class="form-hint">Bidang yang menyusun & mencetak naskah fisik SPT</span>
+              <span class="form-hint">Bidang yang menyusun & mencetak naskah fisik surat tugas</span>
           </div>
         </div>
 
@@ -308,7 +308,7 @@ const SuratTugasModule = {
       <button class="btn btn-outline" onclick="App.closeModal()">Batal</button>
       <button class="btn btn-primary" onclick="SuratTugasModule.submitCreate()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        Simpan & Terbitkan Nomor SPT
+        Simpan & Terbitkan Nomor Surat Tugas
       </button>
     `;
 
@@ -436,7 +436,7 @@ const SuratTugasModule = {
 
     if (created) {
       App.closeModal();
-      App.showToast(`Nomor SPT berhasil diterbitkan & dicatat: ${created.no_surat_tugas}`, 'success');
+      App.showToast(`Nomor surat tugas berhasil diterbitkan & dicatat: ${created.no_surat_tugas}`, 'success');
       this.render();
       DashboardModule.render();
     }
@@ -452,14 +452,14 @@ const SuratTugasModule = {
     const body = document.getElementById('modal-body');
     const footer = document.getElementById('modal-footer');
 
-    title.innerText = 'Kartu Kendali Agenda Surat Perintah Tugas (SPT)';
+    title.innerText = 'Kartu Kendali Agenda Surat Tugas';
     body.innerHTML = `
       <div style="font-size:13px; line-height:1.5;">
         <!-- Status Banner -->
         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor SPT Resmi Terdaftar:</div>
+              <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor Surat Tugas Resmi Terdaftar:</div>
               <div style="font-family:monospace; font-size:18px; font-weight:800; color:var(--primary); margin-top:2px;">
                 ${spt.no_surat_tugas}
               </div>
@@ -483,7 +483,7 @@ const SuratTugasModule = {
         <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px;">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:12px;">
             <div>
-              <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Bidang / Unit Kerja Pembuat SPT:</div>
+              <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Bidang / Unit Kerja Pembuat Surat Tugas:</div>
               <div style="font-weight:700; color:#0f172a; margin-top:3px;">
                 ${spt.bidang_pengusul || 'Subbagian Umum dan Kepegawaian'}
               </div>
@@ -554,7 +554,7 @@ const SuratTugasModule = {
               `).join('') : `
                 <tr>
                   <td colspan="4" style="text-align:center; padding:16px; color:#64748b; font-style:italic;">
-                    Daftar nama pegawai yang ditugaskan dicantumkan langsung pada naskah fisik SPT manual oleh bidang pengusul.
+                    Daftar nama pegawai yang ditugaskan dicantumkan langsung pada naskah fisik surat tugas manual oleh bidang pengusul.
                   </td>
                 </tr>
               `}
@@ -563,7 +563,7 @@ const SuratTugasModule = {
         </div>
 
         <div style="margin-top:16px; background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:10px 14px; font-size:11.5px; color:#92400e;">
-          💡 <strong>Catatan Agendaris:</strong> Naskah cetak fisik SPT dibuat dan dicetak secara manual oleh bidang pengusul. Bagian Umum hanya memvalidasi agenda ini dan mengunci nomor urut agar tidak bentrok.
+          💡 <strong>Catatan Agendaris:</strong> Naskah cetak fisik surat tugas dibuat dan dicetak secara manual oleh bidang pengusul. Bagian Umum hanya memvalidasi agenda ini dan mengunci nomor urut agar tidak bentrok.
         </div>
       </div>
     `;
@@ -571,7 +571,7 @@ const SuratTugasModule = {
     footer.innerHTML = `
       <button class="btn btn-outline" onclick="App.closeModal()">Tutup</button>
       <button class="btn btn-primary" onclick="SuratTugasModule.copyNoSpt('${spt.no_surat_tugas}')">
-        Salin Nomor SPT
+        Salin Nomor Surat Tugas
       </button>
     `;
 
@@ -580,7 +580,7 @@ const SuratTugasModule = {
 
   copyNoSpt(noSpt) {
     navigator.clipboard.writeText(noSpt).then(() => {
-      App.showToast(`Nomor SPT ${noSpt} berhasil disalin`, 'success');
+      App.showToast(`Nomor surat tugas ${noSpt} berhasil disalin`, 'success');
     }).catch(() => {
       App.showToast(`Nomor: ${noSpt}`, 'info');
     });
@@ -599,18 +599,18 @@ const SuratTugasModule = {
     const body = document.getElementById('modal-body');
     const footer = document.getElementById('modal-footer');
 
-    title.innerText = `Ubah Data Surat Perintah Tugas: ${spt.no_surat_tugas}`;
+    title.innerText = `Ubah Data Surat Tugas: ${spt.no_surat_tugas}`;
     body.innerHTML = `
       <form id="form-edit-spt">
         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px;">
-          <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor SPT Resmi Terkunci:</div>
+          <div style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700;">Nomor Surat Tugas Resmi Terkunci:</div>
           <div style="font-family:monospace; font-size:16px; font-weight:800; color:var(--primary); margin-top:2px;">
             ${spt.no_surat_tugas}
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Bidang / Unit Kerja Pembuat SPT <span class="required">*</span></label>
+          <label class="form-label">Bidang / Unit Kerja Pembuat Surat Tugas <span class="required">*</span></label>
           <select id="edit-spt-bidang" class="form-control" required>
             <option value="Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian" ${spt.bidang_pengusul && (spt.bidang_pengusul.includes('Pengadaan') || spt.bidang_pengusul.includes('PPK')) ? 'selected' : ''}>Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian</option>
             <option value="Bidang Mutasi, Kepangkatan dan Pengembangan Karir" ${spt.bidang_pengusul && spt.bidang_pengusul.includes('Mutasi') ? 'selected' : ''}>Bidang Mutasi, Kepangkatan dan Pengembangan Karir</option>
@@ -727,7 +727,7 @@ const SuratTugasModule = {
 
     if (updated) {
       App.closeModal();
-      App.showToast('Data SPT berhasil diperbarui', 'success');
+      App.showToast('Data surat tugas berhasil diperbarui', 'success');
       this.render();
       DashboardModule.render();
     }
@@ -737,10 +737,10 @@ const SuratTugasModule = {
     const spt = Store.state.surat_tugas.find(s => s.id === id);
     if (!spt) return;
 
-    if (confirm(`Yakin ingin menghapus Surat Perintah Tugas ${spt.no_surat_tugas}?`)) {
+    if (confirm(`Yakin ingin menghapus surat tugas ${spt.no_surat_tugas}?`)) {
       const ok = await Store.deleteSuratTugas(id);
       if (ok) {
-        App.showToast(`SPT ${spt.no_surat_tugas} berhasil dihapus`, 'success');
+        App.showToast(`Surat tugas ${spt.no_surat_tugas} berhasil dihapus`, 'success');
         this.render();
         DashboardModule.render();
       }
@@ -749,7 +749,7 @@ const SuratTugasModule = {
 
   copyNoSpt(text) {
     navigator.clipboard.writeText(text).then(() => {
-      App.showToast(`Nomor SPT ${text} berhasil disalin ke clipboard!`, 'success');
+      App.showToast(`Nomor surat tugas ${text} berhasil disalin ke clipboard!`, 'success');
     }).catch(() => {
       App.showToast(`Nomor: ${text}`, 'info');
     });

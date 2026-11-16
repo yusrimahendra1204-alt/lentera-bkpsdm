@@ -9,12 +9,14 @@ const http   = require('http');
 const fs     = require('fs');
 const path   = require('path');
 const url    = require('url');
+const crypto = require('crypto');
 const db     = require('./config/database');
 
 const PORT       = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const DATA_DIR   = path.join(__dirname, 'data');
 const KLASIFIKASI_FILE = path.join(DATA_DIR, 'klasifikasi_perbup.json');
+const AUTH_SECRET = process.env.AUTH_SECRET || crypto.createHash('sha256').update(`${process.env.DB_NAME || 'persuratan'}:${process.env.DB_PASSWORD || 'local'}`).digest('hex');
 
 // Klasifikasi tetap di-load dari JSON (2.961 kode, read-only, tidak perlu DB)
 let classifications = [];
@@ -61,13 +63,56 @@ function parseBody(req) {
 }
 
 function sendJSON(res, data, status = 200) {
-  res.writeHead(status, {
+  const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type'
-  });
+  };
+  const cookie = res.getHeader('Set-Cookie');
+  if (cookie) headers['Set-Cookie'] = cookie;
+  res.writeHead(status, headers);
   res.end(JSON.stringify(data));
+}
+
+function publicUser(user) {
+  if (!user) return user;
+  const safe = { ...user };
+  delete safe.password;
+  return safe;
+}
+
+function createSession(user) {
+  const payload = Buffer.from(JSON.stringify({ id: user.id, role: user.role, exp: Date.now() + 8 * 60 * 60 * 1000 })).toString('base64url');
+  const signature = crypto.createHmac('sha256', AUTH_SECRET).update(payload).digest('base64url');
+  return `${payload}.${signature}`;
+}
+
+function getSessionUser(req) {
+  const raw = String(req.headers.cookie || '').split(';').map(v => v.trim()).find(v => v.startsWith('lentera_session='))?.slice(16);
+  if (!raw) return null;
+  const [payload, signature] = raw.split('.');
+  if (!payload || !signature) return null;
+  const expected = crypto.createHmac('sha256', AUTH_SECRET).update(payload).digest('base64url');
+  if (signature.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return null;
+  try { const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')); return data.exp > Date.now() ? data : null; }
+  catch { return null; }
+}
+
+function setSessionCookie(res, user) {
+  const secure = process.env.VERCEL === '1' ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `lentera_session=${createSession(user)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=28800${secure}`);
+}
+
+const DISPOSISI_SIFAT = ['A. Sangat Segera', 'B. Segera', 'C. Rahasia', 'Biasa', 'Segera', 'Sangat Segera'];
+const DISPOSISI_STATUS = ['Diproses', 'Selesai', 'Ditangguhkan'];
+
+function normalizeDisposisiSifat(value) {
+  const sifat = String(value || '').trim();
+  if (sifat === 'A. Sangat Segera') return 'Sangat Segera';
+  if (sifat === 'B. Segera') return 'Segera';
+  if (sifat === 'C. Rahasia') return 'Biasa';
+  return sifat;
 }
 
 function searchKlasifikasi(query, kategori = '', limit = 25) {
@@ -145,13 +190,15 @@ async function buildAppState() {
       if (!Array.isArray(st.personil)) st.personil = [];
     });
 
-    return { pegawai, surat_masuk: suratMasuk, disposisi, surat_keluar: suratKeluar, surat_tugas: suratTugas };
+    return { pegawai: pegawai.map(publicUser), surat_masuk: suratMasuk, disposisi, surat_keluar: suratKeluar, surat_tugas: suratTugas };
   } catch (err) {
     console.warn('[MySQL FAIL] Gagal memuat dari MySQL, fallback ke current_state.json:', err.message);
     const STATE_FILE = path.join(DATA_DIR, 'current_state.json');
     if (fs.existsSync(STATE_FILE)) {
       try {
-        return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+        const fallbackState = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+        fallbackState.pegawai = (fallbackState.pegawai || []).map(publicUser);
+        return fallbackState;
       } catch (parseErr) {
         console.error('[STATE ERROR] Gagal parse JSON:', parseErr.message);
       }
@@ -179,6 +226,18 @@ const server = http.createServer(async (req, res) => {
 
   if (pathname.startsWith('/api/')) {
     try {
+      if (method !== 'GET' && pathname !== '/api/login') {
+        const session = getSessionUser(req);
+        if (!session) return sendJSON(res, { success: false, message: 'Sesi login diperlukan' }, 401);
+        req.authUser = session;
+        const adminOnly = pathname === '/api/reset' || pathname === '/api/clear-dummy' || pathname.includes('/database/') || pathname === '/api/pegawai' || pathname.startsWith('/api/pegawai/');
+        if (adminOnly && session.role !== 'admin') return sendJSON(res, { success: false, message: 'Akses khusus administrator' }, 403);
+      }
+
+      if (pathname === '/api/logout' && method === 'POST') {
+        res.setHeader('Set-Cookie', 'lentera_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
+        return sendJSON(res, { success: true });
+      }
 
       // ---- KLASIFIKASI ----
       if (pathname === '/api/klasifikasi' && method === 'GET') {
@@ -213,11 +272,13 @@ const server = http.createServer(async (req, res) => {
         const body = await parseBody(req);
         const nip  = (body.nip || '').trim();
         const pass = (body.password || '').trim();
+        if (!nip || !pass)
+          return sendJSON(res, { success: false, message: 'NIP / username dan kata sandi wajib diisi' }, 400);
         let user = null;
         try {
           user = await db.queryOne(
-            'SELECT * FROM pegawai WHERE (nip = ? OR username = ? OR (role = "admin" AND LOWER(?) = "admin") OR LOWER(nama) LIKE ?) AND (aktif = 1 OR aktif IS NULL) LIMIT 1',
-            [nip, nip, nip, `%${nip.toLowerCase()}%`]
+            'SELECT * FROM pegawai WHERE (nip = ? OR (role = "admin" AND LOWER(?) = "admin") OR LOWER(nama) LIKE ?) AND (aktif = 1 OR aktif IS NULL) LIMIT 1',
+            [nip, nip, `%${nip.toLowerCase()}%`]
           );
         } catch (dbErr) {
           console.warn('[LOGIN FAIL] Gagal query MySQL, fallback ke master_pegawai_bkpsdm_final.json:', dbErr.message);
@@ -236,9 +297,10 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'NIP / Nama pengguna tidak terdaftar di BKPSDM' }, 401);
         const validPass = user.password || '123456';
         const allowedPass = [validPass, '123', '123456', 'admin', 'admin123'];
-        if (pass && !allowedPass.includes(pass))
+        if (!allowedPass.includes(pass))
           return sendJSON(res, { success: false, message: 'Kata sandi / Password salah' }, 401);
-        return sendJSON(res, { success: true, message: `Selamat datang, ${user.nama}`, user });
+        setSessionCookie(res, user);
+        return sendJSON(res, { success: true, message: `Selamat datang, ${user.nama}`, user: publicUser(user) });
       }
 
       // ---- PEGAWAI: Load Master ----
@@ -256,7 +318,7 @@ const server = http.createServer(async (req, res) => {
             }
           }
           const allPegawai = await db.query('SELECT * FROM pegawai WHERE aktif = 1 ORDER BY id');
-          return sendJSON(res, { success: true, message: `Berhasil memuat master pegawai (${allPegawai.length} data)`, data: allPegawai });
+          return sendJSON(res, { success: true, message: `Berhasil memuat master pegawai (${allPegawai.length} data)`, data: allPegawai.map(publicUser) });
         }
         return sendJSON(res, { success: false, message: 'File master pegawai tidak ditemukan' }, 404);
       }
@@ -279,7 +341,7 @@ const server = http.createServer(async (req, res) => {
            body.password|| '123456']
         );
         const newPeg = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [result.insertId]);
-        return sendJSON(res, { success: true, message: 'Pegawai berhasil ditambahkan', data: newPeg });
+        return sendJSON(res, { success: true, message: 'Pegawai berhasil ditambahkan', data: publicUser(newPeg) });
       }
 
       // ---- PEGAWAI: Update ----
@@ -300,7 +362,7 @@ const server = http.createServer(async (req, res) => {
            id]
         );
         const updated = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [id]);
-        return sendJSON(res, { success: true, message: 'Data pegawai diperbarui', data: updated });
+        return sendJSON(res, { success: true, message: 'Data pegawai diperbarui', data: publicUser(updated) });
       }
 
       // ---- PEGAWAI: Delete ----
@@ -380,16 +442,29 @@ const server = http.createServer(async (req, res) => {
       if (pathname === '/api/disposisi' && method === 'POST') {
         const body      = await parseBody(req);
         const instruksi = Array.isArray(body.instruksi) ? body.instruksi : [body.instruksi].filter(Boolean);
+        const suratId = parseInt(body.id_surat_masuk, 10);
+        const sifatInput = String(body.sifat || '').trim();
+        const sifat = normalizeDisposisiSifat(sifatInput || 'Biasa');
+        if (!Number.isInteger(suratId))
+          return sendJSON(res, { success: false, message: 'Surat masuk wajib dipilih' }, 400);
+        if (!await db.queryOne('SELECT id FROM surat_masuk WHERE id = ?', [suratId]))
+          return sendJSON(res, { success: false, message: 'Surat masuk tidak ditemukan' }, 404);
+        if (!body.tujuan_nama || !String(body.tujuan_nama).trim())
+          return sendJSON(res, { success: false, message: 'Tujuan disposisi wajib diisi' }, 400);
+        if (!instruksi.length)
+          return sendJSON(res, { success: false, message: 'Instruksi disposisi wajib diisi' }, 400);
+        if (!DISPOSISI_SIFAT.includes(sifatInput) && !['Biasa', 'Segera', 'Sangat Segera'].includes(sifat))
+          return sendJSON(res, { success: false, message: 'Sifat disposisi tidak valid' }, 400);
         const [result]  = await db.getPool().execute(`
           INSERT INTO disposisi
             (id_surat_masuk,dari_user,tujuan_user_id,tujuan_nama,
              sifat,instruksi,catatan,batas_waktu,status_tindak_lanjut)
           VALUES (?,?,?,?,?,?,?,?,?)`,
-          [parseInt(body.id_surat_masuk, 10),
+          [suratId,
            body.dari_user      || 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
            body.tujuan_user_id ? parseInt(body.tujuan_user_id, 10) : null,
            body.tujuan_nama    || '',
-           body.sifat          || 'Biasa',
+           sifat,
            JSON.stringify(instruksi),
            body.catatan        || '',
            body.batas_waktu    || null,
@@ -398,7 +473,7 @@ const server = http.createServer(async (req, res) => {
         // Update status surat masuk
         await db.getPool().execute(
           "UPDATE surat_masuk SET status_disposisi = 'Didisposisi' WHERE id = ?",
-          [parseInt(body.id_surat_masuk, 10)]
+          [suratId]
         );
         const newDisp = await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [result.insertId]);
         if (newDisp && newDisp.instruksi) {
@@ -415,19 +490,29 @@ const server = http.createServer(async (req, res) => {
         if (!disp) return sendJSON(res, { success: false, message: 'Disposisi tidak ditemukan' }, 404);
         const newStatus = body.status_tindak_lanjut || disp.status_tindak_lanjut;
         const newTujuanNama = body.tujuan_nama !== undefined ? body.tujuan_nama : disp.tujuan_nama;
-        const newSifat = body.sifat !== undefined ? body.sifat : disp.sifat;
+        const newSifat = body.sifat !== undefined ? normalizeDisposisiSifat(body.sifat) : disp.sifat;
         const newCatatan = body.catatan !== undefined ? body.catatan : disp.catatan;
+        const newBatasWaktu = body.batas_waktu !== undefined ? (body.batas_waktu || null) : disp.batas_waktu;
+        if (!DISPOSISI_STATUS.includes(newStatus))
+          return sendJSON(res, { success: false, message: 'Status tindak lanjut tidak valid' }, 400);
+        if (!['Biasa', 'Segera', 'Sangat Segera'].includes(newSifat))
+          return sendJSON(res, { success: false, message: 'Sifat disposisi tidak valid' }, 400);
         const newInstruksi = body.instruksi !== undefined 
           ? (Array.isArray(body.instruksi) ? JSON.stringify(body.instruksi) : String(body.instruksi))
           : (typeof disp.instruksi === 'string' ? disp.instruksi : JSON.stringify(disp.instruksi || []));
 
         await db.getPool().execute(
-          'UPDATE disposisi SET status_tindak_lanjut=?, tindak_lanjut_note=?, tujuan_nama=?, sifat=?, instruksi=?, catatan=? WHERE id=?',
-          [newStatus, body.tindak_lanjut_note || disp.tindak_lanjut_note || '', newTujuanNama, newSifat, newInstruksi, newCatatan, id]
+          'UPDATE disposisi SET status_tindak_lanjut=?, tindak_lanjut_note=?, tujuan_nama=?, sifat=?, instruksi=?, catatan=?, batas_waktu=? WHERE id=?',
+          [newStatus, body.tindak_lanjut_note !== undefined ? body.tindak_lanjut_note : (disp.tindak_lanjut_note || ''), newTujuanNama, newSifat, newInstruksi, newCatatan, newBatasWaktu, id]
         );
         if (newStatus === 'Selesai') {
           await db.getPool().execute(
             "UPDATE surat_masuk SET status_disposisi='Selesai' WHERE id=?",
+            [disp.id_surat_masuk]
+          );
+        } else {
+          await db.getPool().execute(
+            "UPDATE surat_masuk SET status_disposisi='Didisposisi' WHERE id=?",
             [disp.id_surat_masuk]
           );
         }
@@ -704,7 +789,7 @@ const server = http.createServer(async (req, res) => {
         const spt = await db.queryOne('SELECT no_surat_tugas FROM surat_tugas WHERE id = ?', [id]);
         if (!spt) return sendJSON(res, { success: false, message: 'Surat tugas tidak ditemukan' }, 404);
         await db.getPool().execute('DELETE FROM surat_tugas WHERE id = ?', [id]);
-        return sendJSON(res, { success: true, message: `SPT ${spt.no_surat_tugas} berhasil dihapus` });
+        return sendJSON(res, { success: true, message: `Surat tugas ${spt.no_surat_tugas} berhasil dihapus` });
       }
 
       // ---- CHANGE PASSWORD ----
@@ -825,7 +910,8 @@ const server = http.createServer(async (req, res) => {
   let safePath = path.normalize(pathname).replace(/^(\.\.[\\/])+/, '');
   if (safePath === '/' || safePath === '/login') safePath = '/index.html';
   const filePath = path.join(PUBLIC_DIR, safePath);
-  if (!filePath.startsWith(PUBLIC_DIR)) {
+  const publicRoot = path.resolve(PUBLIC_DIR) + path.sep;
+  if (path.resolve(filePath) !== path.resolve(PUBLIC_DIR) && !path.resolve(filePath).startsWith(publicRoot)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     return res.end('Access Denied');
   }

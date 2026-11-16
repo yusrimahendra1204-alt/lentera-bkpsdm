@@ -34,7 +34,7 @@ const LaporanModule = {
             Buku Agenda Surat Keluar
           </button>
           <button class="btn btn-sm ${this.currentTab === 'surat-tugas' ? 'btn-primary' : 'btn-outline'}" onclick="LaporanModule.switchTab('surat-tugas')">
-            Rekap Surat Perintah Tugas (SPT)
+            Rekap Surat Tugas
           </button>
           <button class="btn btn-sm ${this.currentTab === 'disposisi' ? 'btn-primary' : 'btn-outline'}" onclick="LaporanModule.switchTab('disposisi')">
             Rekap Disposisi Kepala BKPSDM
@@ -76,7 +76,7 @@ const LaporanModule = {
     switch(this.currentTab) {
       case 'surat-masuk': return 'BUKU AGENDA SURAT MASUK';
       case 'surat-keluar': return 'BUKU AGENDA SURAT KELUAR';
-      case 'surat-tugas': return 'REKAPITULASI SURAT PERINTAH TUGAS (SPT)';
+      case 'surat-tugas': return 'REKAPITULASI SURAT TUGAS';
       case 'disposisi': return 'BUKU KENDALI DISPOSISI KEPALA BADAN';
       default: return 'LAPORAN PERSURATAN';
     }
@@ -157,14 +157,14 @@ const LaporanModule = {
         <table class="data-table" style="border:1px solid #cbd5e1;">
           <thead>
             <tr>
-              <th>Nomor SPT</th>
+              <th>Nomor Surat Tugas</th>
               <th>Maksud Tugas Kedinasan</th>
               <th>Tujuan & Jadwal</th>
               <th>Personil Ditugaskan</th>
             </tr>
           </thead>
           <tbody>
-            ${list.length === 0 ? `<tr><td colspan="4" style="text-align:center; padding:28px; color:#94a3b8;">Belum ada catatan surat perintah tugas (SPT) dinas.</td></tr>` : list.map(spt => `
+            ${list.length === 0 ? `<tr><td colspan="4" style="text-align:center; padding:28px; color:#94a3b8;">Belum ada catatan surat tugas dinas.</td></tr>` : list.map(spt => `
               <tr>
                 <td style="font-family:monospace; font-weight:700; color:var(--primary);">${spt.no_surat_tugas}</td>
                 <td style="max-width:300px; font-weight:500;">${spt.maksud_tugas}</td>
@@ -236,7 +236,7 @@ const LaporanModule = {
         csvContent += `"${s.no_agenda}","${s.no_surat_keluar}","${s.kode_klasifikasi}","${s.perihal}","${s.tgl_surat}","${s.penandatangan}"\n`;
       });
     } else if (this.currentTab === 'surat-tugas') {
-      csvContent += 'No SPT,Maksud Tugas,Tujuan,Tgl Berangkat,Tgl Kembali,Lama Hari,Personil\n';
+      csvContent += 'No Surat Tugas,Maksud Tugas,Tujuan,Tgl Berangkat,Tgl Kembali,Lama Hari,Personil\n';
       Store.state.surat_tugas.forEach(s => {
         const personilStr = (s.personil || []).map(p => p.nama).join('; ');
         csvContent += `"${s.no_surat_tugas}","${s.maksud_tugas}","${s.tempat_tujuan}","${s.tgl_berangkat}","${s.tgl_kembali}","${s.lama_hari}","${personilStr}"\n`;
