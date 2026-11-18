@@ -1,11 +1,66 @@
 // Smart Auto-Suggest Engine - Matching Perihal Surat to Perbup Luwu Timur No. 69 Tahun 2023
 class SmartAutoSuggest {
+  static RAHASIA_CODES = ['800.1.8.1', '800.1.6.1', '800.1.6.2', '800.1.6.4', '800.1.6.5'];
+
+  static isRahasiaCode(kode) {
+    const clean = String(kode || '').trim();
+    return SmartAutoSuggest.RAHASIA_CODES.includes(clean);
+  }
+
+  static isRahasiaPerihal(text) {
+    const q = String(text || '').toLowerCase();
+    return /\b(cerai|perceraian|izin\s+cerai|gugatan\s+cerai|akta\s+cerai|hukuman\s+disiplin|pelanggaran\s+disiplin|sidang\s+kode\s+etik|pemberhentian\s+dengan\s+tidak\s+hormat|pemberhentian\s+sementara)\b/i.test(q);
+  }
+
+  static detectInstantCode(text) {
+    const q = String(text || '').toLowerCase().trim();
+    if (/\b(cerai|perceraian|izin\s+cerai|gugatan\s+cerai|mediasi\s+perceraian)\b/i.test(q)) {
+      return {
+        kode: '800.1.8.1',
+        nama: 'Status Kepegawaian (Izin Perceraian / Perkawinan ASN)',
+        kategori: '800',
+        is_rahasia: true,
+        sifat_default: 'Rahasia'
+      };
+    }
+    if (/\b(hukuman\s+disiplin|pelanggaran\s+disiplin|sidang\s+disiplin|pemeriksaan\s+disiplin|bap\s+disiplin)\b/i.test(q)) {
+      return {
+        kode: '800.1.6.2',
+        nama: 'Disiplin ASN (Hukuman Disiplin / Pemeriksaan Pelanggaran)',
+        kategori: '800',
+        is_rahasia: true,
+        sifat_default: 'Rahasia'
+      };
+    }
+    if (/\b(sidang\s+kode\s+etik|pelanggaran\s+kode\s+etik)\b/i.test(q)) {
+      return {
+        kode: '800.1.6.1',
+        nama: 'Kode Etik Pegawai (Sidang / Pelanggaran Kode Etik ASN)',
+        kategori: '800',
+        is_rahasia: true,
+        sifat_default: 'Rahasia'
+      };
+    }
+    if (/\b(pemberhentian\s+dengan\s+tidak\s+hormat|ptdh)\b/i.test(q)) {
+      return {
+        kode: '800.1.6.4',
+        nama: 'Pemberhentian Dengan Tidak Hormat',
+        kategori: '800',
+        is_rahasia: true,
+        sifat_default: 'Rahasia'
+      };
+    }
+    return null;
+  }
+
   constructor(options) {
     this.input = typeof options.input === 'string' ? document.querySelector(options.input) : options.input;
     this.targetCodeInput = typeof options.targetCode === 'string' ? document.querySelector(options.targetCode) : options.targetCode;
     this.targetNameInput = typeof options.targetName === 'string' ? document.querySelector(options.targetName) : options.targetName;
+    this.targetSifatInput = typeof options.targetSifat === 'string' ? document.querySelector(options.targetSifat) : options.targetSifat;
     this.onSelect = options.onSelect || null;
-    this.debounceTime = options.debounce || 200;
+    this.autoFillTop = options.autoFillTop !== false;
+    this.debounceTime = options.debounce || 180;
     this.debounceTimer = null;
     this.dropdown = null;
     this.selectedIndex = -1;
@@ -54,8 +109,33 @@ class SmartAutoSuggest {
       return;
     }
 
+    // Deteksi instan untuk kata kunci sensitif/rahasia (seperti "cerai" / "disiplin")
+    const instantItem = SmartAutoSuggest.detectInstantCode(query);
+    if (instantItem) {
+      this.applyItemFields(instantItem, true);
+    }
+
     this.debounceTimer = setTimeout(async () => {
-      this.results = await Store.searchKlasifikasi(query, '', 8);
+      let fetched = await Store.searchKlasifikasi(query, '', 8);
+      if (instantItem) {
+        // Pastikan kode rahasia instan selalu berada di urutan paling atas (#1)
+        const existingIdx = fetched.findIndex(x => x.kode === instantItem.kode);
+        if (existingIdx > 0) {
+          const [found] = fetched.splice(existingIdx, 1);
+          fetched.unshift({ ...found, ...instantItem });
+        } else if (existingIdx === -1) {
+          fetched.unshift(instantItem);
+        } else if (existingIdx === 0) {
+          fetched[0] = { ...fetched[0], ...instantItem };
+        }
+      }
+      this.results = fetched;
+
+      // Auto-fill otomatis rekomendasi terbaik (#1) saat mengetik perihal
+      if (this.autoFillTop && this.results.length > 0) {
+        this.applyItemFields(this.results[0], true);
+      }
+
       this.renderResults(query);
     }, this.debounceTime);
   }
@@ -113,9 +193,12 @@ class SmartAutoSuggest {
       let displayName = item.nama;
       // Highlight matching words
       qTokens.forEach(token => {
-        const regex = new RegExp(`(${token})`, 'gi');
+        const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escaped})`, 'gi');
         displayName = displayName.replace(regex, '<mark>$1</mark>');
       });
+
+      const isRahasia = Boolean(item.is_rahasia || SmartAutoSuggest.isRahasiaCode(item.kode));
 
       const categoryNames = {
         '000': '000 UMUM & KETATAUSAHAAN',
@@ -132,13 +215,16 @@ class SmartAutoSuggest {
       const catLabel = categoryNames[item.kategori] || `Kategori ${item.kategori}`;
       const catColor = item.kategori === '800' ? '#059669' : (item.kategori === '000' ? '#0284c7' : (item.kategori === '900' ? '#d97706' : '#64748b'));
       const catBadge = `<span style="color:${catColor}; font-weight:700;">● ${catLabel}</span>`;
+      const rahasiaBadge = isRahasia
+        ? `<span style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; padding:1px 6px; border-radius:4px; font-size:10px; font-weight:800; margin-left:6px;">🔒 KODE RAHASIA</span>`
+        : '';
 
       return `
-        <div class="autosuggest-item" data-index="${index}">
-          <div class="autosuggest-code">${item.kode}</div>
+        <div class="autosuggest-item" data-index="${index}" style="${isRahasia ? 'background:#fff5f5; border-left:3px solid #dc2626;' : ''}">
+          <div class="autosuggest-code" style="${isRahasia ? 'background:#fee2e2; color:#b91c1c; border-color:#fca5a5;' : ''}">${item.kode}</div>
           <div class="autosuggest-details">
-            <div class="autosuggest-title">${displayName}</div>
-            <div class="autosuggest-category">${catBadge}</div>
+            <div class="autosuggest-title">${displayName} ${rahasiaBadge}</div>
+            <div class="autosuggest-category">${catBadge}${index === 0 ? ' <span style="color:#0284c7; font-weight:700; margin-left:6px;">✓ Terpilih Otomatis</span>' : ''}</div>
           </div>
         </div>
       `;
@@ -147,7 +233,7 @@ class SmartAutoSuggest {
     this.dropdown.innerHTML = `
       <div class="autosuggest-header">
         <span>⚡ Rekomendasi Kode Perbup No. 69/2023 (${this.results.length})</span>
-        <span style="font-size: 10px; color: #94a3b8;">Klik untuk pilih otomatis</span>
+        <span style="font-size: 10px; color: #94a3b8;">Otomatis terisi &bull; Klik untuk ganti</span>
       </div>
       <div class="autosuggest-list">
         ${itemsHTML}
@@ -168,29 +254,38 @@ class SmartAutoSuggest {
     this.showDropdown();
   }
 
-  selectItem(item) {
+  applyItemFields(item, isAuto = false) {
     if (!item) return;
 
     if (this.targetCodeInput) {
       this.targetCodeInput.value = item.kode;
-      this.flashInput(this.targetCodeInput);
+      if (!isAuto) this.flashInput(this.targetCodeInput);
     }
 
     if (this.targetNameInput) {
       this.targetNameInput.value = item.nama;
-      this.flashInput(this.targetNameInput);
+      if (!isAuto) this.flashInput(this.targetNameInput);
+    }
+
+    const isRahasia = Boolean(item.is_rahasia || SmartAutoSuggest.isRahasiaCode(item.kode) || SmartAutoSuggest.isRahasiaPerihal(this.input?.value));
+    if (this.targetSifatInput && isRahasia) {
+      this.targetSifatInput.value = 'Rahasia';
+      this.targetSifatInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     if (this.onSelect) {
-      this.onSelect(item);
+      this.onSelect(item, isAuto);
     }
 
-    this.hideDropdown();
-
-    // Trigger change events
     if (this.targetCodeInput) {
       this.targetCodeInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
+  }
+
+  selectItem(item) {
+    if (!item) return;
+    this.applyItemFields(item, false);
+    this.hideDropdown();
   }
 
   flashInput(element) {

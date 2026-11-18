@@ -271,11 +271,11 @@ const SuratTugasModule = {
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Tanggal Berangkat</label>
-            <input type="date" id="spt-tgl-berangkat" class="form-control" value="${new Date().toISOString().split('T')[0]}" required onchange="SuratTugasModule.calcLama()">
+            <input type="date" id="spt-tgl-berangkat" class="form-control" value="${App.getTodayDate()}" required onchange="SuratTugasModule.calcLama()">
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Kembali</label>
-            <input type="date" id="spt-tgl-kembali" class="form-control" value="${new Date().toISOString().split('T')[0]}" required onchange="SuratTugasModule.calcLama()">
+            <input type="date" id="spt-tgl-kembali" class="form-control" value="${App.getTodayDate()}" required onchange="SuratTugasModule.calcLama()">
           </div>
           <div class="form-group" style="max-width:110px;">
             <label class="form-label">Lama Hari</label>
@@ -639,11 +639,11 @@ const SuratTugasModule = {
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Tanggal Berangkat</label>
-            <input type="date" id="edit-spt-tgl-berangkat" class="form-control" value="${spt.tgl_berangkat}" required>
+            <input type="date" id="edit-spt-tgl-berangkat" class="form-control" value="${App.normalizeDateInput(spt.tgl_berangkat)}" required>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Kembali</label>
-            <input type="date" id="edit-spt-tgl-kembali" class="form-control" value="${spt.tgl_kembali}" required>
+            <input type="date" id="edit-spt-tgl-kembali" class="form-control" value="${App.normalizeDateInput(spt.tgl_kembali)}" required>
           </div>
         </div>
 

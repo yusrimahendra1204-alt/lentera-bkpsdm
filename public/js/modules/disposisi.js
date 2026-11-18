@@ -623,7 +623,7 @@ const DisposisiModule = {
     const sifatSelected = disp.sifat || 'B. Segera';
     const catatanText = disp.catatan || '';
     const statusSelected = disp.status_tindak_lanjut || 'Diproses';
-    const batasWaktuText = disp.batas_waktu || '';
+    const batasWaktuText = App.normalizeDateInput(disp.batas_waktu || '');
     const tindakLanjutNote = disp.tindak_lanjut_note || '';
 
     title.innerText = `Ubah Pencatatan Disposisi: ${sm.no_agenda}`;

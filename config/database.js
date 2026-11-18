@@ -14,7 +14,8 @@ const DB_CONFIG = {
   password: process.env.DB_PASSWORD || '',           // Ganti dengan password MySQL Anda
   database: process.env.DB_NAME     || 'persuratan_bkpsdm',
   charset:  'utf8mb4',
-  timezone: '+08:00',                                // WIT (Waktu Indonesia Timur)
+  timezone: '+08:00',                                // WITA (Waktu Indonesia Tengah - Luwu Timur)
+  dateStrings: true,                                 // Kembalikan kolom DATE/DATETIME sebagai string murni YYYY-MM-DD tanpa konversi UTC
   waitForConnections: true,
   connectionLimit:    10,
   queueLimit:         0,

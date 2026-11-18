@@ -22,6 +22,32 @@ const Store = {
     this.listeners.forEach(cb => cb(this.state));
   },
 
+  normalizeDateStr(val) {
+    if (!val) return '';
+    const s = String(val).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    if (s.includes('T')) {
+      const parsed = new Date(s);
+      if (!isNaN(parsed.getTime())) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, '0');
+        const day = String(parsed.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+      return s.split('T')[0];
+    }
+    return s.split(' ')[0];
+  },
+
+  normalizeRecord(row) {
+    if (!row || typeof row !== 'object') return row;
+    const fields = ['tgl_surat', 'tgl_diterima', 'tgl_berangkat', 'tgl_kembali', 'batas_waktu'];
+    for (const f of fields) {
+      if (row[f]) row[f] = this.normalizeDateStr(row[f]);
+    }
+    return row;
+  },
+
   // Initialize and load from server
   async init() {
     try {
@@ -30,10 +56,10 @@ const Store = {
         const json = await res.json();
         if (json.success && json.data) {
           this.state.pegawai = json.data.pegawai || [];
-          this.state.surat_masuk = json.data.surat_masuk || [];
-          this.state.disposisi = json.data.disposisi || [];
-          this.state.surat_keluar = json.data.surat_keluar || [];
-          this.state.surat_tugas = json.data.surat_tugas || [];
+          this.state.surat_masuk = (json.data.surat_masuk || []).map(r => this.normalizeRecord(r));
+          this.state.disposisi = (json.data.disposisi || []).map(r => this.normalizeRecord(r));
+          this.state.surat_keluar = (json.data.surat_keluar || []).map(r => this.normalizeRecord(r));
+          this.state.surat_tugas = (json.data.surat_tugas || []).map(r => this.normalizeRecord(r));
           
           // Check saved user session
           const savedUserId = localStorage.getItem('bkpsdm_user_id');
@@ -198,9 +224,10 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
-          this.state.surat_masuk.unshift(json.data);
+          const item = this.normalizeRecord(json.data);
+          this.state.surat_masuk.unshift(item);
           this.notify();
-          return json.data;
+          return item;
         }
       }
     } catch (err) {
@@ -220,10 +247,11 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
+          const item = this.normalizeRecord(json.data);
           const idx = this.state.surat_masuk.findIndex(s => s.id === id);
-          if (idx !== -1) this.state.surat_masuk[idx] = json.data;
+          if (idx !== -1) this.state.surat_masuk[idx] = item;
           this.notify();
-          return json.data;
+          return item;
         }
       }
     } catch (err) {
@@ -273,6 +301,8 @@ const Store = {
     // Fallback optimis jika API server offline agar input pengguna tidak pernah hilang/gagal
     if (!savedData) {
       const newId = (this.state.disposisi.length ? Math.max(...this.state.disposisi.map(d => d.id)) : 0) + 1;
+      const d = new Date();
+      const localTs = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
       savedData = {
         id: newId,
         id_surat_masuk: parseInt(data.id_surat_masuk, 10),
@@ -284,11 +314,12 @@ const Store = {
         catatan: data.catatan || '',
         batas_waktu: data.batas_waktu || '',
         status_tindak_lanjut: 'Diproses',
-        created_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        created_at: localTs,
         tindak_lanjut_note: ''
       };
     }
 
+    this.normalizeRecord(savedData);
     this.state.disposisi.unshift(savedData);
     // Update status in surat masuk
     const sm = this.state.surat_masuk.find(s => s.id === savedData.id_surat_masuk);
@@ -319,7 +350,7 @@ const Store = {
     const index = this.state.disposisi.findIndex(d => d.id === id);
     if (index !== -1) {
       const current = this.state.disposisi[index];
-      savedData = savedData || { ...current, ...data };
+      savedData = this.normalizeRecord(savedData || { ...current, ...data });
       this.state.disposisi[index] = savedData;
       if (savedData.status_tindak_lanjut === 'Selesai') {
         const sm = this.state.surat_masuk.find(s => s.id === savedData.id_surat_masuk);
@@ -391,7 +422,7 @@ const Store = {
         no_surat_keluar: data.no_surat_keluar || '',
         tujuan_surat: data.tujuan_surat || '',
         perihal: data.perihal || '',
-        tgl_surat: data.tgl_surat || new Date().toISOString().split('T')[0],
+        tgl_surat: data.tgl_surat || App.getTodayDate(),
         sifat_surat: data.sifat_surat || 'Biasa',
         penandatangan: data.penandatangan || 'PARHA ARIEF, S.AP',
         metode_dokumen: 'Fisik Manual (Tanda Tangan Basah)',
@@ -403,6 +434,7 @@ const Store = {
       };
     }
 
+    this.normalizeRecord(savedData);
     this.state.surat_keluar.unshift(savedData);
     this.notify();
     return savedData;
@@ -428,7 +460,7 @@ const Store = {
     const index = this.state.surat_keluar.findIndex(s => s.id === id);
     if (index !== -1) {
       const current = this.state.surat_keluar[index];
-      savedData = savedData || { ...current, ...data };
+      savedData = this.normalizeRecord(savedData || { ...current, ...data });
       this.state.surat_keluar[index] = savedData;
       this.notify();
       return savedData;
@@ -465,9 +497,10 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
-          this.state.surat_tugas.unshift(json.data);
+          const item = this.normalizeRecord(json.data);
+          this.state.surat_tugas.unshift(item);
           this.notify();
-          return json.data;
+          return item;
         }
       }
     } catch (err) {
@@ -487,10 +520,11 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
+          const item = this.normalizeRecord(json.data);
           const idx = this.state.surat_tugas.findIndex(s => s.id === id);
-          if (idx !== -1) this.state.surat_tugas[idx] = json.data;
+          if (idx !== -1) this.state.surat_tugas[idx] = item;
           this.notify();
-          return json.data;
+          return item;
         }
       }
     } catch (err) {

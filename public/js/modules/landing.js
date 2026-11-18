@@ -251,15 +251,20 @@ const LandingModule = {
             </tr>
           </thead>
           <tbody>
-            ${list.map(k => `
+            ${list.map(k => {
+              const isRahasia = Boolean(k.is_rahasia || (typeof SmartAutoSuggest !== 'undefined' && SmartAutoSuggest.isRahasiaCode(k.kode)));
+              return `
               <tr>
                 <td>
-                  <span class="number-badge-live" style="color: #34d399; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.15);">
+                  <span class="number-badge-live" style="${isRahasia ? 'color: #f87171; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.15);' : 'color: #34d399; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.15);'}">
                     ${k.kode}
                   </span>
                 </td>
                 <td>
-                  <div style="font-weight: 600; color: #f1f5f9; font-size: 13.5px;">${k.nama}</div>
+                  <div style="font-weight: 600; color: #f1f5f9; font-size: 13.5px;">
+                    ${k.nama}
+                    ${isRahasia ? `<span style="background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.4); padding:1px 6px; border-radius:4px; font-size:10px; font-weight:800; margin-left:6px;">🔒 KODE RAHASIA</span>` : ''}
+                  </div>
                   ${k.keywords && k.keywords.length ? `
                     <div style="font-size: 11px; color: #64748b; margin-top: 3px;">
                       Kata kunci: ${Array.isArray(k.keywords) ? k.keywords.slice(0, 4).join(', ') : k.keywords}
@@ -277,7 +282,8 @@ const LandingModule = {
                   </button>
                 </td>
               </tr>
-            `).join('')}
+            `;
+            }).join('')}
           </tbody>
         </table>
       </div>

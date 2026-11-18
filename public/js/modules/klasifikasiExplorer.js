@@ -185,12 +185,16 @@ const KlasifikasiExplorerModule = {
     // Render table rows
     tbody.innerHTML = pageItems.map(item => {
       const catInfo = this.CAT_MAP[item.kategori] || { name: `Kategori ${item.kategori}`, color: '#64748b', bg: '#f1f5f9' };
+      const isRahasia = Boolean(item.is_rahasia || (typeof SmartAutoSuggest !== 'undefined' && SmartAutoSuggest.isRahasiaCode(item.kode)));
       return `
-        <tr>
+        <tr style="${isRahasia ? 'background:#fff5f5;' : ''}">
           <td>
-            <span style="font-family:monospace; font-weight:800; font-size:13.5px; padding:3px 8px; border-radius:4px; background:${catInfo.bg}; color:${catInfo.color}; border:1px solid ${catInfo.color}44;">
-              ${item.kode}
-            </span>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span style="font-family:monospace; font-weight:800; font-size:13.5px; padding:3px 8px; border-radius:4px; background:${isRahasia ? '#fee2e2' : catInfo.bg}; color:${isRahasia ? '#b91c1c' : catInfo.color}; border:1px solid ${isRahasia ? '#fca5a5' : catInfo.color + '44'};">
+                ${item.kode}
+              </span>
+              ${isRahasia ? `<span class="badge badge-rahasia" style="font-size:9.5px; padding:2px 6px; font-weight:800;">🔒 Rahasia</span>` : ''}
+            </div>
           </td>
           <td>
             <div style="font-size:13.5px; font-weight:600; color:var(--text-main); line-height:1.4;">

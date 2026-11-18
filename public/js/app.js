@@ -588,12 +588,37 @@ const App = {
     }
   },
 
+  getTodayDate() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  },
+
+  normalizeDateInput(dateStr) {
+    if (!dateStr) return '';
+    const s = String(dateStr).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    if (s.includes('T')) {
+      const parsed = new Date(s);
+      if (!isNaN(parsed.getTime())) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, '0');
+        const day = String(parsed.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+      return s.split('T')[0];
+    }
+    return s.split(' ')[0];
+  },
+
   formatIndoDate(dateStr) {
     if (!dateStr) return '-';
-    if (typeof dateStr === 'string' && dateStr.includes(' ') && !dateStr.includes('T')) {
+    if (typeof dateStr === 'string' && dateStr.includes(' ') && !dateStr.includes('T') && !/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
       return dateStr;
     }
-    const clean = String(dateStr).split('T')[0];
+    const clean = this.normalizeDateInput(dateStr);
     const parts = clean.split('-');
     if (parts.length === 3) {
       const y = parts[0];

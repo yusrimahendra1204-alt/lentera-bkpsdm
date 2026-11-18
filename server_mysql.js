@@ -133,6 +133,39 @@ function setSessionCookie(res, user) {
   res.setHeader('Set-Cookie', `lentera_session=${createSession(user)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=28800${secure}`);
 }
 
+function getLocalToday() {
+  const now = new Date(Date.now() + 8 * 60 * 60 * 1000);
+  return now.toISOString().split('T')[0];
+}
+
+function normalizeDateStr(val) {
+  if (!val) return '';
+  if (val instanceof Date) {
+    return new Date(val.getTime() + 8 * 60 * 60 * 1000).toISOString().split('T')[0];
+  }
+  const s = String(val).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  if (s.includes('T')) {
+    const parsed = new Date(s);
+    if (!isNaN(parsed.getTime())) {
+      return new Date(parsed.getTime() + 8 * 60 * 60 * 1000).toISOString().split('T')[0];
+    }
+    return s.split('T')[0];
+  }
+  return s.split(' ')[0];
+}
+
+function normalizeRecordDates(row) {
+  if (!row || typeof row !== 'object') return row;
+  const dateFields = ['tgl_surat', 'tgl_diterima', 'tgl_berangkat', 'tgl_kembali', 'batas_waktu'];
+  for (const field of dateFields) {
+    if (row[field] !== undefined && row[field] !== null && row[field] !== '') {
+      row[field] = normalizeDateStr(row[field]);
+    }
+  }
+  return row;
+}
+
 const DISPOSISI_SIFAT = ['A. Sangat Segera', 'B. Segera', 'C. Rahasia', 'Biasa', 'Segera', 'Sangat Segera'];
 const DISPOSISI_STATUS = ['Diproses', 'Selesai', 'Ditangguhkan'];
 
@@ -151,6 +184,8 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
   }
   const q = (query || '').toLowerCase().trim();
   const qTokens = q.split(/\s+/).filter(t => t.length > 1);
+  const isCeraiQuery = /\b(cerai|perceraian|perkawinan|nikah|pernikahan|kawin)\b/i.test(q);
+  const isDisiplinQuery = /\b(disiplin|hukuman|pelanggaran|bap)\b/i.test(q);
   let scored = [];
   for (const item of classifications) {
     if (kategori && item.kategori !== kategori) continue;
@@ -168,7 +203,9 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
       if (kode.includes(token)) score += 40;
     }
     if (score > 0) {
-      if (item.kode.startsWith('800')) score += 150;
+      if (item.kode.startsWith('800')) score += 250;
+      if (isCeraiQuery && item.kode === '800.1.8.1') score += 600;
+      if (isDisiplinQuery && item.kode === '800.1.6.2') score += 400;
       scored.push({ item, score });
     }
   }
@@ -201,8 +238,11 @@ async function buildAppState() {
     const suratKeluar = await db.query('SELECT * FROM surat_keluar ORDER BY id DESC');
     const suratTugas  = await db.query('SELECT * FROM surat_tugas ORDER BY id DESC');
 
-    // Parse instruksi & personil
+    // Parse instruksi & personil + normalisasi tanggal agar tidak mundur karena UTC
+    suratMasuk.forEach(normalizeRecordDates);
+    suratKeluar.forEach(normalizeRecordDates);
     disposisi.forEach(d => {
+      normalizeRecordDates(d);
       if (typeof d.instruksi === 'string') {
         try { d.instruksi = JSON.parse(d.instruksi); }
         catch { d.instruksi = d.instruksi ? d.instruksi.split(',') : []; }
@@ -210,6 +250,7 @@ async function buildAppState() {
       if (!Array.isArray(d.instruksi)) d.instruksi = [];
     });
     suratTugas.forEach(st => {
+      normalizeRecordDates(st);
       if (typeof st.personil === 'string') {
         try { st.personil = JSON.parse(st.personil); }
         catch { st.personil = []; }
@@ -440,14 +481,14 @@ const server = http.createServer(async (req, res) => {
            body.kode_internal     || '800',
            body.nama_klasifikasi_internal || 'Kepegawaian',
            body.perihal           || '',
-           body.tgl_surat         || new Date().toISOString().split('T')[0],
-           body.tgl_diterima      || new Date().toISOString().split('T')[0],
+           normalizeDateStr(body.tgl_surat)    || getLocalToday(),
+           normalizeDateStr(body.tgl_diterima) || getLocalToday(),
            body.sifat_surat       || 'Biasa',
            body.lampiran          || '1 Berkas',
            'Menunggu Disposisi',
            body.file_name         || 'surat_masuk.pdf']
         );
-        const newSM = await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [result.insertId]);
+        const newSM = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [result.insertId]));
         return sendJSON(res, { success: true, data: newSM });
       }
 
@@ -455,7 +496,7 @@ const server = http.createServer(async (req, res) => {
       if (pathname.startsWith('/api/surat-masuk/') && method === 'PUT') {
         const id   = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const sm   = await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [id]);
+        const sm   = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [id]));
         if (!sm) return sendJSON(res, { success: false, message: 'Surat masuk tidak ditemukan' }, 404);
         await db.getPool().execute(`
           UPDATE surat_masuk SET
@@ -468,13 +509,13 @@ const server = http.createServer(async (req, res) => {
            body.kode_internal     || sm.kode_internal,
            body.nama_klasifikasi_internal || sm.nama_klasifikasi_internal,
            body.perihal           || sm.perihal,
-           body.tgl_surat         || sm.tgl_surat,
-           body.tgl_diterima      || sm.tgl_diterima,
+           normalizeDateStr(body.tgl_surat)    || sm.tgl_surat,
+           normalizeDateStr(body.tgl_diterima) || sm.tgl_diterima,
            body.sifat_surat       || sm.sifat_surat,
            body.file_name         || sm.file_name,
            id]
         );
-        const updated = await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [id]);
+        const updated = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [id]));
         return sendJSON(res, { success: true, message: 'Surat masuk diperbarui', data: updated });
       }
 
@@ -516,7 +557,7 @@ const server = http.createServer(async (req, res) => {
            sifat,
            JSON.stringify(instruksi),
            body.catatan        || '',
-           body.batas_waktu    || null,
+           normalizeDateStr(body.batas_waktu) || null,
            'Diproses']
         );
         // Update status surat masuk
@@ -524,7 +565,7 @@ const server = http.createServer(async (req, res) => {
           "UPDATE surat_masuk SET status_disposisi = 'Didisposisi' WHERE id = ?",
           [suratId]
         );
-        const newDisp = await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [result.insertId]);
+        const newDisp = normalizeRecordDates(await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [result.insertId]));
         if (newDisp && newDisp.instruksi) {
           try { newDisp.instruksi = JSON.parse(newDisp.instruksi); } catch {}
         }
@@ -535,13 +576,13 @@ const server = http.createServer(async (req, res) => {
       if (pathname.startsWith('/api/disposisi/') && method === 'PUT') {
         const id   = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const disp = await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]);
+        const disp = normalizeRecordDates(await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]));
         if (!disp) return sendJSON(res, { success: false, message: 'Disposisi tidak ditemukan' }, 404);
         const newStatus = body.status_tindak_lanjut || disp.status_tindak_lanjut;
         const newTujuanNama = body.tujuan_nama !== undefined ? body.tujuan_nama : disp.tujuan_nama;
         const newSifat = body.sifat !== undefined ? normalizeDisposisiSifat(body.sifat) : disp.sifat;
         const newCatatan = body.catatan !== undefined ? body.catatan : disp.catatan;
-        const newBatasWaktu = body.batas_waktu !== undefined ? (body.batas_waktu || null) : disp.batas_waktu;
+        const newBatasWaktu = body.batas_waktu !== undefined ? (normalizeDateStr(body.batas_waktu) || null) : (disp.batas_waktu || null);
         if (!DISPOSISI_STATUS.includes(newStatus))
           return sendJSON(res, { success: false, message: 'Status tindak lanjut tidak valid' }, 400);
         if (!['Biasa', 'Segera', 'Sangat Segera'].includes(newSifat))
@@ -565,7 +606,7 @@ const server = http.createServer(async (req, res) => {
             [disp.id_surat_masuk]
           );
         }
-        const updated = await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]);
+        const updated = normalizeRecordDates(await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]));
         if (updated && updated.instruksi) { try { updated.instruksi = JSON.parse(updated.instruksi); } catch {} }
         return sendJSON(res, { success: true, data: updated });
       }
@@ -633,7 +674,7 @@ const server = http.createServer(async (req, res) => {
              noSurat,
              body.tujuan_surat      || '',
              body.perihal           || '',
-             body.tgl_surat         || new Date().toISOString().split('T')[0],
+             normalizeDateStr(body.tgl_surat) || getLocalToday(),
              body.sifat_surat       || 'Biasa',
              body.penandatangan     || 'Kepala BKPSDM Kabupaten Luwu Timur',
              body.metode_dokumen    || 'Fisik Manual (Tanda Tangan Basah)',
@@ -658,7 +699,7 @@ const server = http.createServer(async (req, res) => {
              noSurat,
              body.tujuan_surat      || '',
              body.perihal           || '',
-             body.tgl_surat         || new Date().toISOString().split('T')[0],
+             normalizeDateStr(body.tgl_surat) || getLocalToday(),
              body.sifat_surat       || 'Biasa',
              body.penandatangan     || 'Kepala BKPSDM Kabupaten Luwu Timur',
              body.metode_dokumen    || 'Fisik Manual (Tanda Tangan Basah)',
@@ -669,7 +710,7 @@ const server = http.createServer(async (req, res) => {
              body.file_name         || 'surat_keluar.pdf']
           );
         }
-        const newSK = await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [result.insertId]);
+        const newSK = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [result.insertId]));
         if (newSK && !newSK.kode_usulan_bidang) {
           newSK.kode_usulan_bidang = kodeUsulan;
           newSK.status_komparasi_kode = statusKomparasi;
@@ -681,7 +722,7 @@ const server = http.createServer(async (req, res) => {
       if (pathname.startsWith('/api/surat-keluar/') && method === 'PUT') {
         const id   = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const sk   = await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]);
+        const sk   = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]));
         if (!sk) return sendJSON(res, { success: false, message: 'Surat keluar tidak ditemukan' }, 404);
 
         const kodeUsulan = body.kode_usulan_bidang !== undefined ? body.kode_usulan_bidang : (sk.kode_usulan_bidang || sk.kode_klasifikasi);
@@ -697,7 +738,7 @@ const server = http.createServer(async (req, res) => {
             WHERE id=?`,
             [body.tujuan_surat    || sk.tujuan_surat,
              body.perihal         || sk.perihal,
-             body.tgl_surat       || sk.tgl_surat,
+             normalizeDateStr(body.tgl_surat) || sk.tgl_surat,
              body.sifat_surat     || sk.sifat_surat,
              body.penandatangan   || sk.penandatangan,
              kodeBaku,
@@ -716,7 +757,7 @@ const server = http.createServer(async (req, res) => {
             WHERE id=?`,
             [body.tujuan_surat    || sk.tujuan_surat,
              body.perihal         || sk.perihal,
-             body.tgl_surat       || sk.tgl_surat,
+             normalizeDateStr(body.tgl_surat) || sk.tgl_surat,
              body.sifat_surat     || sk.sifat_surat,
              body.penandatangan   || sk.penandatangan,
              kodeBaku,
@@ -726,7 +767,7 @@ const server = http.createServer(async (req, res) => {
              id]
           );
         }
-        const updated = await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]);
+        const updated = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]));
         if (updated && !updated.kode_usulan_bidang) {
           updated.kode_usulan_bidang = kodeUsulan;
           updated.status_komparasi_kode = statusKomparasi;
@@ -774,8 +815,8 @@ const server = http.createServer(async (req, res) => {
            body.dasar                 || '',
            body.maksud_tugas          || '',
            body.tempat_tujuan         || '',
-           body.tgl_berangkat         || new Date().toISOString().split('T')[0],
-           body.tgl_kembali           || new Date().toISOString().split('T')[0],
+           normalizeDateStr(body.tgl_berangkat) || getLocalToday(),
+           normalizeDateStr(body.tgl_kembali)   || getLocalToday(),
            parseInt(body.lama_hari||'1', 10),
            body.pembebanan_anggaran   || `DPA-SKPD BKPSDM Kabupaten Luwu Timur TA ${tahun}`,
            body.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
@@ -791,7 +832,7 @@ const server = http.createServer(async (req, res) => {
             [sptId, p.nip||'', p.nama||'', p.pangkat||'', p.jabatan||'', i+1]
           );
         }
-        const newSpt = await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [sptId]);
+        const newSpt = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [sptId]));
         newSpt.personil = personil;
         return sendJSON(res, { success: true, data: newSpt });
       }
@@ -800,7 +841,7 @@ const server = http.createServer(async (req, res) => {
       if (pathname.startsWith('/api/surat-tugas/') && method === 'PUT') {
         const id   = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const spt  = await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [id]);
+        const spt  = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [id]));
         if (!spt) return sendJSON(res, { success: false, message: 'Surat tugas tidak ditemukan' }, 404);
         await db.getPool().execute(`
           UPDATE surat_tugas SET
@@ -811,8 +852,8 @@ const server = http.createServer(async (req, res) => {
            body.dasar               || spt.dasar,
            body.maksud_tugas        || spt.maksud_tugas,
            body.tempat_tujuan       || spt.tempat_tujuan,
-           body.tgl_berangkat       || spt.tgl_berangkat,
-           body.tgl_kembali         || spt.tgl_kembali,
+           normalizeDateStr(body.tgl_berangkat) || spt.tgl_berangkat,
+           normalizeDateStr(body.tgl_kembali)   || spt.tgl_kembali,
            parseInt(body.lama_hari||spt.lama_hari, 10),
            body.pembebanan_anggaran || spt.pembebanan_anggaran,
            body.pejabat_penandatangan || spt.pejabat_penandatangan,
@@ -828,7 +869,7 @@ const server = http.createServer(async (req, res) => {
             );
           }
         }
-        const updated = await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [id]);
+        const updated = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [id]));
         return sendJSON(res, { success: true, message: 'Surat tugas diperbarui', data: updated });
       }
 
@@ -878,7 +919,7 @@ const server = http.createServer(async (req, res) => {
       // ---- BACKUP JSON ----
       if (pathname === '/api/database/backup-json' && method === 'GET') {
         const appState = await buildAppState();
-        const dateStr  = new Date().toISOString().slice(0,10).replace(/-/g,'');
+        const dateStr  = getLocalToday().replace(/-/g,'');
         const filename = `backup_persuratan_bkpsdm_${dateStr}.json`;
         res.writeHead(200, {
           'Content-Type': 'application/json; charset=utf-8',

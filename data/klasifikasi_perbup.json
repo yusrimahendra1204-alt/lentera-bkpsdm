@@ -32343,7 +32343,6 @@
       "kedudukan",
       "hukum",
       "perubahan status perkawinan",
-      "cerai",
       "akta cerai",
       "duda",
       "janda",
@@ -32546,7 +32545,7 @@
   },
   {
     "kode": "800.1.6.1",
-    "nama": "Kode etik Pegawai",
+    "nama": "Kode Etik Pegawai (Sidang / Pelanggaran Kode Etik ASN)",
     "kategori": "800",
     "keywords": [
       "kode",
@@ -32555,11 +32554,13 @@
       "pegawai",
       "kode etik",
       "etik"
-    ]
+    ],
+    "is_rahasia": true,
+    "sifat_default": "Rahasia"
   },
   {
     "kode": "800.1.6.2",
-    "nama": "Disiplin",
+    "nama": "Disiplin ASN (Hukuman Disiplin / Pemeriksaan Pelanggaran)",
     "kategori": "800",
     "keywords": [
       "disiplin",
@@ -32567,8 +32568,13 @@
       "pp 94",
       "surat peringatan",
       "disiplin pns",
-      "teguran tertulis"
-    ]
+      "teguran tertulis",
+      "rahasia",
+      "pemeriksaan",
+      "bap"
+    ],
+    "is_rahasia": true,
+    "sifat_default": "Rahasia"
   },
   {
     "kode": "800.1.6.3",
@@ -32592,7 +32598,9 @@
       "hormat",
       "pemberhentian",
       "dengan"
-    ]
+    ],
+    "is_rahasia": true,
+    "sifat_default": "Rahasia"
   },
   {
     "kode": "800.1.6.5",
@@ -32601,7 +32609,9 @@
     "keywords": [
       "sementara",
       "pemberhentian"
-    ]
+    ],
+    "is_rahasia": true,
+    "sifat_default": "Rahasia"
   },
   {
     "kode": "800.1.6.6",
@@ -32649,24 +32659,31 @@
   },
   {
     "kode": "800.1.8.1",
-    "nama": "Status Kepegawaian",
+    "nama": "Status Kepegawaian (Izin Perceraian / Perkawinan ASN)",
     "kategori": "800",
     "keywords": [
-      "kepegawaian",
-      "status",
       "cerai",
       "perceraian",
       "izin cerai",
+      "izin perceraian",
+      "permohonan izin cerai",
       "surat izin perceraian",
       "surat keterangan perceraian",
+      "status kepegawaian",
       "status perkawinan",
       "perkawinan",
       "nikah",
       "pernikahan",
       "gugatan cerai",
       "pengadilan agama",
-      "mediasi perceraian"
-    ]
+      "mediasi perceraian",
+      "pemeriksaan perceraian",
+      "rahasia",
+      "kepegawaian",
+      "status"
+    ],
+    "is_rahasia": true,
+    "sifat_default": "Rahasia"
   },
   {
     "kode": "800.1.8.2",

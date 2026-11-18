@@ -119,8 +119,9 @@ const SuratMasukModule = {
           </div>
         </td>
         <td>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span class="code-tag code-tag-internal">Kode ${s.kode_internal}</span>
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span class="code-tag code-tag-internal" style="${typeof SmartAutoSuggest !== 'undefined' && SmartAutoSuggest.isRahasiaCode(s.kode_internal) ? 'background:#fee2e2; color:#b91c1c; border-color:#fca5a5;' : ''}">Kode ${s.kode_internal}</span>
+            ${typeof SmartAutoSuggest !== 'undefined' && SmartAutoSuggest.isRahasiaCode(s.kode_internal) ? '<span class="badge badge-rahasia" style="font-size:9.5px; padding:2px 6px; font-weight:800;">🔒 Kode Rahasia</span>' : ''}
           </div>
           <div style="font-size:11.5px; color:#166534; font-weight:500; margin-top:3px; max-width:220px; line-height:1.2;">
             ${s.nama_klasifikasi_internal}
@@ -131,7 +132,7 @@ const SuratMasukModule = {
           <div style="font-size:11px; color:var(--text-muted);">Surat: ${App.formatIndoDate(s.tgl_surat)}</div>
         </td>
         <td>
-          <span class="badge badge-${s.sifat_surat.toLowerCase()}">${s.sifat_surat}</span>
+          <span class="badge badge-${s.sifat_surat.toLowerCase()}">${s.sifat_surat === 'Rahasia' ? '🔒 ' : ''}${s.sifat_surat}</span>
         </td>
         <td>
           <span class="badge badge-${s.status_disposisi === 'Menunggu Disposisi' ? 'menunggu' : (s.status_disposisi === 'Didisposisi' ? 'didisposisi' : 'selesai')}">
@@ -232,11 +233,11 @@ const SuratMasukModule = {
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Tanggal Surat</label>
-            <input type="date" id="sm-tgl-surat" class="form-control" value="${new Date().toISOString().split('T')[0]}" required>
+            <input type="date" id="sm-tgl-surat" class="form-control" value="${App.getTodayDate()}" required>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Diterima BKPSDM</label>
-            <input type="date" id="sm-tgl-diterima" class="form-control" value="${new Date().toISOString().split('T')[0]}" required>
+            <input type="date" id="sm-tgl-diterima" class="form-control" value="${App.getTodayDate()}" required>
           </div>
           <div class="form-group">
             <label class="form-label">Sifat Surat</label>
@@ -262,7 +263,8 @@ const SuratMasukModule = {
     new SmartAutoSuggest({
       input: '#sm-perihal',
       targetCode: '#sm-kode-internal',
-      targetName: '#sm-nama-internal'
+      targetName: '#sm-nama-internal',
+      targetSifat: '#sm-sifat'
     });
   },
 
@@ -354,11 +356,11 @@ const SuratMasukModule = {
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Tanggal Surat</label>
-            <input type="date" id="edit-sm-tgl-surat" class="form-control" value="${s.tgl_surat}" required>
+            <input type="date" id="edit-sm-tgl-surat" class="form-control" value="${App.normalizeDateInput(s.tgl_surat)}" required>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Diterima</label>
-            <input type="date" id="edit-sm-tgl-diterima" class="form-control" value="${s.tgl_diterima}" required>
+            <input type="date" id="edit-sm-tgl-diterima" class="form-control" value="${App.normalizeDateInput(s.tgl_diterima)}" required>
           </div>
           <div class="form-group">
             <label class="form-label">Sifat Surat</label>
@@ -383,7 +385,8 @@ const SuratMasukModule = {
     new SmartAutoSuggest({
       input: '#edit-sm-perihal',
       targetCode: '#edit-sm-kode-internal',
-      targetName: '#edit-sm-nama-internal'
+      targetName: '#edit-sm-nama-internal',
+      targetSifat: '#edit-sm-sifat'
     });
   },
 

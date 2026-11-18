@@ -168,6 +168,33 @@ function setSessionCookie(res, user) {
   res.setHeader('Set-Cookie', `lentera_session=${createSession(user)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=28800${secure}`);
 }
 
+function getLocalToday() {
+  const now = new Date(Date.now() + 8 * 60 * 60 * 1000);
+  return now.toISOString().split('T')[0];
+}
+
+function getLocalTimestamp() {
+  const now = new Date(Date.now() + 8 * 60 * 60 * 1000);
+  return now.toISOString().replace('T', ' ').substring(0, 19);
+}
+
+function normalizeDateStr(val) {
+  if (!val) return '';
+  if (val instanceof Date) {
+    return new Date(val.getTime() + 8 * 60 * 60 * 1000).toISOString().split('T')[0];
+  }
+  const s = String(val).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  if (s.includes('T')) {
+    const parsed = new Date(s);
+    if (!isNaN(parsed.getTime())) {
+      return new Date(parsed.getTime() + 8 * 60 * 60 * 1000).toISOString().split('T')[0];
+    }
+    return s.split('T')[0];
+  }
+  return s.split(' ')[0];
+}
+
 function searchKlasifikasi(query, kategori = '', limit = 25) {
   if (!query) {
     if (kategori) {
@@ -179,6 +206,8 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
 
   const q = (query || '').toLowerCase().trim();
   const qTokens = q.split(/\s+/).filter(t => t.length > 1);
+  const isCeraiQuery = /\b(cerai|perceraian|perkawinan|nikah|pernikahan|kawin)\b/i.test(q);
+  const isDisiplinQuery = /\b(disiplin|hukuman|pelanggaran|bap)\b/i.test(q);
 
   let scored = [];
 
@@ -213,7 +242,13 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
     // Priority boost for BKPSDM domain: 800 KEPEGAWAIAN
     if (score > 0) {
       if (item.kode.startsWith('800')) {
-        score += 150;
+        score += 250;
+      }
+      if (isCeraiQuery && item.kode === '800.1.8.1') {
+        score += 600;
+      }
+      if (isDisiplinQuery && item.kode === '800.1.6.2') {
+        score += 400;
       }
       scored.push({ item, score });
     }
@@ -441,8 +476,8 @@ const server = http.createServer(async (req, res) => {
           kode_internal: body.kode_internal || '800',
           nama_klasifikasi_internal: body.nama_klasifikasi_internal || 'Kepegawaian',
           perihal: body.perihal || '',
-          tgl_surat: body.tgl_surat || new Date().toISOString().split('T')[0],
-          tgl_diterima: body.tgl_diterima || new Date().toISOString().split('T')[0],
+          tgl_surat: normalizeDateStr(body.tgl_surat) || getLocalToday(),
+          tgl_diterima: normalizeDateStr(body.tgl_diterima) || getLocalToday(),
           sifat_surat: body.sifat_surat || 'Biasa',
           lampiran: body.lampiran || '1 Berkas',
           status_disposisi: body.status_disposisi || 'Menunggu Disposisi',
@@ -468,8 +503,8 @@ const server = http.createServer(async (req, res) => {
         if (body.kode_internal) sm.kode_internal = body.kode_internal;
         if (body.nama_klasifikasi_internal) sm.nama_klasifikasi_internal = body.nama_klasifikasi_internal;
         if (body.perihal) sm.perihal = body.perihal;
-        if (body.tgl_surat) sm.tgl_surat = body.tgl_surat;
-        if (body.tgl_diterima) sm.tgl_diterima = body.tgl_diterima;
+        if (body.tgl_surat) sm.tgl_surat = normalizeDateStr(body.tgl_surat);
+        if (body.tgl_diterima) sm.tgl_diterima = normalizeDateStr(body.tgl_diterima);
         if (body.sifat_surat) sm.sifat_surat = body.sifat_surat;
         if (body.file_name) sm.file_name = body.file_name;
 
@@ -518,9 +553,9 @@ const server = http.createServer(async (req, res) => {
           sifat: body.sifat || 'B. Segera',
           instruksi,
           catatan: body.catatan || '',
-          batas_waktu: body.batas_waktu || '',
+          batas_waktu: normalizeDateStr(body.batas_waktu) || '',
           status_tindak_lanjut: ['Diproses', 'Selesai', 'Ditangguhkan'].includes(body.status_tindak_lanjut) ? body.status_tindak_lanjut : 'Diproses',
-          created_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+          created_at: getLocalTimestamp(),
           tindak_lanjut_note: ''
         };
 
@@ -561,7 +596,7 @@ const server = http.createServer(async (req, res) => {
         }
         if (body.tindak_lanjut_note) disp.tindak_lanjut_note = body.tindak_lanjut_note;
         if (body.tindak_lanjut_note === '') disp.tindak_lanjut_note = '';
-        if (body.batas_waktu !== undefined) disp.batas_waktu = body.batas_waktu || '';
+        if (body.batas_waktu !== undefined) disp.batas_waktu = normalizeDateStr(body.batas_waktu) || '';
 
         // If completed, check if surat masuk can be marked Selesai
         if (disp.status_tindak_lanjut === 'Selesai') {
@@ -622,7 +657,7 @@ const server = http.createServer(async (req, res) => {
           no_surat_keluar: body.no_surat_keluar || noSurat,
           tujuan_surat: body.tujuan_surat || '',
           perihal: body.perihal || '',
-          tgl_surat: body.tgl_surat || new Date().toISOString().split('T')[0],
+          tgl_surat: normalizeDateStr(body.tgl_surat) || getLocalToday(),
           sifat_surat: body.sifat_surat || 'Biasa',
           penandatangan: body.penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur',
           metode_dokumen: body.metode_dokumen || 'Fisik Manual (Tanda Tangan Basah)',
@@ -649,7 +684,7 @@ const server = http.createServer(async (req, res) => {
 
         if (body.tujuan_surat) sk.tujuan_surat = body.tujuan_surat;
         if (body.perihal) sk.perihal = body.perihal;
-        if (body.tgl_surat) sk.tgl_surat = body.tgl_surat;
+        if (body.tgl_surat) sk.tgl_surat = normalizeDateStr(body.tgl_surat);
         if (body.sifat_surat) sk.sifat_surat = body.sifat_surat;
         if (body.penandatangan) sk.penandatangan = body.penandatangan;
         if (body.kode_klasifikasi) sk.kode_klasifikasi = body.kode_klasifikasi;
@@ -702,8 +737,8 @@ const server = http.createServer(async (req, res) => {
           dasar: body.dasar || '',
           maksud_tugas: body.maksud_tugas || '',
           tempat_tujuan: body.tempat_tujuan || '',
-          tgl_berangkat: body.tgl_berangkat || new Date().toISOString().split('T')[0],
-          tgl_kembali: body.tgl_kembali || new Date().toISOString().split('T')[0],
+          tgl_berangkat: normalizeDateStr(body.tgl_berangkat) || getLocalToday(),
+          tgl_kembali: normalizeDateStr(body.tgl_kembali) || getLocalToday(),
           lama_hari: parseInt(body.lama_hari || '1', 10),
           pembebanan_anggaran: body.pembebanan_anggaran || `DPA-SKPD BKPSDM Kabupaten Luwu Timur TA ${CURRENT_YEAR}`,
           pejabat_penandatangan: body.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
@@ -729,8 +764,8 @@ const server = http.createServer(async (req, res) => {
         if (body.dasar) spt.dasar = body.dasar;
         if (body.maksud_tugas) spt.maksud_tugas = body.maksud_tugas;
         if (body.tempat_tujuan) spt.tempat_tujuan = body.tempat_tujuan;
-        if (body.tgl_berangkat) spt.tgl_berangkat = body.tgl_berangkat;
-        if (body.tgl_kembali) spt.tgl_kembali = body.tgl_kembali;
+        if (body.tgl_berangkat) spt.tgl_berangkat = normalizeDateStr(body.tgl_berangkat);
+        if (body.tgl_kembali) spt.tgl_kembali = normalizeDateStr(body.tgl_kembali);
         if (body.lama_hari) spt.lama_hari = parseInt(body.lama_hari, 10);
         if (body.pembebanan_anggaran) spt.pembebanan_anggaran = body.pembebanan_anggaran;
         if (body.pejabat_penandatangan) spt.pejabat_penandatangan = body.pejabat_penandatangan;
@@ -819,7 +854,7 @@ const server = http.createServer(async (req, res) => {
 
       // 11. Download JSON Backup
       if (pathname === '/api/database/backup-json' && method === 'GET') {
-        const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const dateStr = getLocalToday().replace(/-/g, '');
         const filename = `backup_persuratan_bkpsdm_${dateStr}.json`;
         const content = JSON.stringify(appState, null, 2);
         const backupHeaders = {

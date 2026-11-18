@@ -331,12 +331,22 @@ const SuratKeluarModule = {
     this.render();
   },
 
+  isRahasiaEntry(kode, perihal = '', sifat = '') {
+    if ((sifat || '').toLowerCase() === 'rahasia') return true;
+    if (typeof SmartAutoSuggest !== 'undefined') {
+      if (SmartAutoSuggest.isRahasiaCode(kode) || SmartAutoSuggest.isRahasiaPerihal(perihal)) return true;
+    }
+    const clean = String(kode || '').trim();
+    if (['800.1.8.1', '800.1.6.1', '800.1.6.2', '800.1.6.4', '800.1.6.5'].includes(clean)) return true;
+    return /\b(cerai|perceraian|izin\s+cerai|hukuman\s+disiplin|pelanggaran\s+disiplin)\b/i.test(String(perihal || ''));
+  },
+
   getFilteredList(list) {
     if (this.currentFilter === 'all') return list;
 
     return list.filter(s => {
       const kode = s.kode_klasifikasi || '';
-      const isRahasia = (s.sifat_surat || '').toLowerCase() === 'rahasia';
+      const isRahasia = this.isRahasiaEntry(kode, s.perihal, s.sifat_surat);
 
       if (this.currentFilter === 'rahasia') return isRahasia;
       if (this.currentFilter === 'pangkat_mutasi') {
@@ -363,8 +373,12 @@ const SuratKeluarModule = {
     const isAuth = Store.state.isLoggedIn;
 
     return list.map(s => {
-      const isRahasia = (s.sifat_surat || '').toLowerCase() === 'rahasia';
+      const isRahasia = this.isRahasiaEntry(s.kode_klasifikasi, s.perihal, s.sifat_surat);
+      const isKodeRahasia = typeof SmartAutoSuggest !== 'undefined'
+        ? SmartAutoSuggest.isRahasiaCode(s.kode_klasifikasi)
+        : ['800.1.8.1', '800.1.6.1', '800.1.6.2', '800.1.6.4', '800.1.6.5'].includes(s.kode_klasifikasi);
       const is800 = (s.kode_klasifikasi || '').startsWith('800');
+      const displaySifat = isRahasia ? 'Rahasia' : (s.sifat_surat || 'Biasa');
 
       return `
         <tr>
@@ -410,12 +424,17 @@ const SuratKeluarModule = {
               </div>
             ` : '')}
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span class="code-tag ${is800 ? 'code-tag-internal' : ''}" style="${!is800 ? 'background:#e0f2fe; color:#0369a1; border-color:#bae6fd;' : ''}">
+              <span class="code-tag ${is800 ? 'code-tag-internal' : ''}" style="${isKodeRahasia ? 'background:#fee2e2; color:#b91c1c; border-color:#fca5a5;' : (!is800 ? 'background:#e0f2fe; color:#0369a1; border-color:#bae6fd;' : '')}">
                 ${s.kode_klasifikasi}
               </span>
               <span class="badge ${is800 ? 'badge-success' : 'badge-info'}" style="font-size:10px; padding:2px 6px;">
                 Perbup 69/2023
               </span>
+              ${isKodeRahasia ? `
+                <span class="badge badge-rahasia" style="font-size:9.5px; padding:2px 6px; font-weight:800;">
+                  🔒 Kode Rahasia
+                </span>
+              ` : ''}
             </div>
             <div style="font-size:12px; font-weight:600; color:#1e293b; margin-top:3px; max-width:260px; line-height:1.35;">
               ${s.nama_klasifikasi}
@@ -428,8 +447,8 @@ const SuratKeluarModule = {
           </td>
           <td>
             <div>
-              <span class="badge badge-${s.sifat_surat.toLowerCase()}">
-                ${isRahasia ? '🔒 ' : ''}${s.sifat_surat}
+              <span class="badge badge-${displaySifat.toLowerCase()}">
+                ${isRahasia ? '🔒 ' : ''}${displaySifat}
               </span>
             </div>
             <div style="font-size:11px; color:#64748b; margin-top:4px;">
@@ -618,7 +637,7 @@ const SuratKeluarModule = {
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Surat Keluar <span class="required">*</span></label>
-            <input type="date" id="sk-tgl-surat" class="form-control" value="${new Date().toISOString().split('T')[0]}" required>
+            <input type="date" id="sk-tgl-surat" class="form-control" value="${App.getTodayDate()}" required>
             <span class="form-hint">Tanggal yang tercantum pada naskah surat fisik</span>
           </div>
         </div>
@@ -669,21 +688,24 @@ const SuratKeluarModule = {
       input: '#sk-perihal',
       targetCode: '#sk-kode',
       targetName: '#sk-nama-kode',
+      targetSifat: '#sk-sifat',
       onSelect: (item) => {
         SuratKeluarModule.updateNumberWithCode(item.kode);
         SuratKeluarModule.updateHierarchyBox(item.kode, item.nama);
         SuratKeluarModule.onCompareCodes();
-
-        // Auto-select Rahasia for sensitive codes
-        if (item.kode === '800.1.8.1' || item.kode === '800.1.6.2' || item.kode === '800.1.6.4' || item.kode === '800.1.6.5') {
-          const sifatSel = document.getElementById('sk-sifat');
-          if (sifatSel) {
-            sifatSel.value = 'Rahasia';
-            SuratKeluarModule.onSifatChange('Rahasia');
-          }
-        }
+        SuratKeluarModule.checkAndApplyRahasia(item.kode, document.getElementById('sk-perihal')?.value);
       }
     });
+  },
+
+  checkAndApplyRahasia(kode, perihal = '') {
+    if (this.isRahasiaEntry(kode, perihal)) {
+      const sifatSel = document.getElementById('sk-sifat');
+      if (sifatSel && sifatSel.value !== 'Rahasia') {
+        sifatSel.value = 'Rahasia';
+      }
+      this.onSifatChange('Rahasia');
+    }
   },
 
   togglePerbupDrawer() {
@@ -703,7 +725,7 @@ const SuratKeluarModule = {
     this.updateHierarchyBox(kode, nama, hierarki);
     this.onCompareCodes();
 
-    if (isRahasia) {
+    if (isRahasia || this.isRahasiaEntry(kode)) {
       const sifatSel = document.getElementById('sk-sifat');
       if (sifatSel) {
         sifatSel.value = 'Rahasia';
@@ -717,9 +739,15 @@ const SuratKeluarModule = {
 
   onManualCodeInput(val) {
     const code = val.trim();
+    const pop = this.POPULAR_CODES.find(p => p.kode === code);
+    if (pop) {
+      const namaInput = document.getElementById('sk-nama-kode');
+      if (namaInput) namaInput.value = pop.nama;
+    }
     this.updateNumberWithCode(code);
-    this.updateHierarchyBox(code);
+    this.updateHierarchyBox(code, pop ? pop.nama : '');
     this.onCompareCodes();
+    this.checkAndApplyRahasia(code, document.getElementById('sk-perihal')?.value);
   },
 
   onCompareCodes() {
@@ -801,10 +829,19 @@ const SuratKeluarModule = {
 
     const pop = this.POPULAR_CODES.find(p => p.kode === code);
     const hierarkiText = customHierarki || (pop ? pop.hierarki : `Kode ${code} Klasifikasi Perbup Luwu Timur No. 69/2023`);
+    const isKodeRahasia = this.isRahasiaEntry(code);
 
-    text.innerHTML = `<strong>Kesesuaian Regulasi:</strong> Terdaftar resmi dalam Perbup Luwu Timur No. 69/2023 &bull; <em>${hierarkiText}</em>`;
-    box.style.background = '#dcfce7';
-    box.style.color = '#166534';
+    if (isKodeRahasia) {
+      text.innerHTML = `🔒 <strong>KODE KLASIFIKASI RAHASIA (${code}):</strong> Terdaftar resmi dalam Perbup Luwu Timur No. 69/2023 &bull; <em>${hierarkiText}</em> &bull; <strong>Sifat Surat Otomatis: RAHASIA</strong>`;
+      box.style.background = '#fee2e2';
+      box.style.color = '#991b1b';
+      box.style.border = '1px solid #fca5a5';
+    } else {
+      text.innerHTML = `<strong>Kesesuaian Regulasi:</strong> Terdaftar resmi dalam Perbup Luwu Timur No. 69/2023 &bull; <em>${hierarkiText}</em>`;
+      box.style.background = '#dcfce7';
+      box.style.color = '#166534';
+      box.style.border = 'none';
+    }
   },
 
   onSifatChange(val) {
@@ -1125,7 +1162,7 @@ const SuratKeluarModule = {
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Surat Keluar <span class="required">*</span></label>
-            <input type="date" id="edit-sk-tgl" class="form-control" value="${s.tgl_surat || new Date().toISOString().split('T')[0]}" required>
+            <input type="date" id="edit-sk-tgl" class="form-control" value="${App.normalizeDateInput(s.tgl_surat) || App.getTodayDate()}" required>
           </div>
         </div>
 
@@ -1196,6 +1233,16 @@ const SuratKeluarModule = {
 
     App.openModal();
     this.onEditCompareCodes();
+
+    new SmartAutoSuggest({
+      input: '#edit-sk-perihal',
+      targetCode: '#edit-sk-kode',
+      targetName: '#edit-sk-nama-kode',
+      targetSifat: '#edit-sk-sifat',
+      onSelect: () => {
+        SuratKeluarModule.onEditCompareCodes();
+      }
+    });
   },
 
   onEditCompareCodes() {
@@ -1211,6 +1258,11 @@ const SuratKeluarModule = {
     const usulan = (usulanInput?.value || '').trim();
     const perbup = (perbupInput?.value || '').trim();
     const nama = (namaInput?.value || '').trim();
+
+    if (this.isRahasiaEntry(perbup, document.getElementById('edit-sk-perihal')?.value)) {
+      const editSifat = document.getElementById('edit-sk-sifat');
+      if (editSifat) editSifat.value = 'Rahasia';
+    }
 
     if (previewNo && perbup) {
       const parts = previewNo.innerText.split('/');

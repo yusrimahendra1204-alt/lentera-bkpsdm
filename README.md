@@ -54,3 +54,28 @@ Aplikasi web ini berjalan menggunakan **Node.js + Vanilla JavaScript**, sehingga
    ```
    http://localhost:3000
    ```
+
+---
+
+## 🔄 Cara Update Kode ke GitHub & Sinkronisasi Vercel
+
+1. **Konfigurasi Git (Cukup 1x di Komputer Baru):**
+   ```bash
+   git config --global user.name "Yusri Mahendra"
+   git config --global user.email "yusrimahendra1204@gmail.com"
+   ```
+
+2. **Simpan & Push Perubahan ke GitHub:**
+   ```bash
+   git status
+   git add .
+   git commit -m "Pembaruan sistem persuratan LENTERA BKPSDM"
+   git push origin main
+   ```
+   *(Jika muncul pop-up login GitHub, klik **Sign in with your browser**).*
+
+3. **Sinkronisasi Otomatis ke Vercel:**
+   * Repositori GitHub ini telah terhubung dengan **Vercel** (`vercel.json` -> `server_mysql.js`).
+   * Setiap kali perintah `git push origin main` berhasil dijalankan, Vercel otomatis melakukan *build* dan memperbarui website online dalam ±30–60 detik.
+   * Sistem juga dilengkapi *resilient fallback* ke `data/current_state.json` apabila database MySQL Cloud tidak terjangkau.
+
