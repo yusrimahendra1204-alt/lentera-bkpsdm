@@ -699,12 +699,17 @@ const SuratKeluarModule = {
   },
 
   checkAndApplyRahasia(kode, perihal = '') {
+    const sifatSel = document.getElementById('sk-sifat');
     if (this.isRahasiaEntry(kode, perihal)) {
-      const sifatSel = document.getElementById('sk-sifat');
       if (sifatSel && sifatSel.value !== 'Rahasia') {
         sifatSel.value = 'Rahasia';
       }
       this.onSifatChange('Rahasia');
+    } else {
+      if (sifatSel && sifatSel.value === 'Rahasia') {
+        sifatSel.value = 'Biasa';
+      }
+      this.onSifatChange(sifatSel ? sifatSel.value : 'Biasa');
     }
   },
 
@@ -725,12 +730,15 @@ const SuratKeluarModule = {
     this.updateHierarchyBox(kode, nama, hierarki);
     this.onCompareCodes();
 
+    const sifatSel = document.getElementById('sk-sifat');
     if (isRahasia || this.isRahasiaEntry(kode)) {
-      const sifatSel = document.getElementById('sk-sifat');
       if (sifatSel) {
         sifatSel.value = 'Rahasia';
         this.onSifatChange('Rahasia');
       }
+    } else if (sifatSel && sifatSel.value === 'Rahasia') {
+      sifatSel.value = 'Biasa';
+      this.onSifatChange('Biasa');
     }
 
     this.togglePerbupDrawer();
@@ -1259,9 +1267,11 @@ const SuratKeluarModule = {
     const perbup = (perbupInput?.value || '').trim();
     const nama = (namaInput?.value || '').trim();
 
+    const editSifat = document.getElementById('edit-sk-sifat');
     if (this.isRahasiaEntry(perbup, document.getElementById('edit-sk-perihal')?.value)) {
-      const editSifat = document.getElementById('edit-sk-sifat');
       if (editSifat) editSifat.value = 'Rahasia';
+    } else if (editSifat && editSifat.value === 'Rahasia') {
+      editSifat.value = 'Biasa';
     }
 
     if (previewNo && perbup) {

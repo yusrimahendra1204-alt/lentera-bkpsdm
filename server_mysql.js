@@ -180,9 +180,9 @@ function normalizeDisposisiSifat(value) {
 const GENERIC_QUERY_STOPWORDS = new Set([
   'surat', 'izin', 'ijin', 'permohonan', 'usulan', 'pengantar', 'rekomendasi',
   'keterangan', 'keputusan', 'berita', 'acara', 'undangan', 'laporan', 'daftar',
-  'tentang', 'dan', 'atau', 'yang', 'dari', 'untuk', 'pada', 'dalam', 'atas',
-  'nama', 'kepada', 'sdr', 'sdri', 'asn', 'pns', 'pppk', 'pegawai', 'staf',
-  'kabupaten', 'luwu', 'timur', 'bkpsdm', 'pemerintah', 'daerah'
+  'nota', 'dinas', 'tentang', 'dan', 'atau', 'yang', 'dari', 'untuk', 'pada',
+  'dalam', 'atas', 'nama', 'kepada', 'sdr', 'sdri', 'asn', 'pns', 'pppk',
+  'pegawai', 'staf', 'kabupaten', 'luwu', 'timur', 'bkpsdm', 'pemerintah', 'daerah'
 ]);
 
 function searchKlasifikasi(query, kategori = '', limit = 25) {
@@ -195,29 +195,35 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
   const specificTokens = qTokens.filter(t => !GENERIC_QUERY_STOPWORDS.has(t));
   const isCeraiQuery = /\b(cerai|perceraian|perkawinan|nikah|pernikahan|kawin)\b/i.test(q);
   const isDisiplinQuery = /\b(disiplin|hukuman|pelanggaran|bap)\b/i.test(q);
+  const isPerjalananDinas = /\bperjalanan\s+dinas\b/i.test(q);
   let scored = [];
   for (const item of classifications) {
     if (kategori && item.kategori !== kategori) continue;
     let score = 0;
-    let specificMatch = false;
+    let specificMatchCount = 0;
     const kode = item.kode.toLowerCase();
     const nama = item.nama.toLowerCase();
     const keywords = item.keywords || [];
-    if (kode === q) { score += 1000; specificMatch = true; }
-    else if (kode.startsWith(q)) { score += 500; specificMatch = true; }
-    if (q && nama.includes(q)) { score += 300; specificMatch = true; }
+    if (kode === q) { score += 1000; specificMatchCount = specificTokens.length || 1; }
+    else if (kode.startsWith(q)) { score += 500; specificMatchCount = specificTokens.length || 1; }
+    if (q && nama.includes(q)) { score += 400; specificMatchCount = specificTokens.length || 1; }
     for (const token of qTokens) {
       const isSpecific = !GENERIC_QUERY_STOPWORDS.has(token);
       let tokenHit = false;
-      if (nama.includes(token)) { score += isSpecific ? 80 : 15; tokenHit = true; }
+      if (nama.includes(token)) { score += isSpecific ? 100 : 15; tokenHit = true; }
       if (keywords.includes(token)) { score += isSpecific ? 100 : 20; tokenHit = true; }
       if (keywords.some(k => k.includes(token))) { score += isSpecific ? 45 : 10; tokenHit = true; }
       if (kode.includes(token)) { score += 40; tokenHit = true; }
-      if (isSpecific && tokenHit) specificMatch = true;
+      if (isSpecific && tokenHit) specificMatchCount++;
     }
-    if (specificTokens.length > 0 && !specificMatch) continue;
+    if (specificTokens.length > 0 && specificMatchCount === 0) continue;
+    if (specificTokens.length > 1 && specificMatchCount === specificTokens.length) score += 300;
     if (score > 0) {
-      if (item.kode.startsWith('800')) score += 250;
+      if (item.kode.startsWith('800')) score += 200;
+      if (isPerjalananDinas && (item.kode === '000.1.2.3' || item.kode === '000.1.2' || item.kode === '800.1.11.1')) {
+        score += 500;
+        if (item.kode === '000.1.2.3') score += 150;
+      }
       if (isCeraiQuery && item.kode === '800.1.8.1') score += 600;
       if (isCeraiQuery && item.kode === '800.1.8') score += 350;
       if (isDisiplinQuery && item.kode === '800.1.6.2') score += 400;

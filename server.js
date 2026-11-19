@@ -198,9 +198,9 @@ function normalizeDateStr(val) {
 const GENERIC_QUERY_STOPWORDS = new Set([
   'surat', 'izin', 'ijin', 'permohonan', 'usulan', 'pengantar', 'rekomendasi',
   'keterangan', 'keputusan', 'berita', 'acara', 'undangan', 'laporan', 'daftar',
-  'tentang', 'dan', 'atau', 'yang', 'dari', 'untuk', 'pada', 'dalam', 'atas',
-  'nama', 'kepada', 'sdr', 'sdri', 'asn', 'pns', 'pppk', 'pegawai', 'staf',
-  'kabupaten', 'luwu', 'timur', 'bkpsdm', 'pemerintah', 'daerah'
+  'nota', 'dinas', 'tentang', 'dan', 'atau', 'yang', 'dari', 'untuk', 'pada',
+  'dalam', 'atas', 'nama', 'kepada', 'sdr', 'sdri', 'asn', 'pns', 'pppk',
+  'pegawai', 'staf', 'kabupaten', 'luwu', 'timur', 'bkpsdm', 'pemerintah', 'daerah'
 ]);
 
 function searchKlasifikasi(query, kategori = '', limit = 25) {
@@ -217,6 +217,7 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
   const specificTokens = qTokens.filter(t => !GENERIC_QUERY_STOPWORDS.has(t));
   const isCeraiQuery = /\b(cerai|perceraian|perkawinan|nikah|pernikahan|kawin)\b/i.test(q);
   const isDisiplinQuery = /\b(disiplin|hukuman|pelanggaran|bap)\b/i.test(q);
+  const isPerjalananDinas = /\bperjalanan\s+dinas\b/i.test(q);
 
   let scored = [];
 
@@ -224,7 +225,7 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
     if (kategori && item.kategori !== kategori) continue;
 
     let score = 0;
-    let specificMatch = false;
+    let specificMatchCount = 0;
     const kode = item.kode.toLowerCase();
     const nama = item.nama.toLowerCase();
     const keywords = item.keywords || [];
@@ -232,36 +233,43 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
     // Exact code match
     if (kode === q) {
       score += 1000;
-      specificMatch = true;
+      specificMatchCount = specificTokens.length || 1;
     } else if (kode.startsWith(q)) {
       score += 500;
-      specificMatch = true;
+      specificMatchCount = specificTokens.length || 1;
     }
 
     // Exact phrase in name
     if (q && nama.includes(q)) {
-      score += 300;
-      specificMatch = true;
+      score += 400;
+      specificMatchCount = specificTokens.length || 1;
     }
 
     // Token matches in name and keywords
     for (const token of qTokens) {
       const isSpecific = !GENERIC_QUERY_STOPWORDS.has(token);
       let tokenHit = false;
-      if (nama.includes(token)) { score += isSpecific ? 80 : 15; tokenHit = true; }
+      if (nama.includes(token)) { score += isSpecific ? 100 : 15; tokenHit = true; }
       if (keywords.includes(token)) { score += isSpecific ? 100 : 20; tokenHit = true; }
       if (keywords.some(k => k.includes(token))) { score += isSpecific ? 45 : 10; tokenHit = true; }
       if (kode.includes(token)) { score += 40; tokenHit = true; }
-      if (isSpecific && tokenHit) specificMatch = true;
+      if (isSpecific && tokenHit) specificMatchCount++;
     }
 
-    // Abaikan kode yang hanya cocok pada kata awalan umum (seperti "surat" atau "izin") jika ada kata kunci spesifik
-    if (specificTokens.length > 0 && !specificMatch) continue;
+    // Abaikan kode yang hanya cocok pada kata awalan umum (seperti "surat", "permohonan", "dinas") jika ada kata kunci spesifik
+    if (specificTokens.length > 0 && specificMatchCount === 0) continue;
+    if (specificTokens.length > 1 && specificMatchCount === specificTokens.length) {
+      score += 300;
+    }
 
     // Priority boost for BKPSDM domain: 800 KEPEGAWAIAN
     if (score > 0) {
       if (item.kode.startsWith('800')) {
-        score += 250;
+        score += 200;
+      }
+      if (isPerjalananDinas && (item.kode === '000.1.2.3' || item.kode === '000.1.2' || item.kode === '800.1.11.1')) {
+        score += 500;
+        if (item.kode === '000.1.2.3') score += 150;
       }
       if (isCeraiQuery && item.kode === '800.1.8.1') {
         score += 600;
@@ -324,10 +332,12 @@ const server = http.createServer(async (req, res) => {
 
       // 2. Get full state
       if (pathname === '/api/state' && method === 'GET') {
-        return sendJSON(res, { success: true, data: {
-          ...appState,
-          pegawai: (appState.pegawai || []).map(publicUser)
-        }});
+        return sendJSON(res, {
+          success: true, data: {
+            ...appState,
+            pegawai: (appState.pegawai || []).map(publicUser)
+          }
+        });
       }
 
       // 3. Reset state to default
@@ -364,8 +374,8 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'NIP / username dan kata sandi wajib diisi' }, 400);
         }
 
-        const user = appState.pegawai.find(p => 
-          p.nip === nip || 
+        const user = appState.pegawai.find(p =>
+          p.nip === nip ||
           (p.username && p.username.toLowerCase() === nip.toLowerCase()) ||
           (nip.toLowerCase() === 'admin' && p.role === 'admin') ||
           p.nama.toLowerCase().includes(nip.toLowerCase())
@@ -402,9 +412,9 @@ const server = http.createServer(async (req, res) => {
           const masterList = JSON.parse(fs.readFileSync(MASTER_FILE, 'utf8'));
           appState.pegawai = masterList;
           saveState();
-          return sendJSON(res, { 
-            success: true, 
-            message: `Berhasil memuat ${masterList.length} master pegawai resmi BKPSDM`, 
+          return sendJSON(res, {
+            success: true,
+            message: `Berhasil memuat ${masterList.length} master pegawai resmi BKPSDM`,
             data: masterList.map(publicUser)
           });
         }
@@ -433,8 +443,8 @@ const server = http.createServer(async (req, res) => {
           jabatan: body.jabatan || 'Staf Pelaksana',
           role: body.role || 'pegawai',
           unit: body.unit || 'Subbag Umum & Kepegawaian',
-            password: hashIfNeeded(body.password || '123456')
-          ,akses_login: 1
+          password: hashIfNeeded(body.password || '123456')
+          , akses_login: 1
         };
 
         appState.pegawai.push(newPegawai);
@@ -458,9 +468,9 @@ const server = http.createServer(async (req, res) => {
         if (body.jabatan) peg.jabatan = body.jabatan.trim();
         if (body.role) peg.role = body.role;
         if (body.unit) peg.unit = body.unit.trim();
-          if (body.password) peg.password = hashIfNeeded(body.password.trim());
-          if (body.akses_login !== undefined) peg.akses_login = body.role === 'admin' ? 1 : (body.akses_login ? 1 : 0);
-          if (peg.role === 'admin') peg.akses_login = 1;
+        if (body.password) peg.password = hashIfNeeded(body.password.trim());
+        if (body.akses_login !== undefined) peg.akses_login = body.role === 'admin' ? 1 : (body.akses_login ? 1 : 0);
+        if (peg.role === 'admin') peg.akses_login = 1;
 
         saveState();
         return sendJSON(res, { success: true, message: 'Data pegawai berhasil diperbarui', data: publicUser(peg) });
@@ -561,8 +571,8 @@ const server = http.createServer(async (req, res) => {
         if (!instruksi.length) return sendJSON(res, { success: false, message: 'Instruksi disposisi wajib diisi' }, 400);
         const newId = (appState.disposisi.length ? Math.max(...appState.disposisi.map(d => d.id)) : 0) + 1;
 
-        const diteruskanList = Array.isArray(body.diteruskan_kepada) 
-          ? body.diteruskan_kepada 
+        const diteruskanList = Array.isArray(body.diteruskan_kepada)
+          ? body.diteruskan_kepada
           : (body.diteruskan_kepada ? [body.diteruskan_kepada] : (body.tujuan_nama ? [body.tujuan_nama] : []));
 
         const newDisposisi = {
@@ -745,10 +755,10 @@ const server = http.createServer(async (req, res) => {
           }
         }
         const nextUrut = maxUrut > 0 ? maxUrut + 1 : (appState.surat_tugas.length || 0) + 1;
-        const romawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+        const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         const bulanRomawi = romawi[new Date().getMonth()];
         const tahun = new Date().getFullYear();
-        const noSpt = body.no_surat_tugas || `800.1.11.1/${String(nextUrut).padStart(3,'0')}/BKPSDM/${bulanRomawi}/${tahun}`;
+        const noSpt = body.no_surat_tugas || `800.1.11.1/${String(nextUrut).padStart(3, '0')}/BKPSDM/${bulanRomawi}/${tahun}`;
 
         const newSpt = {
           id: newId,

@@ -268,9 +268,14 @@ class SmartAutoSuggest {
     }
 
     const isRahasia = Boolean(item.is_rahasia || SmartAutoSuggest.isRahasiaCode(item.kode) || SmartAutoSuggest.isRahasiaPerihal(this.input?.value));
-    if (this.targetSifatInput && isRahasia) {
-      this.targetSifatInput.value = 'Rahasia';
-      this.targetSifatInput.dispatchEvent(new Event('change', { bubbles: true }));
+    if (this.targetSifatInput) {
+      if (isRahasia) {
+        this.targetSifatInput.value = 'Rahasia';
+        this.targetSifatInput.dispatchEvent(new Event('change', { bubbles: true }));
+      } else if (this.targetSifatInput.value === 'Rahasia') {
+        this.targetSifatInput.value = 'Biasa';
+        this.targetSifatInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     }
 
     if (this.onSelect) {
