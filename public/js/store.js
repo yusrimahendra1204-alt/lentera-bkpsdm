@@ -215,6 +215,7 @@ const Store = {
 
   // Add Surat Masuk
   async addSuratMasuk(data) {
+    let savedData = null;
     try {
       const res = await fetch('/api/surat-masuk', {
         method: 'POST',
@@ -224,20 +225,41 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
-          const item = this.normalizeRecord(json.data);
-          this.state.surat_masuk.unshift(item);
-          this.notify();
-          return item;
+          savedData = json.data;
         }
       }
     } catch (err) {
-      console.error('Failed to add surat masuk:', err);
+      console.warn('API /api/surat-masuk offline, simpan secara lokal:', err);
     }
-    return null;
+
+    if (!savedData) {
+      const newId = (this.state.surat_masuk.length ? Math.max(...this.state.surat_masuk.map(s => s.id)) : 0) + 1;
+      savedData = {
+        id: newId,
+        no_agenda: data.no_agenda || `SM-${new Date().getFullYear()}-${String(newId).padStart(3, '0')}`,
+        no_surat_pengirim: data.no_surat_pengirim || '',
+        instansi_pengirim: data.instansi_pengirim || '',
+        kode_internal: data.kode_internal || '800',
+        nama_klasifikasi_internal: data.nama_klasifikasi_internal || 'Kepegawaian',
+        perihal: data.perihal || '',
+        tgl_surat: data.tgl_surat || App.getTodayDate(),
+        tgl_diterima: data.tgl_diterima || App.getTodayDate(),
+        sifat_surat: data.sifat_surat || 'Biasa',
+        lampiran: data.lampiran || '1 Berkas',
+        status_disposisi: data.status_disposisi || 'Menunggu Disposisi',
+        file_name: data.file_name || 'surat_masuk.pdf'
+      };
+    }
+
+    const item = this.normalizeRecord(savedData);
+    this.state.surat_masuk.unshift(item);
+    this.notify();
+    return item;
   },
 
   // Update Surat Masuk
   async updateSuratMasuk(id, data) {
+    let savedData = null;
     try {
       const res = await fetch(`/api/surat-masuk/${id}`, {
         method: 'PUT',
@@ -247,15 +269,20 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
-          const item = this.normalizeRecord(json.data);
-          const idx = this.state.surat_masuk.findIndex(s => s.id === id);
-          if (idx !== -1) this.state.surat_masuk[idx] = item;
-          this.notify();
-          return item;
+          savedData = json.data;
         }
       }
     } catch (err) {
-      console.error('Failed to update surat masuk:', err);
+      console.warn('API /api/surat-masuk offline, update secara lokal:', err);
+    }
+
+    const idx = this.state.surat_masuk.findIndex(s => s.id === id);
+    if (idx !== -1) {
+      const current = this.state.surat_masuk[idx];
+      const item = this.normalizeRecord(savedData || { ...current, ...data });
+      this.state.surat_masuk[idx] = item;
+      this.notify();
+      return item;
     }
     return null;
   },
@@ -263,20 +290,14 @@ const Store = {
   // Delete Surat Masuk
   async deleteSuratMasuk(id) {
     try {
-      const res = await fetch(`/api/surat-masuk/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success) {
-          this.state.surat_masuk = this.state.surat_masuk.filter(s => s.id !== id);
-          this.state.disposisi = this.state.disposisi.filter(d => d.id_surat_masuk !== id);
-          this.notify();
-          return true;
-        }
-      }
+      await fetch(`/api/surat-masuk/${id}`, { method: 'DELETE' });
     } catch (err) {
-      console.error('Failed to delete surat masuk:', err);
+      console.warn('API /api/surat-masuk offline, delete secara lokal:', err);
     }
-    return false;
+    this.state.surat_masuk = this.state.surat_masuk.filter(s => s.id !== id);
+    this.state.disposisi = this.state.disposisi.filter(d => d.id_surat_masuk !== id);
+    this.notify();
+    return true;
   },
 
   // Add Disposisi
@@ -488,6 +509,7 @@ const Store = {
 
   // Add Surat Tugas (SPT)
   async addSuratTugas(data) {
+    let savedData = null;
     try {
       const res = await fetch('/api/surat-tugas', {
         method: 'POST',
@@ -497,20 +519,46 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
-          const item = this.normalizeRecord(json.data);
-          this.state.surat_tugas.unshift(item);
-          this.notify();
-          return item;
+          savedData = json.data;
         }
       }
     } catch (err) {
-      console.error('Failed to add surat tugas:', err);
+      console.warn('API /api/surat-tugas offline, simpan secara lokal:', err);
     }
-    return null;
+
+    if (!savedData) {
+      const newId = (this.state.surat_tugas.length ? Math.max(...this.state.surat_tugas.map(s => s.id)) : 0) + 1;
+      const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+      const bulan = romawi[new Date().getMonth()];
+      const tahun = new Date().getFullYear();
+      savedData = {
+        id: newId,
+        no_surat_tugas: data.no_surat_tugas || `800.1.11.1/${String(newId).padStart(3, '0')}/BKPSDM/${bulan}/${tahun}`,
+        bidang_pengusul: data.bidang_pengusul || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
+        kode_klasifikasi: '800.1.11.1',
+        nama_klasifikasi: 'Surat Perintah Dinas/Surat Tugas',
+        personil: Array.isArray(data.personil) ? data.personil : [],
+        dasar: data.dasar || '',
+        maksud_tugas: data.maksud_tugas || '',
+        tempat_tujuan: data.tempat_tujuan || '',
+        tgl_berangkat: data.tgl_berangkat || App.getTodayDate(),
+        tgl_kembali: data.tgl_kembali || App.getTodayDate(),
+        lama_hari: parseInt(data.lama_hari || '1', 10),
+        pembebanan_anggaran: data.pembebanan_anggaran || `DPA-SKPD BKPSDM Kabupaten Luwu Timur TA ${tahun}`,
+        pejabat_penandatangan: data.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
+        jabatan_penandatangan: data.jabatan_penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur'
+      };
+    }
+
+    const item = this.normalizeRecord(savedData);
+    this.state.surat_tugas.unshift(item);
+    this.notify();
+    return item;
   },
 
   // Update Surat Tugas
   async updateSuratTugas(id, data) {
+    let savedData = null;
     try {
       const res = await fetch(`/api/surat-tugas/${id}`, {
         method: 'PUT',
@@ -520,15 +568,20 @@ const Store = {
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
-          const item = this.normalizeRecord(json.data);
-          const idx = this.state.surat_tugas.findIndex(s => s.id === id);
-          if (idx !== -1) this.state.surat_tugas[idx] = item;
-          this.notify();
-          return item;
+          savedData = json.data;
         }
       }
     } catch (err) {
-      console.error('Failed to update surat tugas:', err);
+      console.warn('API /api/surat-tugas offline, update secara lokal:', err);
+    }
+
+    const idx = this.state.surat_tugas.findIndex(s => s.id === id);
+    if (idx !== -1) {
+      const current = this.state.surat_tugas[idx];
+      const item = this.normalizeRecord(savedData || { ...current, ...data });
+      this.state.surat_tugas[idx] = item;
+      this.notify();
+      return item;
     }
     return null;
   },

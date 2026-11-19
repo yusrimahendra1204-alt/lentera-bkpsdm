@@ -242,8 +242,8 @@ const SuratMasukModule = {
           <div class="form-group">
             <label class="form-label">Sifat Surat</label>
             <select id="sm-sifat" class="form-control">
-              <option value="Biasa">Biasa</option>
-              <option value="Segera" selected>Segera</option>
+              <option value="Biasa" selected>Biasa</option>
+              <option value="Segera">Segera</option>
               <option value="Penting">Penting</option>
               <option value="Rahasia">Rahasia</option>
             </select>

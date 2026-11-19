@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `surat_masuk` (
   `perihal`                 TEXT NOT NULL COMMENT 'Perihal/pokok surat',
   `tgl_surat`               DATE NOT NULL,
   `tgl_diterima`            DATE NOT NULL,
-  `sifat_surat`             ENUM('Biasa','Penting','Sangat Penting','Rahasia','Sangat Rahasia')
+  `sifat_surat`             ENUM('Biasa','Segera','Penting','Sangat Penting','Rahasia','Sangat Rahasia')
                             NOT NULL DEFAULT 'Biasa',
   `lampiran`                VARCHAR(100) DEFAULT '1 Berkas',
   `status_disposisi`        ENUM('Menunggu Disposisi','Didisposisi','Selesai')
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `surat_keluar` (
   `tujuan_surat`         TEXT NOT NULL,
   `perihal`              TEXT NOT NULL,
   `tgl_surat`            DATE NOT NULL,
-  `sifat_surat`          ENUM('Biasa','Penting','Sangat Penting','Rahasia') NOT NULL DEFAULT 'Biasa',
+  `sifat_surat`          ENUM('Biasa','Segera','Penting','Sangat Penting','Rahasia','Sangat Rahasia') NOT NULL DEFAULT 'Biasa',
   `penandatangan`        VARCHAR(200) DEFAULT 'Kepala BKPSDM Kabupaten Luwu Timur',
   `metode_dokumen`       VARCHAR(150) DEFAULT 'Fisik Manual (Tanda Tangan Basah)',
   `lokasi_arsip_fisik`   VARCHAR(200) DEFAULT 'Lemari Arsip Subbag Umum',

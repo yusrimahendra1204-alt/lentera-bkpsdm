@@ -5,16 +5,16 @@
 // Berdasarkan Perbup Luwu Timur No. 69 Tahun 2023
 // ============================================================
 
-const http   = require('http');
-const fs     = require('fs');
-const path   = require('path');
-const url    = require('url');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const url = require('url');
 const crypto = require('crypto');
-const db     = require('./config/database');
+const db = require('./config/database');
 
-const PORT       = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
-const DATA_DIR   = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, 'data');
 const KLASIFIKASI_FILE = path.join(DATA_DIR, 'klasifikasi_perbup.json');
 const AUTH_SECRET = process.env.AUTH_SECRET || crypto.createHash('sha256').update(`${process.env.DB_NAME || 'persuratan'}:${process.env.DB_PASSWORD || 'local'}`).digest('hex');
 const CORS_ORIGIN = process.env.ALLOWED_ORIGIN || '';
@@ -22,8 +22,18 @@ let accessPolicyReady = false;
 
 async function ensureAccessPolicy() {
   if (accessPolicyReady) return;
-  await db.query("ALTER TABLE pegawai ADD COLUMN IF NOT EXISTS akses_login TINYINT(1) NOT NULL DEFAULT 0");
-  await db.query("UPDATE pegawai SET akses_login = 1 WHERE role = 'admin'");
+  try {
+    await db.query("ALTER TABLE pegawai ADD COLUMN IF NOT EXISTS akses_login TINYINT(1) NOT NULL DEFAULT 0");
+    await db.query("UPDATE pegawai SET akses_login = 1 WHERE role = 'admin'");
+  } catch (e) {
+    // Abaikan jika MySQL versi lama tidak mendukung ADD COLUMN IF NOT EXISTS atau kolom sudah ada
+  }
+  try {
+    await db.query("ALTER TABLE surat_masuk MODIFY COLUMN sifat_surat ENUM('Biasa','Segera','Penting','Sangat Penting','Rahasia','Sangat Rahasia') NOT NULL DEFAULT 'Biasa'");
+    await db.query("ALTER TABLE surat_keluar MODIFY COLUMN sifat_surat ENUM('Biasa','Segera','Penting','Sangat Penting','Rahasia','Sangat Rahasia') NOT NULL DEFAULT 'Biasa'");
+  } catch (e) {
+    // Abaikan jika gagal alter enum
+  }
   accessPolicyReady = true;
 }
 
@@ -43,16 +53,16 @@ try {
 // ============================================================
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
-  '.css':  'text/css; charset=utf-8',
-  '.js':   'application/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
-  '.png':  'image/png',
-  '.jpg':  'image/jpeg',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
-  '.svg':  'image/svg+xml',
-  '.ico':  'image/x-icon',
-  '.pdf':  'application/pdf',
-  '.woff2':'font/woff2',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.pdf': 'application/pdf',
+  '.woff2': 'font/woff2',
   '.woff': 'font/woff'
 };
 
@@ -253,11 +263,11 @@ async function generateNoAgenda(prefix) {
 // Bangun state object dari MySQL (kompatibel dengan frontend lama)
 async function buildAppState() {
   try {
-    const pegawai     = await db.query('SELECT * FROM pegawai ORDER BY id');
-    const suratMasuk  = await db.query('SELECT * FROM surat_masuk ORDER BY id DESC');
-    const disposisi   = await db.query('SELECT * FROM disposisi ORDER BY id DESC');
+    const pegawai = await db.query('SELECT * FROM pegawai ORDER BY id');
+    const suratMasuk = await db.query('SELECT * FROM surat_masuk ORDER BY id DESC');
+    const disposisi = await db.query('SELECT * FROM disposisi ORDER BY id DESC');
     const suratKeluar = await db.query('SELECT * FROM surat_keluar ORDER BY id DESC');
-    const suratTugas  = await db.query('SELECT * FROM surat_tugas ORDER BY id DESC');
+    const suratTugas = await db.query('SELECT * FROM surat_tugas ORDER BY id DESC');
 
     // Parse instruksi & personil + normalisasi tanggal agar tidak mundur karena UTC
     suratMasuk.forEach(normalizeRecordDates);
@@ -301,8 +311,8 @@ async function buildAppState() {
 // ============================================================
 const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  const pathname  = parsedUrl.pathname;
-  const method    = req.method;
+  const pathname = parsedUrl.pathname;
+  const method = req.method;
 
   if (method === 'OPTIONS') {
     res.writeHead(204, {
@@ -331,8 +341,8 @@ const server = http.createServer(async (req, res) => {
 
       // ---- KLASIFIKASI ----
       if (pathname === '/api/klasifikasi' && method === 'GET') {
-        const q     = parsedUrl.query.q || '';
-        const kat   = parsedUrl.query.kat || '';
+        const q = parsedUrl.query.q || '';
+        const kat = parsedUrl.query.kat || '';
         const limit = parseInt(parsedUrl.query.limit || '15', 10);
         const results = searchKlasifikasi(q, kat, limit);
         return sendJSON(res, { success: true, total: results.length, data: results });
@@ -360,7 +370,7 @@ const server = http.createServer(async (req, res) => {
       // ---- LOGIN ----
       if (pathname === '/api/login' && method === 'POST') {
         const body = await parseBody(req);
-        const nip  = (body.nip || '').trim();
+        const nip = (body.nip || '').trim();
         const pass = (body.password || '').trim();
         if (!nip || !pass)
           return sendJSON(res, { success: false, message: 'NIP / username dan kata sandi wajib diisi' }, 400);
@@ -375,10 +385,10 @@ const server = http.createServer(async (req, res) => {
           const MASTER_FILE = path.join(DATA_DIR, 'master_pegawai_bkpsdm_final.json');
           if (fs.existsSync(MASTER_FILE)) {
             const list = JSON.parse(fs.readFileSync(MASTER_FILE, 'utf8'));
-            user = list.find(p => 
-              p.nip === nip || 
-              (p.username && p.username.toLowerCase() === nip.toLowerCase()) || 
-              (nip.toLowerCase() === 'admin' && p.role === 'admin') || 
+            user = list.find(p =>
+              p.nip === nip ||
+              (p.username && p.username.toLowerCase() === nip.toLowerCase()) ||
+              (nip.toLowerCase() === 'admin' && p.role === 'admin') ||
               p.nama.toLowerCase().includes(nip.toLowerCase())
             );
           }
@@ -444,11 +454,11 @@ const server = http.createServer(async (req, res) => {
         const [result] = await db.getPool().execute(
           'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password,akses_login) VALUES (?,?,?,?,?,?,?,?)',
           [body.nip.trim(), body.nama.trim(),
-           body.pangkat || 'Penata Muda (III/a)',
-           body.jabatan || 'Staf Pelaksana',
-           body.role    || 'pegawai',
-           body.unit    || 'Subbag Umum & Kepegawaian',
-           hashIfNeeded(body.password || '123456'), 1]
+          body.pangkat || 'Penata Muda (III/a)',
+          body.jabatan || 'Staf Pelaksana',
+          body.role || 'pegawai',
+          body.unit || 'Subbag Umum & Kepegawaian',
+          hashIfNeeded(body.password || '123456'), 1]
         );
         const newPeg = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [result.insertId]);
         return sendJSON(res, { success: true, message: 'Pegawai berhasil ditambahkan', data: publicUser(newPeg) });
@@ -456,21 +466,21 @@ const server = http.createServer(async (req, res) => {
 
       // ---- PEGAWAI: Update ----
       if (pathname.startsWith('/api/pegawai/') && method === 'PUT') {
-        const id   = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const peg  = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [id]);
+        const peg = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [id]);
         if (!peg) return sendJSON(res, { success: false, message: 'Pegawai tidak ditemukan' }, 404);
         await db.getPool().execute(
           'UPDATE pegawai SET nip=?,nama=?,pangkat=?,jabatan=?,role=?,unit=?,password=?,akses_login=? WHERE id=?',
-          [body.nip     || peg.nip,
-           body.nama    || peg.nama,
-           body.pangkat || peg.pangkat,
-           body.jabatan || peg.jabatan,
-           body.role    || peg.role,
-           body.unit    || peg.unit,
-           body.password ? hashIfNeeded(body.password) : peg.password,
-           body.role === 'admin' ? 1 : (body.akses_login !== undefined ? (body.akses_login ? 1 : 0) : (peg.akses_login || 0)),
-           id]
+          [body.nip || peg.nip,
+          body.nama || peg.nama,
+          body.pangkat || peg.pangkat,
+          body.jabatan || peg.jabatan,
+          body.role || peg.role,
+          body.unit || peg.unit,
+          body.password ? hashIfNeeded(body.password) : peg.password,
+          body.role === 'admin' ? 1 : (body.akses_login !== undefined ? (body.akses_login ? 1 : 0) : (peg.akses_login || 0)),
+            id]
         );
         const updated = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [id]);
         return sendJSON(res, { success: true, message: 'Data pegawai diperbarui', data: publicUser(updated) });
@@ -478,7 +488,7 @@ const server = http.createServer(async (req, res) => {
 
       // ---- PEGAWAI: Delete ----
       if (pathname.startsWith('/api/pegawai/') && method === 'DELETE') {
-        const id    = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const count = await db.queryOne('SELECT COUNT(*) AS c FROM pegawai WHERE aktif = 1');
         if (count.c <= 1)
           return sendJSON(res, { success: false, message: 'Tidak dapat menghapus pegawai terakhir' }, 400);
@@ -488,54 +498,104 @@ const server = http.createServer(async (req, res) => {
 
       // ---- SURAT MASUK: Create ----
       if (pathname === '/api/surat-masuk' && method === 'POST') {
-        const body    = await parseBody(req);
+        const body = await parseBody(req);
         const noAgenda = await generateNoAgenda('SM');
-        const [result] = await db.getPool().execute(`
-          INSERT INTO surat_masuk
-            (no_agenda,no_surat_pengirim,instansi_pengirim,kode_internal,
-             nama_klasifikasi_internal,perihal,tgl_surat,tgl_diterima,
-             sifat_surat,lampiran,status_disposisi,file_name)
-          VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-          [noAgenda,
-           body.no_surat_pengirim || '',
-           body.instansi_pengirim || '',
-           body.kode_internal     || '800',
-           body.nama_klasifikasi_internal || 'Kepegawaian',
-           body.perihal           || '',
-           normalizeDateStr(body.tgl_surat)    || getLocalToday(),
-           normalizeDateStr(body.tgl_diterima) || getLocalToday(),
-           body.sifat_surat       || 'Biasa',
-           body.lampiran          || '1 Berkas',
-           'Menunggu Disposisi',
-           body.file_name         || 'surat_masuk.pdf']
-        );
+        const tglSurat = normalizeDateStr(body.tgl_surat) || getLocalToday();
+        const tglDiterima = normalizeDateStr(body.tgl_diterima) || getLocalToday();
+        const sifatSurat = body.sifat_surat || 'Biasa';
+        let result;
+        try {
+          [result] = await db.getPool().execute(`
+            INSERT INTO surat_masuk
+              (no_agenda,no_surat_pengirim,instansi_pengirim,kode_internal,
+               nama_klasifikasi_internal,perihal,tgl_surat,tgl_diterima,
+               sifat_surat,lampiran,status_disposisi,file_name)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [noAgenda,
+              body.no_surat_pengirim || '',
+              body.instansi_pengirim || '',
+              body.kode_internal || '800',
+              body.nama_klasifikasi_internal || 'Kepegawaian',
+              body.perihal || '',
+              tglSurat,
+              tglDiterima,
+              sifatSurat,
+              body.lampiran || '1 Berkas',
+              'Menunggu Disposisi',
+              body.file_name || 'surat_masuk.pdf']
+          );
+        } catch (enumErr) {
+          // Fallback jika kolom sifat_surat di database masih menggunakan ENUM lama tanpa 'Segera'
+          const safeSifat = sifatSurat === 'Segera' ? 'Penting' : 'Biasa';
+          [result] = await db.getPool().execute(`
+            INSERT INTO surat_masuk
+              (no_agenda,no_surat_pengirim,instansi_pengirim,kode_internal,
+               nama_klasifikasi_internal,perihal,tgl_surat,tgl_diterima,
+               sifat_surat,lampiran,status_disposisi,file_name)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [noAgenda,
+              body.no_surat_pengirim || '',
+              body.instansi_pengirim || '',
+              body.kode_internal || '800',
+              body.nama_klasifikasi_internal || 'Kepegawaian',
+              body.perihal || '',
+              tglSurat,
+              tglDiterima,
+              safeSifat,
+              body.lampiran || '1 Berkas',
+              'Menunggu Disposisi',
+              body.file_name || 'surat_masuk.pdf']
+          );
+        }
         const newSM = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [result.insertId]));
         return sendJSON(res, { success: true, data: newSM });
       }
 
       // ---- SURAT MASUK: Update ----
       if (pathname.startsWith('/api/surat-masuk/') && method === 'PUT') {
-        const id   = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const sm   = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [id]));
+        const sm = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [id]));
         if (!sm) return sendJSON(res, { success: false, message: 'Surat masuk tidak ditemukan' }, 404);
-        await db.getPool().execute(`
-          UPDATE surat_masuk SET
-            no_surat_pengirim=?, instansi_pengirim=?, kode_internal=?,
-            nama_klasifikasi_internal=?, perihal=?, tgl_surat=?,
-            tgl_diterima=?, sifat_surat=?, file_name=?
-          WHERE id=?`,
-          [body.no_surat_pengirim || sm.no_surat_pengirim,
-           body.instansi_pengirim || sm.instansi_pengirim,
-           body.kode_internal     || sm.kode_internal,
-           body.nama_klasifikasi_internal || sm.nama_klasifikasi_internal,
-           body.perihal           || sm.perihal,
-           normalizeDateStr(body.tgl_surat)    || sm.tgl_surat,
-           normalizeDateStr(body.tgl_diterima) || sm.tgl_diterima,
-           body.sifat_surat       || sm.sifat_surat,
-           body.file_name         || sm.file_name,
-           id]
-        );
+        const sifatSurat = body.sifat_surat || sm.sifat_surat;
+        try {
+          await db.getPool().execute(`
+            UPDATE surat_masuk SET
+              no_surat_pengirim=?, instansi_pengirim=?, kode_internal=?,
+              nama_klasifikasi_internal=?, perihal=?, tgl_surat=?,
+              tgl_diterima=?, sifat_surat=?, file_name=?
+            WHERE id=?`,
+            [body.no_surat_pengirim || sm.no_surat_pengirim,
+            body.instansi_pengirim || sm.instansi_pengirim,
+            body.kode_internal || sm.kode_internal,
+            body.nama_klasifikasi_internal || sm.nama_klasifikasi_internal,
+            body.perihal || sm.perihal,
+            normalizeDateStr(body.tgl_surat) || sm.tgl_surat,
+            normalizeDateStr(body.tgl_diterima) || sm.tgl_diterima,
+            sifatSurat,
+            body.file_name || sm.file_name,
+              id]
+          );
+        } catch (enumErr) {
+          const safeSifat = sifatSurat === 'Segera' ? 'Penting' : 'Biasa';
+          await db.getPool().execute(`
+            UPDATE surat_masuk SET
+              no_surat_pengirim=?, instansi_pengirim=?, kode_internal=?,
+              nama_klasifikasi_internal=?, perihal=?, tgl_surat=?,
+              tgl_diterima=?, sifat_surat=?, file_name=?
+            WHERE id=?`,
+            [body.no_surat_pengirim || sm.no_surat_pengirim,
+            body.instansi_pengirim || sm.instansi_pengirim,
+            body.kode_internal || sm.kode_internal,
+            body.nama_klasifikasi_internal || sm.nama_klasifikasi_internal,
+            body.perihal || sm.perihal,
+            normalizeDateStr(body.tgl_surat) || sm.tgl_surat,
+            normalizeDateStr(body.tgl_diterima) || sm.tgl_diterima,
+            safeSifat,
+            body.file_name || sm.file_name,
+              id]
+          );
+        }
         const updated = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_masuk WHERE id = ?', [id]));
         return sendJSON(res, { success: true, message: 'Surat masuk diperbarui', data: updated });
       }
@@ -551,7 +611,7 @@ const server = http.createServer(async (req, res) => {
 
       // ---- DISPOSISI: Create ----
       if (pathname === '/api/disposisi' && method === 'POST') {
-        const body      = await parseBody(req);
+        const body = await parseBody(req);
         const instruksi = Array.isArray(body.instruksi) ? body.instruksi : [body.instruksi].filter(Boolean);
         const suratId = parseInt(body.id_surat_masuk, 10);
         const sifatInput = String(body.sifat || '').trim();
@@ -566,20 +626,20 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'Instruksi disposisi wajib diisi' }, 400);
         if (!DISPOSISI_SIFAT.includes(sifatInput) && !['Biasa', 'Segera', 'Sangat Segera'].includes(sifat))
           return sendJSON(res, { success: false, message: 'Sifat disposisi tidak valid' }, 400);
-        const [result]  = await db.getPool().execute(`
+        const [result] = await db.getPool().execute(`
           INSERT INTO disposisi
             (id_surat_masuk,dari_user,tujuan_user_id,tujuan_nama,
              sifat,instruksi,catatan,batas_waktu,status_tindak_lanjut)
           VALUES (?,?,?,?,?,?,?,?,?)`,
           [suratId,
-           body.dari_user      || 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
-           body.tujuan_user_id ? parseInt(body.tujuan_user_id, 10) : null,
-           body.tujuan_nama    || '',
-           sifat,
-           JSON.stringify(instruksi),
-           body.catatan        || '',
-           normalizeDateStr(body.batas_waktu) || null,
-           'Diproses']
+            body.dari_user || 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
+            body.tujuan_user_id ? parseInt(body.tujuan_user_id, 10) : null,
+            body.tujuan_nama || '',
+            sifat,
+            JSON.stringify(instruksi),
+            body.catatan || '',
+            normalizeDateStr(body.batas_waktu) || null,
+            'Diproses']
         );
         // Update status surat masuk
         await db.getPool().execute(
@@ -588,14 +648,14 @@ const server = http.createServer(async (req, res) => {
         );
         const newDisp = normalizeRecordDates(await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [result.insertId]));
         if (newDisp && newDisp.instruksi) {
-          try { newDisp.instruksi = JSON.parse(newDisp.instruksi); } catch {}
+          try { newDisp.instruksi = JSON.parse(newDisp.instruksi); } catch { }
         }
         return sendJSON(res, { success: true, data: newDisp });
       }
 
       // ---- DISPOSISI: Update ----
       if (pathname.startsWith('/api/disposisi/') && method === 'PUT') {
-        const id   = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
         const disp = normalizeRecordDates(await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]));
         if (!disp) return sendJSON(res, { success: false, message: 'Disposisi tidak ditemukan' }, 404);
@@ -608,7 +668,7 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'Status tindak lanjut tidak valid' }, 400);
         if (!['Biasa', 'Segera', 'Sangat Segera'].includes(newSifat))
           return sendJSON(res, { success: false, message: 'Sifat disposisi tidak valid' }, 400);
-        const newInstruksi = body.instruksi !== undefined 
+        const newInstruksi = body.instruksi !== undefined
           ? (Array.isArray(body.instruksi) ? JSON.stringify(body.instruksi) : String(body.instruksi))
           : (typeof disp.instruksi === 'string' ? disp.instruksi : JSON.stringify(disp.instruksi || []));
 
@@ -628,13 +688,13 @@ const server = http.createServer(async (req, res) => {
           );
         }
         const updated = normalizeRecordDates(await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]));
-        if (updated && updated.instruksi) { try { updated.instruksi = JSON.parse(updated.instruksi); } catch {} }
+        if (updated && updated.instruksi) { try { updated.instruksi = JSON.parse(updated.instruksi); } catch { } }
         return sendJSON(res, { success: true, data: updated });
       }
 
       // ---- DISPOSISI: Delete ----
       if (pathname.startsWith('/api/disposisi/') && method === 'DELETE') {
-        const id   = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const disp = await db.queryOne('SELECT * FROM disposisi WHERE id = ?', [id]);
         if (!disp) return sendJSON(res, { success: false, message: 'Disposisi tidak ditemukan' }, 404);
         await db.getPool().execute('DELETE FROM disposisi WHERE id = ?', [id]);
@@ -652,13 +712,13 @@ const server = http.createServer(async (req, res) => {
 
       // ---- SURAT KELUAR: Create ----
       if (pathname === '/api/surat-keluar' && method === 'POST') {
-        const body     = await parseBody(req);
+        const body = await parseBody(req);
         const noAgenda = await generateNoAgenda('SK');
-        const kode     = body.kode_klasifikasi || '000';
-        const romawi   = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-        const bulan    = romawi[new Date().getMonth()];
-        const tahun    = new Date().getFullYear();
-        
+        const kode = body.kode_klasifikasi || '000';
+        const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+        const bulan = romawi[new Date().getMonth()];
+        const tahun = new Date().getFullYear();
+
         let nextN = 1;
         const [recentSK] = await db.getPool().execute(
           'SELECT no_surat_keluar FROM surat_keluar ORDER BY id DESC LIMIT 10'
@@ -673,8 +733,8 @@ const server = http.createServer(async (req, res) => {
             }
           }
         }
-        const noUrut   = String(nextN).padStart(3, '0');
-        const noSurat  = body.no_surat_keluar || `${kode}/${noUrut}/BKPSDM/${bulan}/${tahun}`;
+        const noUrut = String(nextN).padStart(3, '0');
+        const noSurat = body.no_surat_keluar || `${kode}/${noUrut}/BKPSDM/${bulan}/${tahun}`;
         const kodeUsulan = body.kode_usulan_bidang || kode;
         const statusKomparasi = body.status_komparasi_kode || (kodeUsulan !== kode ? 'Dikoreksi Sistem' : 'Sesuai Standar');
 
@@ -687,23 +747,23 @@ const server = http.createServer(async (req, res) => {
                lokasi_arsip_fisik,is_surat_balasan,id_surat_masuk_asal,no_surat_pengirim_asal,file_name)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
             [noAgenda,
-             body.bidang_pembuat    || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
-             kodeUsulan,
-             kode,
-             body.nama_klasifikasi  || 'Umum',
-             statusKomparasi,
-             noSurat,
-             body.tujuan_surat      || '',
-             body.perihal           || '',
-             normalizeDateStr(body.tgl_surat) || getLocalToday(),
-             body.sifat_surat       || 'Biasa',
-             body.penandatangan     || 'Kepala BKPSDM Kabupaten Luwu Timur',
-             body.metode_dokumen    || 'Fisik Manual (Tanda Tangan Basah)',
-             body.lokasi_arsip_fisik|| 'Lemari Arsip Subbag Umum',
-             body.is_surat_balasan  ? 1 : 0,
-             body.id_surat_masuk_asal ? parseInt(body.id_surat_masuk_asal, 10) : null,
-             body.no_surat_pengirim_asal || '',
-             body.file_name         || 'surat_keluar.pdf']
+              body.bidang_pembuat || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
+              kodeUsulan,
+              kode,
+              body.nama_klasifikasi || 'Umum',
+              statusKomparasi,
+              noSurat,
+              body.tujuan_surat || '',
+              body.perihal || '',
+              normalizeDateStr(body.tgl_surat) || getLocalToday(),
+              body.sifat_surat || 'Biasa',
+              body.penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur',
+              body.metode_dokumen || 'Fisik Manual (Tanda Tangan Basah)',
+              body.lokasi_arsip_fisik || 'Lemari Arsip Subbag Umum',
+              body.is_surat_balasan ? 1 : 0,
+              body.id_surat_masuk_asal ? parseInt(body.id_surat_masuk_asal, 10) : null,
+              body.no_surat_pengirim_asal || '',
+              body.file_name || 'surat_keluar.pdf']
           );
         } catch (colErr) {
           // Fallback jika database MySQL belum di-alter kolom komparasi
@@ -714,21 +774,21 @@ const server = http.createServer(async (req, res) => {
                lokasi_arsip_fisik,is_surat_balasan,id_surat_masuk_asal,no_surat_pengirim_asal,file_name)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
             [noAgenda,
-             body.bidang_pembuat    || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
-             kode,
-             body.nama_klasifikasi  || 'Umum',
-             noSurat,
-             body.tujuan_surat      || '',
-             body.perihal           || '',
-             normalizeDateStr(body.tgl_surat) || getLocalToday(),
-             body.sifat_surat       || 'Biasa',
-             body.penandatangan     || 'Kepala BKPSDM Kabupaten Luwu Timur',
-             body.metode_dokumen    || 'Fisik Manual (Tanda Tangan Basah)',
-             body.lokasi_arsip_fisik|| 'Lemari Arsip Subbag Umum',
-             body.is_surat_balasan  ? 1 : 0,
-             body.id_surat_masuk_asal ? parseInt(body.id_surat_masuk_asal, 10) : null,
-             body.no_surat_pengirim_asal || '',
-             body.file_name         || 'surat_keluar.pdf']
+              body.bidang_pembuat || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
+              kode,
+              body.nama_klasifikasi || 'Umum',
+              noSurat,
+              body.tujuan_surat || '',
+              body.perihal || '',
+              normalizeDateStr(body.tgl_surat) || getLocalToday(),
+              body.sifat_surat || 'Biasa',
+              body.penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur',
+              body.metode_dokumen || 'Fisik Manual (Tanda Tangan Basah)',
+              body.lokasi_arsip_fisik || 'Lemari Arsip Subbag Umum',
+              body.is_surat_balasan ? 1 : 0,
+              body.id_surat_masuk_asal ? parseInt(body.id_surat_masuk_asal, 10) : null,
+              body.no_surat_pengirim_asal || '',
+              body.file_name || 'surat_keluar.pdf']
           );
         }
         const newSK = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [result.insertId]));
@@ -741,9 +801,9 @@ const server = http.createServer(async (req, res) => {
 
       // ---- SURAT KELUAR: Update ----
       if (pathname.startsWith('/api/surat-keluar/') && method === 'PUT') {
-        const id   = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const sk   = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]));
+        const sk = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]));
         if (!sk) return sendJSON(res, { success: false, message: 'Surat keluar tidak ditemukan' }, 404);
 
         const kodeUsulan = body.kode_usulan_bidang !== undefined ? body.kode_usulan_bidang : (sk.kode_usulan_bidang || sk.kode_klasifikasi);
@@ -757,18 +817,18 @@ const server = http.createServer(async (req, res) => {
               penandatangan=?, kode_klasifikasi=?, nama_klasifikasi=?, bidang_pembuat=?,
               kode_usulan_bidang=?, status_komparasi_kode=?, no_surat_keluar=?
             WHERE id=?`,
-            [body.tujuan_surat    || sk.tujuan_surat,
-             body.perihal         || sk.perihal,
-             normalizeDateStr(body.tgl_surat) || sk.tgl_surat,
-             body.sifat_surat     || sk.sifat_surat,
-             body.penandatangan   || sk.penandatangan,
-             kodeBaku,
-             body.nama_klasifikasi|| sk.nama_klasifikasi,
-             body.bidang_pembuat  || sk.bidang_pembuat,
-             kodeUsulan,
-             statusKomparasi,
-             body.no_surat_keluar || sk.no_surat_keluar,
-             id]
+            [body.tujuan_surat || sk.tujuan_surat,
+            body.perihal || sk.perihal,
+            normalizeDateStr(body.tgl_surat) || sk.tgl_surat,
+            body.sifat_surat || sk.sifat_surat,
+            body.penandatangan || sk.penandatangan,
+              kodeBaku,
+            body.nama_klasifikasi || sk.nama_klasifikasi,
+            body.bidang_pembuat || sk.bidang_pembuat,
+              kodeUsulan,
+              statusKomparasi,
+            body.no_surat_keluar || sk.no_surat_keluar,
+              id]
           );
         } catch (colErr) {
           await db.getPool().execute(`
@@ -776,16 +836,16 @@ const server = http.createServer(async (req, res) => {
               tujuan_surat=?, perihal=?, tgl_surat=?, sifat_surat=?,
               penandatangan=?, kode_klasifikasi=?, nama_klasifikasi=?, bidang_pembuat=?, no_surat_keluar=?
             WHERE id=?`,
-            [body.tujuan_surat    || sk.tujuan_surat,
-             body.perihal         || sk.perihal,
-             normalizeDateStr(body.tgl_surat) || sk.tgl_surat,
-             body.sifat_surat     || sk.sifat_surat,
-             body.penandatangan   || sk.penandatangan,
-             kodeBaku,
-             body.nama_klasifikasi|| sk.nama_klasifikasi,
-             body.bidang_pembuat  || sk.bidang_pembuat,
-             body.no_surat_keluar || sk.no_surat_keluar,
-             id]
+            [body.tujuan_surat || sk.tujuan_surat,
+            body.perihal || sk.perihal,
+            normalizeDateStr(body.tgl_surat) || sk.tgl_surat,
+            body.sifat_surat || sk.sifat_surat,
+            body.penandatangan || sk.penandatangan,
+              kodeBaku,
+            body.nama_klasifikasi || sk.nama_klasifikasi,
+            body.bidang_pembuat || sk.bidang_pembuat,
+            body.no_surat_keluar || sk.no_surat_keluar,
+              id]
           );
         }
         const updated = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_keluar WHERE id = ?', [id]));
@@ -807,9 +867,9 @@ const server = http.createServer(async (req, res) => {
 
       // ---- SURAT TUGAS: Create ----
       if (pathname === '/api/surat-tugas' && method === 'POST') {
-        const body     = await parseBody(req);
-        const tahun    = new Date().getFullYear();
-        const romawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+        const body = await parseBody(req);
+        const tahun = new Date().getFullYear();
+        const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         const bulanRomawi = romawi[new Date().getMonth()];
         const allSpt = await db.query('SELECT no_surat_tugas FROM surat_tugas');
         let maxUrut = 0;
@@ -822,7 +882,7 @@ const server = http.createServer(async (req, res) => {
         }
         const nextUrut = maxUrut > 0 ? maxUrut + 1 : (allSpt.length || 0) + 1;
         const noSpt = body.no_surat_tugas ||
-          `800.1.11.1/${String(nextUrut).padStart(3,'0')}/BKPSDM/${bulanRomawi}/${tahun}`;
+          `800.1.11.1/${String(nextUrut).padStart(3, '0')}/BKPSDM/${bulanRomawi}/${tahun}`;
         const [result] = await db.getPool().execute(`
           INSERT INTO surat_tugas
             (no_surat_tugas,bidang_pengusul,kode_klasifikasi,nama_klasifikasi,
@@ -830,18 +890,18 @@ const server = http.createServer(async (req, res) => {
              lama_hari,pembebanan_anggaran,pejabat_penandatangan,jabatan_penandatangan)
           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
           [noSpt,
-           body.bidang_pengusul       || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
-           '800.1.11.1',
-           'Surat Perintah Dinas/Surat Tugas',
-           body.dasar                 || '',
-           body.maksud_tugas          || '',
-           body.tempat_tujuan         || '',
-           normalizeDateStr(body.tgl_berangkat) || getLocalToday(),
-           normalizeDateStr(body.tgl_kembali)   || getLocalToday(),
-           parseInt(body.lama_hari||'1', 10),
-           body.pembebanan_anggaran   || `DPA-SKPD BKPSDM Kabupaten Luwu Timur TA ${tahun}`,
-           body.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
-           body.jabatan_penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur']
+            body.bidang_pengusul || 'Bidang Pengadaan, Pemberhentian, Kinerja, dan Informasi Kepegawaian',
+            '800.1.11.1',
+            'Surat Perintah Dinas/Surat Tugas',
+            body.dasar || '',
+            body.maksud_tugas || '',
+            body.tempat_tujuan || '',
+            normalizeDateStr(body.tgl_berangkat) || getLocalToday(),
+            normalizeDateStr(body.tgl_kembali) || getLocalToday(),
+            parseInt(body.lama_hari || '1', 10),
+            body.pembebanan_anggaran || `DPA-SKPD BKPSDM Kabupaten Luwu Timur TA ${tahun}`,
+            body.pejabat_penandatangan || 'PARHA ARIEF, S.AP',
+            body.jabatan_penandatangan || 'Kepala BKPSDM Kabupaten Luwu Timur']
         );
         const sptId = result.insertId;
         // Insert personil
@@ -850,7 +910,7 @@ const server = http.createServer(async (req, res) => {
           const p = personil[i];
           await db.getPool().execute(
             'INSERT INTO surat_tugas_personil (id_surat_tugas,nip,nama,pangkat,jabatan,urutan) VALUES (?,?,?,?,?,?)',
-            [sptId, p.nip||'', p.nama||'', p.pangkat||'', p.jabatan||'', i+1]
+            [sptId, p.nip || '', p.nama || '', p.pangkat || '', p.jabatan || '', i + 1]
           );
         }
         const newSpt = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [sptId]));
@@ -860,25 +920,25 @@ const server = http.createServer(async (req, res) => {
 
       // ---- SURAT TUGAS: Update ----
       if (pathname.startsWith('/api/surat-tugas/') && method === 'PUT') {
-        const id   = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const body = await parseBody(req);
-        const spt  = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [id]));
+        const spt = normalizeRecordDates(await db.queryOne('SELECT * FROM surat_tugas WHERE id = ?', [id]));
         if (!spt) return sendJSON(res, { success: false, message: 'Surat tugas tidak ditemukan' }, 404);
         await db.getPool().execute(`
           UPDATE surat_tugas SET
             bidang_pengusul=?, dasar=?, maksud_tugas=?, tempat_tujuan=?, tgl_berangkat=?,
             tgl_kembali=?, lama_hari=?, pembebanan_anggaran=?, pejabat_penandatangan=?
           WHERE id=?`,
-          [body.bidang_pengusul     || spt.bidang_pengusul,
-           body.dasar               || spt.dasar,
-           body.maksud_tugas        || spt.maksud_tugas,
-           body.tempat_tujuan       || spt.tempat_tujuan,
-           normalizeDateStr(body.tgl_berangkat) || spt.tgl_berangkat,
-           normalizeDateStr(body.tgl_kembali)   || spt.tgl_kembali,
-           parseInt(body.lama_hari||spt.lama_hari, 10),
-           body.pembebanan_anggaran || spt.pembebanan_anggaran,
-           body.pejabat_penandatangan || spt.pejabat_penandatangan,
-           id]
+          [body.bidang_pengusul || spt.bidang_pengusul,
+          body.dasar || spt.dasar,
+          body.maksud_tugas || spt.maksud_tugas,
+          body.tempat_tujuan || spt.tempat_tujuan,
+          normalizeDateStr(body.tgl_berangkat) || spt.tgl_berangkat,
+          normalizeDateStr(body.tgl_kembali) || spt.tgl_kembali,
+          parseInt(body.lama_hari || spt.lama_hari, 10),
+          body.pembebanan_anggaran || spt.pembebanan_anggaran,
+          body.pejabat_penandatangan || spt.pejabat_penandatangan,
+            id]
         );
         if (body.personil && Array.isArray(body.personil)) {
           await db.getPool().execute('DELETE FROM surat_tugas_personil WHERE id_surat_tugas = ?', [id]);
@@ -886,7 +946,7 @@ const server = http.createServer(async (req, res) => {
             const p = body.personil[i];
             await db.getPool().execute(
               'INSERT INTO surat_tugas_personil (id_surat_tugas,nip,nama,pangkat,jabatan,urutan) VALUES (?,?,?,?,?,?)',
-              [id, p.nip||'', p.nama||'', p.pangkat||'', p.jabatan||'', i+1]
+              [id, p.nip || '', p.nama || '', p.pangkat || '', p.jabatan || '', i + 1]
             );
           }
         }
@@ -896,7 +956,7 @@ const server = http.createServer(async (req, res) => {
 
       // ---- SURAT TUGAS: Delete ----
       if (pathname.startsWith('/api/surat-tugas/') && method === 'DELETE') {
-        const id  = parseInt(pathname.split('/').pop(), 10);
+        const id = parseInt(pathname.split('/').pop(), 10);
         const spt = await db.queryOne('SELECT no_surat_tugas FROM surat_tugas WHERE id = ?', [id]);
         if (!spt) return sendJSON(res, { success: false, message: 'Surat tugas tidak ditemukan' }, 404);
         await db.getPool().execute('DELETE FROM surat_tugas WHERE id = ?', [id]);
@@ -905,11 +965,11 @@ const server = http.createServer(async (req, res) => {
 
       // ---- CHANGE PASSWORD ----
       if (pathname === '/api/user/change-password' && method === 'POST') {
-        const body    = await parseBody(req);
-        const userId  = parseInt(body.user_id, 10);
+        const body = await parseBody(req);
+        const userId = parseInt(body.user_id, 10);
         const oldPass = (body.old_password || '').trim();
         const newPass = (body.new_password || '').trim();
-        const user    = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [userId]);
+        const user = await db.queryOne('SELECT * FROM pegawai WHERE id = ?', [userId]);
         if (!user)
           return sendJSON(res, { success: false, message: 'Pengguna tidak ditemukan' }, 404);
         if (!verifyPassword(oldPass, user.password || '123456').valid)
@@ -926,13 +986,13 @@ const server = http.createServer(async (req, res) => {
         return sendJSON(res, {
           success: true,
           stats: {
-            surat_masuk:  stats.total_surat_masuk,
+            surat_masuk: stats.total_surat_masuk,
             surat_keluar: stats.total_surat_keluar,
-            disposisi:    stats.total_disposisi,
-            surat_tugas:  stats.total_surat_tugas,
-            pegawai:      stats.total_pegawai,
-            klasifikasi:  classifications.length,
-            engine:       'MySQL ' + db.DB_CONFIG.host + '/' + db.DB_CONFIG.database
+            disposisi: stats.total_disposisi,
+            surat_tugas: stats.total_surat_tugas,
+            pegawai: stats.total_pegawai,
+            klasifikasi: classifications.length,
+            engine: 'MySQL ' + db.DB_CONFIG.host + '/' + db.DB_CONFIG.database
           }
         });
       }
@@ -940,7 +1000,7 @@ const server = http.createServer(async (req, res) => {
       // ---- BACKUP JSON ----
       if (pathname === '/api/database/backup-json' && method === 'GET') {
         const appState = await buildAppState();
-        const dateStr  = getLocalToday().replace(/-/g,'');
+        const dateStr = getLocalToday().replace(/-/g, '');
         const filename = `backup_persuratan_bkpsdm_${dateStr}.json`;
         res.writeHead(200, {
           'Content-Type': 'application/json; charset=utf-8',
@@ -975,7 +1035,7 @@ const server = http.createServer(async (req, res) => {
         for (const p of (data.pegawai || [])) {
           await db.getPool().execute(
             'INSERT INTO pegawai (nip,nama,pangkat,jabatan,role,unit,password,akses_login) VALUES (?,?,?,?,?,?,?,?)',
-            [p.nip,p.nama,p.pangkat||'',p.jabatan||'',p.role||'pegawai',p.unit||'',hashIfNeeded(p.password||'123456'),p.role === 'admin' ? 1 : 0]
+            [p.nip, p.nama, p.pangkat || '', p.jabatan || '', p.role || 'pegawai', p.unit || '', hashIfNeeded(p.password || '123456'), p.role === 'admin' ? 1 : 0]
           );
         }
         for (const sm of (data.surat_masuk || [])) {
@@ -984,11 +1044,11 @@ const server = http.createServer(async (req, res) => {
               (no_agenda,no_surat_pengirim,instansi_pengirim,kode_internal,nama_klasifikasi_internal,
                perihal,tgl_surat,tgl_diterima,sifat_surat,lampiran,status_disposisi,file_name)
              VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-            [sm.no_agenda,sm.no_surat_pengirim||'',sm.instansi_pengirim||'',
-             sm.kode_internal||'800',sm.nama_klasifikasi_internal||'Kepegawaian',
-             sm.perihal||'',sm.tgl_surat,sm.tgl_diterima,sm.sifat_surat||'Biasa',
-             sm.lampiran||'1 Berkas',sm.status_disposisi||'Menunggu Disposisi',
-             sm.file_name||'surat_masuk.pdf']
+            [sm.no_agenda, sm.no_surat_pengirim || '', sm.instansi_pengirim || '',
+            sm.kode_internal || '800', sm.nama_klasifikasi_internal || 'Kepegawaian',
+            sm.perihal || '', sm.tgl_surat, sm.tgl_diterima, sm.sifat_surat || 'Biasa',
+            sm.lampiran || '1 Berkas', sm.status_disposisi || 'Menunggu Disposisi',
+            sm.file_name || 'surat_masuk.pdf']
           );
         }
         for (const sk of (data.surat_keluar || [])) {
@@ -997,19 +1057,19 @@ const server = http.createServer(async (req, res) => {
               (no_agenda,bidang_pembuat,kode_klasifikasi,nama_klasifikasi,no_surat_keluar,
                tujuan_surat,perihal,tgl_surat,sifat_surat,penandatangan,file_name)
              VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-            [sk.no_agenda,sk.bidang_pembuat||'',sk.kode_klasifikasi||'000',
-             sk.nama_klasifikasi||'Umum',sk.no_surat_keluar||'',
-             sk.tujuan_surat||'',sk.perihal||'',sk.tgl_surat,sk.sifat_surat||'Biasa',
-             sk.penandatangan||'',sk.file_name||'surat_keluar.pdf']
+            [sk.no_agenda, sk.bidang_pembuat || '', sk.kode_klasifikasi || '000',
+            sk.nama_klasifikasi || 'Umum', sk.no_surat_keluar || '',
+            sk.tujuan_surat || '', sk.perihal || '', sk.tgl_surat, sk.sifat_surat || 'Biasa',
+            sk.penandatangan || '', sk.file_name || 'surat_keluar.pdf']
           );
         }
         return sendJSON(res, {
           success: true,
           message: 'Data berhasil dipulihkan ke MySQL!',
           stats: {
-            pegawai:     data.pegawai.length,
-            surat_masuk: (data.surat_masuk||[]).length,
-            surat_keluar:(data.surat_keluar||[]).length
+            pegawai: data.pegawai.length,
+            surat_masuk: (data.surat_masuk || []).length,
+            surat_keluar: (data.surat_keluar || []).length
           }
         });
       }
