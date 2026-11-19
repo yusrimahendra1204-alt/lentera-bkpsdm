@@ -2,63 +2,63 @@
 const SuratKeluarModule = {
   currentFilter: 'all',
 
-  // Master Kode Klasifikasi Khusus BKPSDM Berdasarkan Perbup Luwu Timur No. 69 Tahun 2023
+  // Master Kode Klasifikasi Khusus BKPSDM Berdasarkan Perbup Luwu Timur No. 69 Tahun 2023 (Teks Uraian 100% Sesuai Lampiran Perbup)
   POPULAR_CODES: [
     {
       kode: '800.1.3.2',
-      nama: 'Kenaikan Pangkat/ Golongan/ Jabatan ASN',
+      nama: 'Kenaikan Pangkat/ Golongan/ Jabatan',
       kategori: '800',
       klaster: 'pangkat_mutasi',
       desc: 'Pengusulan dan persetujuan teknis kenaikan pangkat reguler/pilihan pegawai',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.3 Mutasi Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.3 Mutasi Pegawai'
     },
     {
       kode: '800.1.11.13',
-      nama: 'Pengurusan Kenaikan Gaji Berkala (KGB)',
+      nama: 'Pengurusan Kenaikan Gaji Berkala, Mutasi gaji/tunjangan',
       kategori: '800',
       klaster: 'cuti_admin',
       desc: 'Pemberitahuan berkala kenaikan gaji 2 tahunan PNS & PPPK',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.11 Administrasi Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.11 Administrasi Pegawai'
     },
     {
       kode: '800.1.3.1',
-      nama: 'Usulan Alih Status, Pindah Instansi, Mutasi Wilayah Kerja',
+      nama: 'Usulan Alih Status, Pindah Instansi, Pindah Wilayah Kerja,Diperbantukan, Dipekerjakan, Penugasan Sementara, Mutasi antar Perwakilan, Mutasi ke dan dari Perwakilan, Pemindahan Sementara, Persetujuan/Pertimbangan Kepala BKN',
       kategori: '800',
       klaster: 'pangkat_mutasi',
       desc: 'Mutasi antar instansi/wilayah kerja, persetujuan Kepala BKN',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.3 Mutasi Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.3 Mutasi Pegawai'
     },
     {
       kode: '800.1.6.6',
-      nama: 'Pensiun ASN (BUP, Janda/Duda, Anumerta)',
+      nama: 'Pensiun ASN, antara lain : Administrasi Pensiun ASN, Penetapan Pensiun ASN, Penetapan Pertimbangan Teknis Pensiun ASN, Pensiun Pejabat Negara dan Janda/Dudanya',
       kategori: '800',
       klaster: 'pangkat_mutasi',
       desc: 'Pemberkasan dan penetapan surat keputusan pensiun batas usia pensiun',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.6 Kode Etik, Disiplin & Pensiun'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.6 Kode Etik, disiplin, Pemberhentian dan Pensiun ASN'
     },
     {
       kode: '800.1.11.4',
-      nama: 'Cuti Tahunan Pegawai',
+      nama: 'Cuti Tahunan',
       kategori: '800',
       klaster: 'cuti_admin',
       desc: 'Pemberian izin cuti tahunan bagi ASN di lingkungan Pemkab Luwu Timur',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.11 Administrasi Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.11 Administrasi Pegawai'
     },
     {
       kode: '800.1.11.3',
-      nama: 'Cuti Bersalin / Melahirkan',
+      nama: 'Cuti Bersalin',
       kategori: '800',
       klaster: 'cuti_admin',
       desc: 'Surat izin cuti persalinan bagi ASN',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.11 Administrasi Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.11 Administrasi Pegawai'
     },
     {
       kode: '800.1.11.2',
-      nama: 'Cuti Sakit Pegawai',
+      nama: 'Cuti Sakit',
       kategori: '800',
       klaster: 'cuti_admin',
       desc: 'Keterangan cuti karena sakit berdasarkan surat dokter resmi',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.11 Administrasi Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.11 Administrasi Pegawai'
     },
     {
       kode: '800.1.11.5',
@@ -66,65 +66,65 @@ const SuratKeluarModule = {
       kategori: '800',
       klaster: 'cuti_admin',
       desc: 'Izin cuti keperluan mendesak keluarga/musibah',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.11 Administrasi Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.11 Administrasi Pegawai'
     },
     {
       kode: '800.1.4.1',
-      nama: 'Usulan Tugas Belajar / Izin Belajar / Diklat / Ujian Dinas',
+      nama: 'Usulan Tugas Belajar/Ijin Belajar/Diklat/Kursus/Magang/Uji an Dinas/Praktek Kerja di Instansi lain/Pertukaran antar ASN dengan pegawai swasta',
       kategori: '800',
       klaster: 'kinerja_diklat',
       desc: 'Rekomendasi pengembangan kompetensi & pendidikan formal lanjutan',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.4 Pengembangan Karir'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.4 Pengembangan Karir'
     },
     {
       kode: '800.1.4.2',
-      nama: 'Penyesuaian Ijazah ASN',
+      nama: 'Penyesuain Ijazah',
       kategori: '800',
       klaster: 'kinerja_diklat',
       desc: 'Pencantuman gelar akademik dan penyesuaian kualifikasi pendidikan',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.4 Pengembangan Karir'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.4 Pengembangan Karir'
     },
     {
       kode: '800.1.4.4',
-      nama: 'Standar Kinerja Pegawai (SKP) dan Penilaian Prestasi Kerja',
+      nama: 'Standar kinerja Pegawai (SKP) dan Penilaian Prestasi Kerja',
       kategori: '800',
       klaster: 'kinerja_diklat',
       desc: 'Evaluasi kinerja periodik ASN tahunan dan triwulanan',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.4 Pengembangan Karir'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.4 Pengembangan Karir'
     },
     {
       kode: '800.1.2.1',
-      nama: 'Formasi ASN / Usulan CPNS & PPPK',
+      nama: 'Formasi ASN, antara lain : Usulan formasi , Usulan permintaan formasi kepada Menpan RB dan Kepala BKN, Persetujuan Formasi, Penetap[an Formasi, Penetapan Formasi Khusus',
       kategori: '800',
       klaster: 'pangkat_mutasi',
       desc: 'Usulan penetapan formasi kepada KemenPAN-RB & BKN',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.2 Formasi & Pengadaan'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.2 Formasi dan Pengadaan Pegawai'
     },
     {
       kode: '800.1.2.5',
-      nama: 'Pengangkatan ASN / Pengambilan Sumpah Janji',
+      nama: 'Pengangkatan ASN',
       kategori: '800',
       klaster: 'pangkat_mutasi',
       desc: 'SK pengangkatan CPNS menjadi PNS / pengangkatan PPPK',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.2 Formasi & Pengadaan'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.2 Formasi dan Pengadaan Pegawai'
     },
     {
       kode: '800.1.6.2',
-      nama: 'Disiplin ASN (Hukuman Disiplin Ringan / Sedang / Berat)',
+      nama: 'Disiplin',
       kategori: '800',
       klaster: 'rahasia',
       isRahasia: true,
       desc: '🔒 Berkas Rahasia - Pemanggilan pemeriksaan & SK Penjatuhan Hukuman Disiplin',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.6 Kode Etik, Disiplin & Pensiun'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.6 Kode Etik, disiplin, Pemberhentian dan Pensiun ASN'
     },
     {
       kode: '800.1.8.1',
-      nama: 'Status Kepegawaian (Izin Perceraian / Perkawinan ASN)',
+      nama: 'Status Kepegawaian',
       kategori: '800',
       klaster: 'rahasia',
       isRahasia: true,
-      desc: '🔒 Berkas Rahasia - Rekomendasi/Izin tertulis perceraian bagi ASN',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.8 Status dan Kedudukan Pegawai'
+      desc: '🔒 Berkas Rahasia - Status Kepegawaian (Hlm. 103 Perbup 69/2023)',
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.8 Status dan Kedudukan Pegawai'
     },
     {
       kode: '800.1.12.8',
@@ -132,31 +132,31 @@ const SuratKeluarModule = {
       kategori: '800',
       klaster: 'cuti_admin',
       desc: 'Usulan Satyalancana Karya Satya pengabdian 10, 20, 30 tahun',
-      hierarki: '800 Kepegawaian > 800.1 SDM > 800.1.12 Kesejahteraan Pegawai'
+      hierarki: '800 Kepegawaian > 800.1 Sumber Daya Manusia > 800.1.12 Kesejahteraan Pegawai'
     },
     {
       kode: '000.1.5',
-      nama: 'Undangan Rapat Kedinasan',
+      nama: 'Rapat Pimpinan',
       kategori: '000',
       klaster: 'umum',
-      desc: 'Penyelenggaraan rapat koordinasi / dinas BKPSDM',
-      hierarki: '000 Umum > 000.1 Ketatausahaan > 000.1.5 Undangan Rapat'
+      desc: 'Penyelenggaraan rapat koordinasi / pimpinan BKPSDM',
+      hierarki: '000 Umum > 000.1 Ketatausahaan dan Kerumahtanggan > 000.1.5 Rapat Pimpinan'
     },
     {
-      kode: '050',
-      nama: 'Perencanaan Pembangunan Daerah / Rencana Strategis (Renstra)',
-      kategori: '050',
+      kode: '000.7.2',
+      nama: 'Perencanaan Pembangunan Daerah',
+      kategori: '000',
       klaster: 'umum',
-      desc: 'Penyusunan Renja, Renstra, dan IKU BKPSDM',
-      hierarki: '050 Perencanaan Pembangunan'
+      desc: 'Penyusunan Renja, Renstra, dan perencanaan pembangunan (Hlm. 12 Perbup 69/2023)',
+      hierarki: '000 Umum > 000.7 Perencanaan Pembangunan > 000.7.2 Perencanaan Pembangunan Daerah'
     },
     {
-      kode: '900',
-      nama: 'Keuangan Daerah (DPA-SKPD & SPJ)',
+      kode: '900.1',
+      nama: 'KEUANGAN DAERAH',
       kategori: '900',
       klaster: 'umum',
-      desc: 'Administrasi keuangan daerah, anggaran, dan perjalanan dinas',
-      hierarki: '900 Keuangan'
+      desc: 'Administrasi keuangan daerah, anggaran DPA-SKPD, dan SPJ (Hlm. 105 Perbup 69/2023)',
+      hierarki: '900 Keuangan > 900.1 Keuangan Daerah'
     }
   ],
 

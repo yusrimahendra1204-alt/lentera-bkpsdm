@@ -17,7 +17,7 @@ class SmartAutoSuggest {
     if (/\b(cerai|perceraian|izin\s+cerai|gugatan\s+cerai|mediasi\s+perceraian)\b/i.test(q)) {
       return {
         kode: '800.1.8.1',
-        nama: 'Status Kepegawaian (Izin Perceraian / Perkawinan ASN)',
+        nama: 'Status Kepegawaian',
         kategori: '800',
         is_rahasia: true,
         sifat_default: 'Rahasia'
@@ -26,7 +26,7 @@ class SmartAutoSuggest {
     if (/\b(hukuman\s+disiplin|pelanggaran\s+disiplin|sidang\s+disiplin|pemeriksaan\s+disiplin|bap\s+disiplin)\b/i.test(q)) {
       return {
         kode: '800.1.6.2',
-        nama: 'Disiplin ASN (Hukuman Disiplin / Pemeriksaan Pelanggaran)',
+        nama: 'Disiplin',
         kategori: '800',
         is_rahasia: true,
         sifat_default: 'Rahasia'
@@ -35,7 +35,7 @@ class SmartAutoSuggest {
     if (/\b(sidang\s+kode\s+etik|pelanggaran\s+kode\s+etik)\b/i.test(q)) {
       return {
         kode: '800.1.6.1',
-        nama: 'Kode Etik Pegawai (Sidang / Pelanggaran Kode Etik ASN)',
+        nama: 'Kode etik Pegawai',
         kategori: '800',
         is_rahasia: true,
         sifat_default: 'Rahasia'

@@ -177,6 +177,14 @@ function normalizeDisposisiSifat(value) {
   return sifat;
 }
 
+const GENERIC_QUERY_STOPWORDS = new Set([
+  'surat', 'izin', 'ijin', 'permohonan', 'usulan', 'pengantar', 'rekomendasi',
+  'keterangan', 'keputusan', 'berita', 'acara', 'undangan', 'laporan', 'daftar',
+  'tentang', 'dan', 'atau', 'yang', 'dari', 'untuk', 'pada', 'dalam', 'atas',
+  'nama', 'kepada', 'sdr', 'sdri', 'asn', 'pns', 'pppk', 'pegawai', 'staf',
+  'kabupaten', 'luwu', 'timur', 'bkpsdm', 'pemerintah', 'daerah'
+]);
+
 function searchKlasifikasi(query, kategori = '', limit = 25) {
   if (!query) {
     if (kategori) return classifications.filter(c => c.kategori === kategori).slice(0, limit);
@@ -184,27 +192,34 @@ function searchKlasifikasi(query, kategori = '', limit = 25) {
   }
   const q = (query || '').toLowerCase().trim();
   const qTokens = q.split(/\s+/).filter(t => t.length > 1);
+  const specificTokens = qTokens.filter(t => !GENERIC_QUERY_STOPWORDS.has(t));
   const isCeraiQuery = /\b(cerai|perceraian|perkawinan|nikah|pernikahan|kawin)\b/i.test(q);
   const isDisiplinQuery = /\b(disiplin|hukuman|pelanggaran|bap)\b/i.test(q);
   let scored = [];
   for (const item of classifications) {
     if (kategori && item.kategori !== kategori) continue;
     let score = 0;
+    let specificMatch = false;
     const kode = item.kode.toLowerCase();
     const nama = item.nama.toLowerCase();
     const keywords = item.keywords || [];
-    if (kode === q) score += 1000;
-    else if (kode.startsWith(q)) score += 500;
-    if (q && nama.includes(q)) score += 300;
+    if (kode === q) { score += 1000; specificMatch = true; }
+    else if (kode.startsWith(q)) { score += 500; specificMatch = true; }
+    if (q && nama.includes(q)) { score += 300; specificMatch = true; }
     for (const token of qTokens) {
-      if (nama.includes(token)) score += 50;
-      if (keywords.includes(token)) score += 80;
-      if (keywords.some(k => k.includes(token))) score += 30;
-      if (kode.includes(token)) score += 40;
+      const isSpecific = !GENERIC_QUERY_STOPWORDS.has(token);
+      let tokenHit = false;
+      if (nama.includes(token)) { score += isSpecific ? 80 : 15; tokenHit = true; }
+      if (keywords.includes(token)) { score += isSpecific ? 100 : 20; tokenHit = true; }
+      if (keywords.some(k => k.includes(token))) { score += isSpecific ? 45 : 10; tokenHit = true; }
+      if (kode.includes(token)) { score += 40; tokenHit = true; }
+      if (isSpecific && tokenHit) specificMatch = true;
     }
+    if (specificTokens.length > 0 && !specificMatch) continue;
     if (score > 0) {
       if (item.kode.startsWith('800')) score += 250;
       if (isCeraiQuery && item.kode === '800.1.8.1') score += 600;
+      if (isCeraiQuery && item.kode === '800.1.8') score += 350;
       if (isDisiplinQuery && item.kode === '800.1.6.2') score += 400;
       scored.push({ item, score });
     }

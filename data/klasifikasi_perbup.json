@@ -32346,7 +32346,9 @@
       "akta cerai",
       "duda",
       "janda",
-      "kedudukan hukum pegawai"
+      "kedudukan hukum pegawai",
+      "perceraian",
+      "cerai"
     ]
   },
   {
@@ -32545,7 +32547,7 @@
   },
   {
     "kode": "800.1.6.1",
-    "nama": "Kode Etik Pegawai (Sidang / Pelanggaran Kode Etik ASN)",
+    "nama": "Kode etik Pegawai",
     "kategori": "800",
     "keywords": [
       "kode",
@@ -32560,7 +32562,7 @@
   },
   {
     "kode": "800.1.6.2",
-    "nama": "Disiplin ASN (Hukuman Disiplin / Pemeriksaan Pelanggaran)",
+    "nama": "Disiplin",
     "kategori": "800",
     "keywords": [
       "disiplin",
@@ -32654,12 +32656,15 @@
       "status",
       "dan",
       "pegawai",
-      "kedudukan"
+      "kedudukan",
+      "perceraian",
+      "cerai",
+      "status kepegawaian"
     ]
   },
   {
     "kode": "800.1.8.1",
-    "nama": "Status Kepegawaian (Izin Perceraian / Perkawinan ASN)",
+    "nama": "Status Kepegawaian",
     "kategori": "800",
     "keywords": [
       "cerai",
