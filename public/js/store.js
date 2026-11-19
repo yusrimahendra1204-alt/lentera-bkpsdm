@@ -492,19 +492,13 @@ const Store = {
   // Delete Surat Keluar
   async deleteSuratKeluar(id) {
     try {
-      const res = await fetch(`/api/surat-keluar/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success) {
-          this.state.surat_keluar = this.state.surat_keluar.filter(s => s.id !== id);
-          this.notify();
-          return true;
-        }
-      }
+      await fetch(`/api/surat-keluar/${id}`, { method: 'DELETE' });
     } catch (err) {
-      console.error('Failed to delete surat keluar:', err);
+      console.warn('API /api/surat-keluar offline, delete secara lokal:', err);
     }
-    return false;
+    this.state.surat_keluar = this.state.surat_keluar.filter(s => s.id !== id);
+    this.notify();
+    return true;
   },
 
   // Add Surat Tugas (SPT)
@@ -589,19 +583,13 @@ const Store = {
   // Delete Surat Tugas
   async deleteSuratTugas(id) {
     try {
-      const res = await fetch(`/api/surat-tugas/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success) {
-          this.state.surat_tugas = this.state.surat_tugas.filter(s => s.id !== id);
-          this.notify();
-          return true;
-        }
-      }
+      await fetch(`/api/surat-tugas/${id}`, { method: 'DELETE' });
     } catch (err) {
-      console.error('Failed to delete surat tugas:', err);
+      console.warn('API /api/surat-tugas offline, delete secara lokal:', err);
     }
-    return false;
+    this.state.surat_tugas = this.state.surat_tugas.filter(s => s.id !== id);
+    this.notify();
+    return true;
   },
 
   // Change Password

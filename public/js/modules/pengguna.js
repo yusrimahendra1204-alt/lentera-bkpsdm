@@ -198,13 +198,13 @@ const PenggunaModule = {
 
   filterTable() {
     const q = (document.getElementById('search-pegawai')?.value || '').toLowerCase();
-    const list = (Store.state.pegawai || []).filter(p => (p.role === 'admin' || p.akses_login === 1) &&
-      p.nip.toLowerCase().includes(q) ||
-      p.nama.toLowerCase().includes(q) ||
-      p.jabatan.toLowerCase().includes(q) ||
+    const list = (Store.state.pegawai || []).filter(p => (p.role === 'admin' || p.akses_login === 1) && (
+      (p.nip || '').toLowerCase().includes(q) ||
+      (p.nama || '').toLowerCase().includes(q) ||
+      (p.jabatan || '').toLowerCase().includes(q) ||
       (p.pangkat || '').toLowerCase().includes(q) ||
-      p.unit.toLowerCase().includes(q)
-    );
+      (p.unit || '').toLowerCase().includes(q)
+    ));
     const tbody = document.getElementById('tbody-pegawai');
     if (tbody) tbody.innerHTML = this.renderRows(list);
   },

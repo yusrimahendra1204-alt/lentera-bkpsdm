@@ -672,10 +672,19 @@ const server = http.createServer(async (req, res) => {
         const kodeUsulan = body.kode_usulan_bidang ? body.kode_usulan_bidang.trim() : kode;
         const statusKomparasi = body.status_komparasi_kode || (kodeUsulan !== kode ? 'Dikoreksi Sistem' : 'Sesuai Standar');
 
+        let maxUrut = 0;
+        for (const r of (appState.surat_keluar || [])) {
+          const m = (r.no_surat_keluar || '').match(/\/0*(\d+)\//);
+          if (m) {
+            const num = parseInt(m[1], 10);
+            if (num < 2000 && num > maxUrut) maxUrut = num;
+          }
+        }
+        const nextUrut = maxUrut > 0 ? maxUrut + 1 : (appState.surat_keluar.length || 0) + 1;
         const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         const monthRomawi = romawi[new Date().getMonth()];
         const year = new Date().getFullYear();
-        const formattedUrut = String(newId + 100).padStart(3, '0');
+        const formattedUrut = String(nextUrut).padStart(3, '0');
         const noSurat = `${kode}/${formattedUrut}/BKPSDM/${monthRomawi}/${year}`;
 
         const newSuratKeluar = {
@@ -722,6 +731,7 @@ const server = http.createServer(async (req, res) => {
         if (body.kode_klasifikasi) sk.kode_klasifikasi = body.kode_klasifikasi;
         if (body.nama_klasifikasi) sk.nama_klasifikasi = body.nama_klasifikasi;
         if (body.bidang_pembuat) sk.bidang_pembuat = body.bidang_pembuat;
+        if (body.no_surat_keluar) sk.no_surat_keluar = body.no_surat_keluar;
         if (body.kode_usulan_bidang !== undefined) sk.kode_usulan_bidang = body.kode_usulan_bidang;
         if (body.status_komparasi_kode !== undefined) sk.status_komparasi_kode = body.status_komparasi_kode;
 
@@ -793,6 +803,7 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(res, { success: false, message: 'Surat tugas tidak ditemukan' }, 404);
         }
 
+        if (body.bidang_pengusul) spt.bidang_pengusul = body.bidang_pengusul;
         if (body.dasar) spt.dasar = body.dasar;
         if (body.maksud_tugas) spt.maksud_tugas = body.maksud_tugas;
         if (body.tempat_tujuan) spt.tempat_tujuan = body.tempat_tujuan;

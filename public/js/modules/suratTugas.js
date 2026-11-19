@@ -672,8 +672,14 @@ const SuratTugasModule = {
 
     // Populate existing personil
     if (spt.personil && spt.personil.length) {
+      const pegList = Store.state.pegawai || [];
       spt.personil.forEach(p => {
-        this.addPersonilRow('edit-personil-container', p.pegawai_id);
+        let matchedId = p.pegawai_id;
+        if (!matchedId) {
+          const found = pegList.find(peg => (p.nip && peg.nip === p.nip) || (p.nama && peg.nama === p.nama));
+          if (found) matchedId = found.id;
+        }
+        this.addPersonilRow('edit-personil-container', matchedId);
       });
     } else {
       this.addPersonilRow('edit-personil-container');

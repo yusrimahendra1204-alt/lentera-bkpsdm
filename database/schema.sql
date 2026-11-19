@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `disposisi` (
   `dari_user`            VARCHAR(200) DEFAULT 'PARHA ARIEF, S.AP (Kepala BKPSDM)',
   `tujuan_user_id`       INT UNSIGNED DEFAULT NULL,
   `tujuan_nama`          VARCHAR(200) DEFAULT '',
-  `sifat`                ENUM('Biasa','Segera','Sangat Segera') NOT NULL DEFAULT 'Biasa',
+  `sifat`                ENUM('Biasa','Segera','Sangat Segera','Rahasia','A. Sangat Segera','B. Segera','C. Rahasia') NOT NULL DEFAULT 'Biasa',
   `instruksi`            JSON          COMMENT 'Array instruksi disposisi: ["Untuk diproses","Koordinasikan"]',
   `catatan`              TEXT,
   `batas_waktu`          DATE DEFAULT NULL,
